@@ -189,14 +189,7 @@ const features = [
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    background: linear-gradient(
-      135deg,
-      var(--text-primary) 0%,
-      var(--accent) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
   }
 
   .page-subtitle {
@@ -377,42 +370,40 @@ const features = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-size: 0.95rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 600;
-    font-family: var(--font-sans);
-    transition: all 0.2s;
+    font-family: var(--font-mono);
+    transition: all 0.15s;
     cursor: pointer;
+    border: 1px solid transparent;
   }
 
   .btn-primary {
     background: var(--accent);
     color: var(--bg-primary);
-    box-shadow:
-      0 0 0 1px rgba(90, 228, 192, 0.3),
-      0 4px 20px rgba(90, 228, 192, 0.2);
+    border-color: var(--accent);
   }
 
   .btn-primary:hover {
     opacity: 1;
     background: #6ef0cc;
-    box-shadow:
-      0 0 0 1px rgba(90, 228, 192, 0.5),
-      0 8px 30px rgba(90, 228, 192, 0.3);
+    border-color: #6ef0cc;
     transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(90, 228, 192, 0.25);
   }
 
   .btn-secondary {
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: rgba(136, 153, 180, 0.25);
   }
 
   .btn-secondary:hover {
     opacity: 1;
-    border-color: rgba(90, 228, 192, 0.3);
-    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: rgba(136, 153, 180, 0.5);
     transform: translateY(-1px);
   }
 
