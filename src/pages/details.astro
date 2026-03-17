@@ -1,51 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
-
-const features = [
-  {
-    id: "custom-actions",
-    title: "Custom Actions",
-    tagline: "Your repo, your rules.",
-    description:
-      "Define up to 3 custom command buttons per repository — each with its own icon, title, and optional keyboard shortcut. Execute as a shell script or inject directly into the terminal. One click to run your most-used workflows.",
-    image: "/images/feature-custom-actions.png",
-    details: [
-      "Per-repo command buttons in the toolbar",
-      "Shell Script or Terminal Input execution modes",
-      "Custom keyboard shortcuts with modifier keys",
-      "SF Symbol icons for visual distinction",
-    ],
-  },
-  {
-    id: "diff-view",
-    title: "Diff View",
-    tagline: "See what changed, instantly.",
-    description:
-      "A built-in diff window with a file tree sidebar. Switch between split and unified views to review worktree changes without leaving your terminal. Preloads all file contents for instant file switching.",
-    image: "/images/feature-diff-view.png",
-    details: [
-      "File tree sidebar with toggle",
-      "Split view and unified diff modes",
-      "Instant file switching with content preloading",
-      "Keyboard-driven navigation",
-    ],
-  },
-  {
-    id: "canvas",
-    title: "Canvas",
-    tagline: "All your agents, one view.",
-    description:
-      "A free-form canvas that displays every open tab as a draggable, resizable card. Pinch to zoom, scroll to pan — see all your coding agents working in parallel at a glance.",
-    image: "/images/feature-canvas.png",
-    details: [
-      "Draggable and resizable tab cards",
-      "Pinch-to-zoom with cursor anchoring",
-      "Balanced grid layout with auto-organize",
-      "Full split pane rendering per card",
-    ],
-  },
-];
 ---
 
 <Layout title="Prowl — Details">
@@ -99,7 +54,7 @@ const features = [
     </div>
 
     <!-- Feature 2: Diff View (inset card) -->
-    <section class="feature-section feature-inset reverse" id="diff-view">
+    <section class="feature-section reverse" id="diff-view">
       <div class="feature-content">
         <div class="feature-header">
           <span class="feature-number">02</span>
@@ -340,12 +295,6 @@ const features = [
     color: var(--accent);
     font-weight: 500;
     margin-bottom: 1rem;
-  }
-
-  .feature-description {
-    color: var(--text-secondary);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
   }
 
   .feature-details {

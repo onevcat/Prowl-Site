@@ -16,6 +16,12 @@ const { title } = Astro.props;
       content="Prowl — An integrated terminal environment, sharpened for coding agents."
     />
     <link rel="icon" type="image/png" href="/images/prowl-icon.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="A native macOS terminal environment, sharpened for coding agents." />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/og.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
