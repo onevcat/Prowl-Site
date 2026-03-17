@@ -1,0 +1,458 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+
+const features = [
+  {
+    id: "custom-actions",
+    title: "Custom Actions",
+    tagline: "Your repo, your rules.",
+    description:
+      "Define up to 3 custom command buttons per repository — each with its own icon, title, and optional keyboard shortcut. Execute as a shell script or inject directly into the terminal. One click to run your most-used workflows.",
+    image: "/images/feature-custom-actions.png",
+    details: [
+      "Per-repo command buttons in the toolbar",
+      "Shell Script or Terminal Input execution modes",
+      "Custom keyboard shortcuts with modifier keys",
+      "SF Symbol icons for visual distinction",
+    ],
+  },
+  {
+    id: "diff-view",
+    title: "Diff View",
+    tagline: "See what changed, instantly.",
+    description:
+      "A built-in diff window with a file tree sidebar. Switch between split and unified views to review worktree changes without leaving your terminal. Preloads all file contents for instant file switching.",
+    image: "/images/feature-diff-view.png",
+    details: [
+      "File tree sidebar with toggle",
+      "Split view and unified diff modes",
+      "Instant file switching with content preloading",
+      "Keyboard-driven navigation",
+    ],
+  },
+  {
+    id: "canvas",
+    title: "Canvas",
+    tagline: "All your agents, one view.",
+    description:
+      "A free-form canvas that displays every open tab as a draggable, resizable card. Pinch to zoom, scroll to pan — see all your coding agents working in parallel at a glance.",
+    image: "/images/feature-canvas.png",
+    details: [
+      "Draggable and resizable tab cards",
+      "Pinch-to-zoom with cursor anchoring",
+      "Balanced grid layout with auto-organize",
+      "Full split pane rendering per card",
+    ],
+  },
+];
+---
+
+<Layout title="Prowl — Details">
+  <Nav active="details" />
+
+  <main class="details-page">
+    <section class="details-hero">
+      <h1 class="page-title">What makes Prowl different</h1>
+      <p class="page-subtitle">
+        Features forked with intent — built for a terminal-first, agent-driven
+        workflow.
+      </p>
+    </section>
+
+    {
+      features.map((feature, index) => (
+        <section
+          class:list={["feature-section", { reverse: index % 2 === 1 }]}
+          id={feature.id}
+        >
+          <div class="feature-content">
+            <div class="feature-header">
+              <span class="feature-number">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h2 class="feature-title">{feature.title}</h2>
+            </div>
+            <p class="feature-tagline">{feature.tagline}</p>
+            <p class="feature-description">{feature.description}</p>
+            <ul class="feature-details">
+              {feature.details.map((detail) => (
+                <li>{detail}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="feature-image-wrapper">
+            <div class="image-placeholder">
+              <img
+                src={feature.image}
+                alt={`${feature.title} screenshot`}
+                class="feature-image"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div class="placeholder-fallback">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="M21 15l-5-5L5 21" />
+                </svg>
+                <span>Screenshot coming soon</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+
+    <section class="cta-section">
+      <p class="cta-text">Ready to give it a try?</p>
+      <div class="cta-group">
+        <a
+          href="https://github.com/onevcat/supacode/releases/latest"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener"
+        >
+          Download Prowl
+        </a>
+        <a
+          href="https://github.com/onevcat/supacode"
+          class="btn btn-secondary"
+          target="_blank"
+          rel="noopener"
+        >
+          View on GitHub
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        Built by <a
+          href="https://github.com/onevcat"
+          target="_blank"
+          rel="noopener">onevcat</a
+        > · A fork of <a
+          href="https://supacode.sh/"
+          target="_blank"
+          rel="noopener">Supacode</a
+        >
+      </p>
+    </footer>
+    <!-- Lightbox modal -->
+    <div class="lightbox" id="lightbox">
+      <img class="lightbox-img" id="lightbox-img" alt="Enlarged screenshot" />
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const lightbox = document.getElementById("lightbox")!;
+  const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement;
+
+  document.querySelectorAll(".feature-image").forEach((img) => {
+    img.addEventListener("click", () => {
+      lightboxImg.src = (img as HTMLImageElement).src;
+      lightbox.classList.add("open");
+    });
+  });
+
+  lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("open");
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") lightbox.classList.remove("open");
+  });
+</script>
+
+<style>
+  .details-page {
+    padding-top: 4rem;
+  }
+
+  /* Hero */
+  .details-hero {
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+  }
+
+  .page-title {
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(
+      135deg,
+      var(--text-primary) 0%,
+      var(--accent) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Feature sections */
+  .feature-section {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 3rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .feature-section.reverse {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  .feature-section.reverse .feature-content {
+    order: 2;
+  }
+
+  .feature-section.reverse .feature-image-wrapper {
+    order: 1;
+  }
+
+  .feature-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-dim);
+    font-weight: 500;
+  }
+
+  .feature-title {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .feature-tagline {
+    font-size: 1.1rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .feature-description {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-details {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .feature-details li {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .feature-details li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: var(--accent-dim);
+    font-weight: 700;
+  }
+
+  /* Image area */
+  .feature-image-wrapper {
+    position: relative;
+  }
+
+  .image-placeholder {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .feature-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+  }
+
+  .feature-image:hover {
+    opacity: 0.85;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    cursor: zoom-out;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .placeholder-fallback {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: absolute;
+    inset: 0;
+    color: var(--text-muted);
+  }
+
+  .placeholder-fallback span {
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+  }
+
+  /* Bottom CTA */
+  .cta-section {
+    text-align: center;
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .cta-text {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg-primary);
+    box-shadow:
+      0 0 0 1px rgba(90, 228, 192, 0.3),
+      0 4px 20px rgba(90, 228, 192, 0.2);
+  }
+
+  .btn-primary:hover {
+    opacity: 1;
+    background: #6ef0cc;
+    box-shadow:
+      0 0 0 1px rgba(90, 228, 192, 0.5),
+      0 8px 30px rgba(90, 228, 192, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    opacity: 1;
+    border-color: rgba(90, 228, 192, 0.3);
+    background: var(--bg-secondary);
+    transform: translateY(-1px);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer a {
+    color: var(--text-secondary);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .feature-section {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 3rem 1.5rem;
+    }
+
+    .feature-section.reverse .feature-content,
+    .feature-section.reverse .feature-image-wrapper {
+      order: unset;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .feature-title {
+      font-size: 1.4rem;
+    }
+
+    .cta-group {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+interface Props {
+  active?: "home" | "details";
+}
+
+const { active = "home" } = Astro.props;
+---
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <img src="/images/prowl-icon.png" alt="Prowl" class="nav-icon" />
+    <span class="nav-name">Prowl</span>
+  </a>
+  <div class="nav-links">
+    <a href="/" class:list={["nav-link", { active: active === "home" }]}>
+      Home
+    </a>
+    <a
+      href="/details"
+      class:list={["nav-link", { active: active === "details" }]}
+    >
+      Details
+    </a>
+    <a
+      href="https://github.com/onevcat/supacode"
+      class="nav-link"
+      target="_blank"
+      rel="noopener"
+    >
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(11, 18, 33, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .nav-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+    opacity: 1;
+  }
+
+  .nav-link.active {
+    color: var(--accent);
+  }
+</style>
