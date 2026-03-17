@@ -10,11 +10,6 @@ import Nav from "../components/Nav.astro";
     <div class="hero-layout">
       <!-- Left: text content -->
       <div class="hero-text">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          macOS terminal
-        </div>
-
         <h1 class="title">Prowl</h1>
         <p class="slogan">Quiet paws.<br />Sharp claws.</p>
         <p class="subtitle">
@@ -62,9 +57,9 @@ import Nav from "../components/Nav.astro";
         </p>
       </div>
 
-      <!-- Right: mini app wireframe + icon -->
+      <!-- Right: interactive mini app wireframe + icon -->
       <div class="hero-visual">
-        <div class="app-frame">
+        <div class="app-frame" id="app-frame">
           <!-- Title bar -->
           <div class="frame-titlebar">
             <div class="frame-dots">
@@ -77,51 +72,124 @@ import Nav from "../components/Nav.astro";
           <div class="frame-content">
             <!-- Vertical tab sidebar -->
             <div class="frame-sidebar">
-              <div class="tab active">
-                <span class="tab-icon">&#xe2bf;</span>
-                <span class="tab-label">prowl-site</span>
+              <div class="sidebar-action canvas-link" id="canvas-toggle" title="Toggle Canvas view">Canvas</div>
+              <div class="tab active" data-tab="prowl">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">prowl</span>
                 <span class="tab-badge running"></span>
               </div>
-              <div class="tab">
-                <span class="tab-icon">&#xe2bf;</span>
-                <span class="tab-label">supacode</span>
-                <span class="tab-badge running"></span>
-              </div>
-              <div class="tab">
-                <span class="tab-icon">&#xe2bf;</span>
+              <div class="tab" data-tab="kingfisher">
+                <span class="tab-icon">&#9733;</span>
                 <span class="tab-label">kingfisher</span>
+                <span class="tab-badge running"></span>
+              </div>
+              <div class="tab" data-tab="meetcat">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">MeetCat</span>
+                <span class="tab-badge running"></span>
+              </div>
+              <div class="tab" data-tab="yitong">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">YiTong</span>
                 <span class="tab-badge idle"></span>
               </div>
-              <div class="tab dim">
-                <span class="tab-icon">&#xe2bf;</span>
-                <span class="tab-label">dotfiles</span>
-              </div>
-              <div class="sidebar-spacer"></div>
-              <div class="sidebar-action canvas-btn" title="Canvas">
-                <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14">
-                  <rect x="1" y="1" width="6" height="6" rx="1" />
-                  <rect x="9" y="1" width="6" height="6" rx="1" />
-                  <rect x="1" y="9" width="6" height="6" rx="1" />
-                  <rect x="9" y="9" width="6" height="6" rx="1" />
-                </svg>
-              </div>
             </div>
-            <!-- Main terminal area -->
+            <!-- Main area -->
             <div class="frame-main">
-              <!-- Toolbar with custom actions -->
-              <div class="frame-toolbar">
-                <span class="toolbar-repo">prowl-site</span>
-                <div class="toolbar-actions">
-                  <span class="action-btn">&#9654; Build</span>
-                  <span class="action-btn">&#8693; Deploy</span>
+              <!-- Canvas 2x2 grid view -->
+              <div class="canvas-panel" id="canvas-panel">
+                <div class="canvas-grid">
+                  <div class="canvas-card" data-card="prowl">
+                    <div class="card-title">prowl</div>
+                    <div class="card-body">
+                      <span class="card-line ok">&#10003; 23 tests passed</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="kingfisher">
+                    <div class="card-title">kingfisher</div>
+                    <div class="card-body">
+                      <span class="card-line">codex &#8230; 3 files</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="meetcat">
+                    <div class="card-title">MeetCat</div>
+                    <div class="card-body">
+                      <span class="card-line ok">&#10003; 10 tests passed</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="yitong">
+                    <div class="card-title">YiTong</div>
+                    <div class="card-body">
+                      <span class="card-line diff-r">- The next idea</span>
+                      <span class="card-line diff-a">+ &#24322;&#21516;</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <!-- Terminal content -->
-              <div class="frame-terminal">
-                <div class="tl"><span class="tp">&#10095;</span> npm run build</div>
-                <div class="tl out">  2 page(s) built in 553ms</div>
-                <div class="tl out ok">  &#10003; Complete!</div>
-                <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+              <!-- prowl -->
+              <div class="tab-panel active" data-panel="prowl">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">prowl</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="prowl-run">&#9654; Run</span>
+                    <span class="action-btn" data-run="prowl-test">&#9881; Test</span>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-prowl">
+                  <div class="tl"><span class="tp">&#10095;</span> swift test</div>
+                  <div class="tl out">  Build complete! (1.2s)</div>
+                  <div class="tl out ok">  Test Suite passed — 23 tests, 0 failures</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- kingfisher -->
+              <div class="tab-panel" data-panel="kingfisher">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">kingfisher</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="kf-build">&#9654; Build</span>
+                    <span class="action-btn" data-run="kf-release">&#9881; Release</span>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-kingfisher">
+                  <div class="tl agent"><span class="tp">&#10095;</span> codex "Add retry to ImageDownloader"</div>
+                  <div class="tl out">  &#8987; Reading ImageDownloader.swift</div>
+                  <div class="tl out">  &#8987; Applying changes to 2 files</div>
+                  <div class="tl out ok">  &#10003; Done. 3 files changed.</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- meetcat -->
+              <div class="tab-panel" data-panel="meetcat">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">MeetCat</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="mc-app">&#9654; Open App</span>
+                    <a class="action-btn action-link" href="https://meet.onev.cat" target="_blank" rel="noopener">&#9741; WebSite</a>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-meetcat">
+                  <div class="tl"><span class="tp">&#10095;</span> npx vitest run</div>
+                  <div class="tl out">  &#10003; src/utils.test.ts (6 tests) 12ms</div>
+                  <div class="tl out">  &#10003; src/hooks.test.ts (4 tests) 8ms</div>
+                  <div class="tl out ok">  Tests  10 passed</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- yitong -->
+              <div class="tab-panel" data-panel="yitong">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">YiTong</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="yt-build">&#9654; Build</span>
+                    <span class="action-btn" data-run="yt-diff">&#8800; Diff</span>
+                  </div>
+                </div>
+                <div class="frame-terminal frame-diff" id="term-yitong">
+                  <div class="tl diff-remove">- The next idea</div>
+                  <div class="tl diff-add">+ YiTong</div>
+                  <div class="tl diff-add">+ &#24322;&#21516;</div>
+                </div>
               </div>
             </div>
           </div>
@@ -169,6 +237,82 @@ import Nav from "../components/Nav.astro";
   </main>
 </Layout>
 
+<script>
+  const tabs = document.querySelectorAll<HTMLElement>(".tab[data-tab]");
+  const panels = document.querySelectorAll<HTMLElement>(".tab-panel[data-panel]");
+  const canvasPanel = document.getElementById("canvas-panel")!;
+  const canvasToggle = document.getElementById("canvas-toggle")!;
+  const tabNames = ["prowl", "kingfisher", "meetcat", "yitong"];
+  // Rotation: canvas → prowl → kingfisher → meetcat → yitong → canvas ...
+  const sequence = ["canvas", ...tabNames];
+  let seqIndex = sequence.indexOf("prowl");
+  let timer: ReturnType<typeof setInterval>;
+  const INTERVAL = 5000;
+
+  function showTab(name: string) {
+    canvasPanel.classList.remove("active");
+    canvasToggle.classList.remove("active");
+    tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+    panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
+  }
+
+  function showCanvas() {
+    panels.forEach((p) => p.classList.remove("active"));
+    tabs.forEach((t) => t.classList.remove("active"));
+    canvasPanel.classList.add("active");
+    canvasToggle.classList.add("active");
+  }
+
+  function showByIndex(i: number) {
+    const name = sequence[i];
+    if (name === "canvas") {
+      showCanvas();
+    } else {
+      showTab(name);
+    }
+  }
+
+  function advance() {
+    seqIndex = (seqIndex + 1) % sequence.length;
+    showByIndex(seqIndex);
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(advance, INTERVAL);
+  }
+
+  function switchTo(name: string) {
+    seqIndex = sequence.indexOf(name);
+    showByIndex(seqIndex);
+    resetTimer();
+  }
+
+  // Tab clicks
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => switchTo(tab.dataset.tab!));
+  });
+
+  // Canvas toggle
+  canvasToggle.addEventListener("click", () => switchTo("canvas"));
+
+  // Canvas card clicks → switch to that tab
+  document.querySelectorAll<HTMLElement>(".canvas-card[data-card]").forEach((card) => {
+    card.addEventListener("click", () => switchTo(card.dataset.card!));
+  });
+
+  // Action button flash
+  document.querySelectorAll<HTMLElement>(".action-btn[data-run]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btn.classList.add("flash");
+      setTimeout(() => btn.classList.remove("flash"), 400);
+    });
+  });
+
+  // Start auto-rotation
+  resetTimer();
+</script>
+
 <style>
   .hero {
     position: relative;
@@ -195,10 +339,10 @@ import Nav from "../components/Nav.astro";
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 2fr 3fr;
+    gap: 3rem;
     align-items: center;
-    max-width: 1100px;
+    max-width: 1200px;
     width: 100%;
     padding: 6rem 3rem 3rem;
   }
@@ -208,28 +352,6 @@ import Nav from "../components/Nav.astro";
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border);
-    padding: 0.35rem 0.8rem;
-    border-radius: 100px;
-  }
-
-  .badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
   }
 
   .title {
@@ -341,7 +463,7 @@ import Nav from "../components/Nav.astro";
   /* App wireframe */
   .app-frame {
     width: 100%;
-    max-width: 460px;
+    max-width: 540px;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid rgba(136, 153, 180, 0.12);
@@ -385,7 +507,7 @@ import Nav from "../components/Nav.astro";
 
   .frame-content {
     display: flex;
-    min-height: 260px;
+    min-height: 300px;
   }
 
   /* Sidebar with vertical tabs */
@@ -407,7 +529,7 @@ import Nav from "../components/Nav.astro";
     font-family: var(--font-mono);
     font-size: 0.65rem;
     color: var(--text-secondary);
-    cursor: default;
+    cursor: pointer;
     border-left: 2px solid transparent;
     transition: background 0.15s;
   }
@@ -423,8 +545,9 @@ import Nav from "../components/Nav.astro";
   }
 
   .tab-icon {
-    font-size: 0.6rem;
-    opacity: 0.4;
+    font-size: 1rem;
+    opacity: 0.5;
+    line-height: 1;
   }
 
   .tab-label {
@@ -449,17 +572,26 @@ import Nav from "../components/Nav.astro";
     background: var(--text-muted);
   }
 
-  .sidebar-spacer {
-    flex: 1;
-  }
-
   .sidebar-action {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 8px;
     color: var(--text-muted);
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .canvas-link {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+
+  .canvas-link:hover {
+    color: var(--accent);
+    opacity: 1;
   }
 
   /* Main area */
@@ -468,6 +600,7 @@ import Nav from "../components/Nav.astro";
     display: flex;
     flex-direction: column;
     min-width: 0;
+    position: relative;
   }
 
   .frame-toolbar {
@@ -497,6 +630,121 @@ import Nav from "../components/Nav.astro";
     color: var(--accent-dim);
     font-size: 0.58rem;
     border: 1px solid rgba(90, 228, 192, 0.12);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .action-btn:hover {
+    background: rgba(90, 228, 192, 0.15);
+  }
+
+  .action-btn.flash {
+    background: rgba(90, 228, 192, 0.3);
+  }
+
+  .action-link {
+    text-decoration: none;
+    color: var(--accent-dim);
+  }
+
+  .action-link:hover {
+    opacity: 1;
+  }
+
+  /* Tab panels */
+  .tab-panel,
+  .canvas-panel {
+    flex: 1;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.5s;
+  }
+
+  .tab-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .canvas-panel {
+    display: flex;
+    padding: 8px;
+  }
+
+  .tab-panel.active,
+  .canvas-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+  }
+
+  .canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .canvas-card {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .canvas-card:hover {
+    border-color: rgba(90, 228, 192, 0.2);
+    background: rgba(90, 228, 192, 0.04);
+  }
+
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 3px;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .card-line {
+    font-family: var(--font-mono);
+    font-size: 0.48rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-line.ok {
+    color: var(--accent-dim);
+  }
+
+  .card-line.diff-r {
+    color: #f87171;
+  }
+
+  .card-line.diff-a {
+    color: var(--accent);
+  }
+
+  /* Canvas toggle active state */
+  .canvas-link.active {
+    color: var(--accent);
   }
 
   /* Terminal output inside frame */
@@ -534,6 +782,25 @@ import Nav from "../components/Nav.astro";
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+  }
+
+  /* Diff view lines */
+  .frame-diff {
+    padding-top: 14px;
+  }
+
+  .diff-remove {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.06);
+    padding: 1px 14px;
+    margin: 0 -14px;
+  }
+
+  .diff-add {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.06);
+    padding: 1px 14px;
+    margin: 0 -14px;
   }
 
   /* Floating icon */
