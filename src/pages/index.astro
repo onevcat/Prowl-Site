@@ -18,7 +18,7 @@ import Nav from "../components/Nav.astro";
 
         <div class="cta-group">
           <a
-            href="https://github.com/onevcat/Prowl/releases/latest"
+            href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
             class="btn btn-primary"
             target="_blank"
             rel="noopener"
@@ -237,17 +237,11 @@ import Nav from "../components/Nav.astro";
         Built by <a
           href="https://github.com/onevcat"
           target="_blank"
-          rel="noopener">onevcat</a
-        > · A fork of <a
-          href="https://supacode.sh/"
-          target="_blank"
-          rel="noopener">Supacode</a
-        >
+          rel="noopener">@onevcat</a
+        > with <span class="heart">&hearts;</span>
       </p>
     </footer>
 
-    <!-- Subtle noise texture overlay -->
-    <div class="noise" aria-hidden="true"></div>
   </main>
 </Layout>
 
@@ -340,14 +334,6 @@ import Nav from "../components/Nav.astro";
       var(--bg-primary);
   }
 
-  .noise {
-    position: absolute;
-    inset: 0;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-
   /* Layout: left text, right visual */
   .hero-layout {
     position: relative;
@@ -356,7 +342,7 @@ import Nav from "../components/Nav.astro";
     grid-template-columns: 2fr 3fr;
     gap: 3rem;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1080px;
     width: 100%;
     padding: 6rem 3rem 3rem;
   }
