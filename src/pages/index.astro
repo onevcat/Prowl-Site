@@ -232,6 +232,20 @@ import Nav from "../components/Nav.astro";
       </div>
     </div>
 
+    <footer class="footer">
+      <p>
+        Built by <a
+          href="https://github.com/onevcat"
+          target="_blank"
+          rel="noopener">onevcat</a
+        > · A fork of <a
+          href="https://supacode.sh/"
+          target="_blank"
+          rel="noopener">Supacode</a
+        >
+      </p>
+    </footer>
+
     <!-- Subtle noise texture overlay -->
     <div class="noise" aria-hidden="true"></div>
   </main>
@@ -859,6 +873,30 @@ import Nav from "../components/Nav.astro";
     bottom: 8%;
     left: 65%;
     transform: rotate(-65deg);
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    z-index: 1;
+  }
+
+  .footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-decoration-color: rgba(136, 153, 180, 0.3);
+    text-underline-offset: 2px;
+  }
+
+  .footer a:hover {
+    color: var(--accent);
+    opacity: 1;
   }
 
   /* Responsive */
