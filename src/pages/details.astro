@@ -53,8 +53,8 @@ import Nav from "../components/Nav.astro";
       </svg>
     </div>
 
-    <!-- Feature 2: Diff View (inset card) -->
-    <section class="feature-section reverse" id="diff-view">
+    <!-- Feature 2: Diff View (reversed side-by-side) -->
+    <section class="feature-section feature-reverse" id="diff-view">
       <div class="feature-content">
         <div class="feature-header">
           <span class="feature-number">02</span>
@@ -88,26 +88,28 @@ import Nav from "../components/Nav.astro";
       </svg>
     </div>
 
-    <!-- Feature 3: Canvas (highlight) -->
-    <section class="feature-section feature-highlight" id="canvas">
-      <div class="feature-content">
-        <div class="feature-header">
-          <span class="feature-number">03</span>
-          <h2 class="feature-title feature-title-lg">Canvas</h2>
-        </div>
-        <p class="feature-tagline">All your agents, one view.</p>
-        <ul class="feature-details">
-          <li>Every tab as a draggable, resizable card</li>
-          <li>Pinch-to-zoom with cursor anchoring</li>
-          <li>Auto-organize with balanced grid layout</li>
-        </ul>
-      </div>
-      <div class="feature-image-wrapper">
-        <div class="image-placeholder">
-          <img src="/images/feature-canvas.png" alt="Canvas screenshot" class="feature-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-          <div class="placeholder-fallback">
-            <span>Screenshot coming soon</span>
+    <!-- Feature 3: Canvas (highlight card — full-width star) -->
+    <section class="feature-card" id="canvas">
+      <div class="feature-card-inner">
+        <div class="feature-image-wrapper feature-card-image">
+          <div class="image-placeholder">
+            <img src="/images/feature-canvas.png" alt="Canvas screenshot" class="feature-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="placeholder-fallback">
+              <span>Screenshot coming soon</span>
+            </div>
           </div>
+        </div>
+        <div class="feature-content feature-card-text">
+          <div class="feature-header">
+            <span class="feature-number">03</span>
+            <h2 class="feature-title feature-title-lg">Canvas</h2>
+          </div>
+          <p class="feature-tagline">All your agents, one view.</p>
+          <ul class="feature-details">
+            <li>Every tab as a draggable, resizable card</li>
+            <li>Pinch-to-zoom with cursor anchoring</li>
+            <li>Auto-organize with balanced grid layout</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -127,7 +129,7 @@ import Nav from "../components/Nav.astro";
       <p class="cta-text">Start prowling.</p>
       <div class="cta-group">
         <a
-          href="https://github.com/onevcat/Prowl/releases/latest"
+          href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
           class="btn btn-primary"
           target="_blank"
           rel="noopener"
@@ -224,22 +226,59 @@ import Nav from "../components/Nav.astro";
     padding: 4rem 4rem;
   }
 
-  .feature-section.reverse {
+  /* Reverse variation (Diff View — image left, text right) */
+  .feature-reverse {
     grid-template-columns: 3fr 2fr;
   }
 
-  .feature-section.reverse .feature-content {
+  .feature-reverse .feature-content {
     order: 2;
   }
 
-  .feature-section.reverse .feature-image-wrapper {
+  .feature-reverse .feature-image-wrapper {
     order: 1;
   }
 
-  /* Highlight variation (Canvas — the star) */
-  .feature-highlight {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+  /* Highlight card variation (Canvas — the star, full-width stacked) */
+  .feature-card {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 4rem;
+  }
+
+  .feature-card-inner {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-card-image {
+    width: 100%;
+  }
+
+  .feature-card-image .image-placeholder {
+    border-radius: 0;
+  }
+
+  .feature-card-image .feature-image {
+    border-radius: 0;
+  }
+
+  .feature-card-text {
+    padding: 1.5rem 3rem 2rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .feature-card-text .feature-header {
+    justify-content: center;
+  }
+
+  .feature-card-text .feature-details {
+    align-items: center;
   }
 
   .feature-title-lg {
@@ -525,9 +564,21 @@ import Nav from "../components/Nav.astro";
       padding: 3rem 1.5rem;
     }
 
-    .feature-section.reverse .feature-content,
-    .feature-section.reverse .feature-image-wrapper {
+    .feature-reverse .feature-content,
+    .feature-reverse .feature-image-wrapper {
       order: unset;
+    }
+
+    .feature-card {
+      padding: 1rem 1.5rem;
+    }
+
+    .feature-card-inner {
+      border-radius: 12px;
+    }
+
+    .feature-card-text {
+      padding: 2rem 1.5rem;
     }
 
     .page-title {
