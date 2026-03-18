@@ -116,11 +116,18 @@ import Nav from "../components/Nav.astro";
       …and everything else great from <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>.
     </p>
 
+    <ul class="highlights">
+      <li>Full Native <span class="hl-sub">— libghostty, no Electron</span></li>
+      <li>Vertical Tabs <span class="hl-sub">— repos &amp; worktrees</span></li>
+      <li>GitHub Integration <span class="hl-sub">— PR notifications</span></li>
+      <li>Agent Reminder <span class="hl-sub">— task completion alerts</span></li>
+    </ul>
+
     <section class="cta-section">
       <p class="cta-text">Start prowling.</p>
       <div class="cta-group">
         <a
-          href="https://github.com/onevcat/supacode/releases/latest"
+          href="https://github.com/onevcat/Prowl/releases/latest"
           class="btn btn-primary"
           target="_blank"
           rel="noopener"
@@ -128,7 +135,7 @@ import Nav from "../components/Nav.astro";
           Download Prowl
         </a>
         <a
-          href="https://github.com/onevcat/supacode"
+          href="https://github.com/onevcat/Prowl"
           class="btn btn-secondary"
           target="_blank"
           rel="noopener"
@@ -212,7 +219,7 @@ import Nav from "../components/Nav.astro";
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 4rem 4rem;
   }
 
   .feature-section.reverse {
@@ -414,6 +421,26 @@ import Nav from "../components/Nav.astro";
     opacity: 1;
   }
 
+  /* Highlights */
+  .highlights {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    list-style: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 4rem 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .hl-sub {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
   /* Bottom CTA */
   .cta-section {
     text-align: center;
@@ -511,6 +538,12 @@ import Nav from "../components/Nav.astro";
 
     .feature-title-lg {
       font-size: 1.6rem;
+    }
+
+    .highlights {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem 1.5rem;
     }
 
     .cta-group {
