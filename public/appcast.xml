@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Prowl</title>
+        <item>
+            <title>2026.3.18</title>
+            <pubDate>Wed, 18 Mar 2026 10:54:52 +0900</pubDate>
+            <sparkle:version>20260318</sparkle:version>
+            <sparkle:shortVersionString>2026.3.18</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[**Full Changelog**: https://github.com/onevcat/Prowl/compare/onevcat-v2026.03.17-1a789d6...v2026.3.18
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.18/Prowl.app.zip" length="24046734" type="application/octet-stream" sparkle:edSignature="uQZyTs+Cl4ENAx1DtpJ68ZO5kxpd48ib7HXbYCnfGL1TiBlkojCg1/9wfPaY036d20NdIbI/+PDg60s7pZJbBQ=="/>
+        </item>
+    </channel>
+</rss>
