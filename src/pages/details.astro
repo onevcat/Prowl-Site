@@ -8,7 +8,7 @@ import Nav from "../components/Nav.astro";
 
   <main class="details-page">
     <section class="details-hero">
-      <h1 class="page-title">What makes Prowl different</h1>
+      <h1 class="page-title">What makes <span class="prowl-accent">Prowl</span> different</h1>
       <p class="page-subtitle">
         Features forked with intent — built for a terminal-first, agent-driven
         workflow.
@@ -22,7 +22,7 @@ import Nav from "../components/Nav.astro";
           <span class="feature-number">01</span>
           <h2 class="feature-title">Custom Actions</h2>
         </div>
-        <p class="feature-tagline">Your repo, your rules.</p>
+        <p class="feature-tagline">Your repo, your rules. IDE-like workflows.</p>
         <ul class="feature-details">
           <li>Up to 3 command buttons per repo</li>
           <li>Shell Script or Terminal Input execution</li>
@@ -186,6 +186,10 @@ import Nav from "../components/Nav.astro";
     position: relative;
     z-index: 1;
     padding-top: 4rem;
+  }
+
+  .prowl-accent {
+    color: var(--accent);
   }
 
   /* Hero */

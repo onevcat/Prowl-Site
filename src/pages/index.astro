@@ -837,7 +837,9 @@ import Nav from "../components/Nav.astro";
 
   .paw {
     position: absolute;
-    color: rgba(90, 228, 192, 0.13);
+    color: rgba(90, 228, 192, 0.22);
+    opacity: 0;
+    animation: paw-appear 0.8s ease-out forwards;
   }
 
   .p1 {
@@ -845,6 +847,7 @@ import Nav from "../components/Nav.astro";
     bottom: 8%;
     left: 50%;
     transform: rotate(-75deg);
+    animation-delay: 2.0s;
   }
 
   .p2 {
@@ -852,6 +855,7 @@ import Nav from "../components/Nav.astro";
     bottom: 4%;
     left: 58%;
     transform: rotate(-70deg);
+    animation-delay: 1.6s;
   }
 
   .p3 {
@@ -859,6 +863,12 @@ import Nav from "../components/Nav.astro";
     bottom: 8%;
     left: 65%;
     transform: rotate(-65deg);
+    animation-delay: 1.2s;
+  }
+
+  @keyframes paw-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   /* Footer */
