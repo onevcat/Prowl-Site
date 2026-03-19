@@ -3,6 +3,22 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.3.19</title>
+            <pubDate>Thu, 19 Mar 2026 22:42:28 +0900</pubDate>
+            <sparkle:version>20260320</sparkle:version>
+            <sparkle:shortVersionString>2026.3.19</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[## What's Changed
+* fix: show unescaped chinese/unicode filenames in git diff by @onevcat in https://github.com/onevcat/Prowl/pull/10
+* feat(canvas): Waterfall + row-break hybrid packing for Arrange by @onevcat in https://github.com/onevcat/Prowl/pull/8
+* feat: ⌥⌘↩ toggle Canvas with worktree+tab restoration by @onevcat in https://github.com/onevcat/Prowl/pull/11
+
+
+**Full Changelog**: https://github.com/onevcat/Prowl/compare/v2026.3.18.2...v2026.3.19
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.19/Prowl.app.zip" length="24072882" type="application/octet-stream" sparkle:edSignature="h8uujNFAOZMdf7iRmVRCABqjasyrBQe3B08nrgDFT2LtBWAPlu2RxeuTuNw6hdkhFIspXyHo/t5SOnAmOmLPAA=="/>
+        </item>
+        <item>
             <title>2026.3.18.2</title>
             <pubDate>Wed, 18 Mar 2026 22:03:52 +0900</pubDate>
             <sparkle:version>20260319</sparkle:version>
