@@ -3,6 +3,20 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.3.20</title>
+            <pubDate>Fri, 20 Mar 2026 12:19:48 +0900</pubDate>
+            <sparkle:version>20260321</sparkle:version>
+            <sparkle:shortVersionString>2026.3.20</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[Startup is faster and more reliable in this release.
+
+- Repositories now appear immediately on launch by restoring from a local snapshot cache, rather than waiting for the full live refresh to complete. The cache is stored at `~/.prowl/repository-snapshot.json` and is always followed by a background refresh to stay up to date.
+- Worktree discovery now runs in parallel across all repositories, and the bundled `wt` tool is invoked directly instead of through a login shell, reducing startup latency.
+- Fixed: Prowl no longer deletes `~/.supacode` on first launch when co-installed with Supacode. Migration now copies data to `~/.prowl` instead of moving it.
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.20/Prowl.app.zip" length="24109618" type="application/octet-stream" sparkle:edSignature="gu6N4neTCOmiP5u8GDhjmeh1TlBOhULfomgwT3gkpMcEnL/ryn9EhFEG69AFyBmNzerS3BAS3TOmmEvSSiynBA=="/>
+        </item>
+        <item>
             <title>2026.3.19</title>
             <pubDate>Thu, 19 Mar 2026 22:42:28 +0900</pubDate>
             <sparkle:version>20260320</sparkle:version>
