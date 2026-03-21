@@ -3,6 +3,22 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.3.21</title>
+            <pubDate>Sat, 21 Mar 2026 23:23:47 +0900</pubDate>
+            <sparkle:version>20260322</sparkle:version>
+            <sparkle:shortVersionString>2026.3.21</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[This release wires up several Ghostty keybindings and actions that previously had no effect in Prowl.
+
+- You can now rename a tab or terminal surface title from the command palette or a bound key. "Change Tab Title" locks the title until you clear it; "Change Terminal Title" sets the surface title and resumes auto-updates when cleared.
+- "Open Config" now opens your Ghostty configuration file in the default text editor.
+- Fullscreen (`toggle_fullscreen`), maximize (`toggle_maximize`), and background opacity (`toggle_background_opacity`) Ghostty actions now work as expected. Opacity toggling requires `background-opacity < 1` in your Ghostty config and has no effect in fullscreen.
+- The `quit` action now routes through the standard macOS termination flow, so any confirm-before-quit prompt still triggers. `close_window` closes the window containing the active terminal.
+- Fixed: The command palette no longer shows duplicate or inapplicable entries (removed redundant "Check for Updates", single-window actions like "New Window", Ghostty debug tools, and iOS-only actions).
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.21/Prowl.app.zip" length="24119987" type="application/octet-stream" sparkle:edSignature="e8rRaSpv2gv0lMdZnNlV4+QFLgfBSt9dxy19mMTb79qC50R2U6uM8eD5fLvZPYt3LNNB5kGENrCsHUTEqSivCg=="/>
+        </item>
+        <item>
             <title>2026.3.20</title>
             <pubDate>Fri, 20 Mar 2026 12:19:48 +0900</pubDate>
             <sparkle:version>20260321</sparkle:version>
