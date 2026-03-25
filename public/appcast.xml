@@ -8,16 +8,18 @@
             <sparkle:version>20260326</sparkle:version>
             <sparkle:shortVersionString>2026.3.25</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <description sparkle:format="markdown"><![CDATA[This release introduces plain folder support and includes several UX and stability improvements.
+            <description sparkle:format="markdown"><![CDATA[This release adds Canvas multi-select broadcast input — select multiple terminal cards and type once to send the same input to all of them.
 
-- Plain folders can now be added alongside Git repositories. They open directly into terminal tabs with their own toolbar, settings, and command palette entries. Git-only actions are hidden when a plain folder is selected. Folders are automatically upgraded to Git repositories when a `.git` directory is detected, and conservatively downgraded when it is removed.
-- Hotkey actions for archive and delete worktree are now scoped to the sidebar, preventing accidental triggers from the terminal. Close Window (⌘W) now works when no terminal is focused, and Show Window (⌘0) brings the main window to front.
-- Fixed: exiting Canvas could leave terminal surfaces blank. Occlusion state is now correctly restored whenever a surface is reattached, regardless of how the transition happened.
-- App size reduced by approximately 7 MB thanks to an optimized YiTong web bundle.
-- Fixed: the Settings toolbar no longer shows an unnecessary separator on macOS 26.
-- Added diagnostic logging for scroll jump events to help investigate an intermittent snap-to-bottom issue during scrollback reading.
+- Canvas multi-select: Cmd+Click to select multiple cards, Cmd+Opt+A to select all. Selected cards show a visual distinction between primary (accent ring) and followers (subtle tint).
+- Broadcast input: typing in the primary card mirrors committed text and special keys (Enter, Backspace, arrows, Tab, Escape, Ctrl+key) to all selected follower cards.
+- IME-safe broadcast: followers receive only committed text (e.g. 你好), not intermediate phonetic input (e.g. nihao). Works correctly with Chinese, Japanese, and other input methods.
+- Cmd+V paste and right-click Paste are broadcast to all selected cards.
+- Cmd+Backspace (delete line) and Cmd+Arrow (line navigation) are broadcast to followers.
+- Escape clears broadcast selection. Click a follower to promote it to primary without clearing selection.
+- Fixed: terminal scrollback position is now preserved during output, preventing unwanted scroll jumps.
+- Fixed: Cmd+W now correctly closes the focused surface in Canvas mode.
 ]]></description>
-            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.25/Prowl.app.zip" length="23037208" type="application/octet-stream" sparkle:edSignature="2T8Di5/pQylOzr1CHBjYtiyIeuo3s70FmUeLG1DLs4Jxndk1H/3iUuOZo82t9qgkU+Ba5jTzb5kAxeZTs67OBQ=="/>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.25/Prowl.app.zip" length="23037145" type="application/octet-stream" sparkle:edSignature="wIT+Kcv/WJ/g5o3CNh5/mLUEMN4SoHS+9WKiboKtJZAK3u5A043hyaxm58LQmLu1mH1nzYQf+287QLMbn6pjDQ=="/>
         </item>
         <item>
             <title>2026.3.24</title>
