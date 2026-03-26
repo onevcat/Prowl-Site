@@ -3,6 +3,19 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.3.27</title>
+            <pubDate>Fri, 27 Mar 2026 00:49:51 +0800</pubDate>
+            <sparkle:version>20260327</sparkle:version>
+            <sparkle:shortVersionString>2026.3.27</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[**New**
+
+- The sidebar now shows a small tab count badge next to each repository name, reflecting the total number of open terminal tabs across all worktrees for that repo. The badge appears automatically when tabs are open and disappears when none remain.
+- Prowl is now available via Homebrew: `brew install --cask onevcat/tap/prowl`. Updates are also delivered through the tap automatically.
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.27/Prowl.app.zip" length="23037923" type="application/octet-stream" sparkle:edSignature="giXJAvz8Wjgbi0lB/jzm7uNMcgA76VitmFStxpkQxVw915vJ39Bp8YIb+uAdHv9au3d+AtQ6w6yRwxPPvo5ECg=="/>
+        </item>
+        <item>
             <title>2026.3.25</title>
             <pubDate>Wed, 25 Mar 2026 23:07:31 +0900</pubDate>
             <sparkle:version>20260326</sparkle:version>
