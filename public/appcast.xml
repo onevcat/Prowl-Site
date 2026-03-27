@@ -3,6 +3,21 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.3.28</title>
+            <pubDate>Sat, 28 Mar 2026 00:32:39 +0800</pubDate>
+            <sparkle:version>20260328</sparkle:version>
+            <sparkle:shortVersionString>2026.3.28</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[**New**
+- Terminal font size now persists across sessions. Prowl saves your preferred size and restores it when you relaunch. Font size controls are available in the View menu.
+- Cmd+0 has been freed from its previous font-size binding, making it available for custom Ghostty keybindings.
+
+**Fixed**
+- Plain folder repositories now show the correct open tab count in the sidebar header.
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.28/Prowl.app.zip" length="23071681" type="application/octet-stream" sparkle:edSignature="JgTQJtyOo2vF3mio9WykUFB27fYWBjoKfK4XnI5062hP7zSKeC1wvt3WvkF1Vno6Ol0fReldz1xDMUU1Z5D7BA=="/>
+        </item>
+        <item>
             <title>2026.3.27</title>
             <pubDate>Fri, 27 Mar 2026 00:49:51 +0800</pubDate>
             <sparkle:version>20260327</sparkle:version>
@@ -139,19 +154,6 @@
 - Fixed: the Canvas sidebar button label is now properly centered, and no longer bleeds through overlapping content when scrolling.
 ]]></description>
             <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.18.2/Prowl.app.zip" length="24054120" type="application/octet-stream" sparkle:edSignature="RSDxRCYmmM5KEAX+PKzOSIxMnsxJbfoIxGMO6JdpJmELau2xVRwwl7T2NlkdRqkIzEAFcl7BkoBJZ4dQZzcGAQ=="/>
-        </item>
-        <item>
-            <title>2026.3.18</title>
-            <pubDate>Wed, 18 Mar 2026 10:54:52 +0900</pubDate>
-            <sparkle:version>20260318</sparkle:version>
-            <sparkle:shortVersionString>2026.3.18</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <description sparkle:format="markdown"><![CDATA[Initial public release of Prowl, rebranded from Supacode.
-
-- Prowl is now the app's name and identity, with an updated app icon to match.
-- Sparkle auto-update support is included, so future releases will be delivered automatically.
-]]></description>
-            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.18/Prowl.app.zip" length="24046734" type="application/octet-stream" sparkle:edSignature="uQZyTs+Cl4ENAx1DtpJ68ZO5kxpd48ib7HXbYCnfGL1TiBlkojCg1/9wfPaY036d20NdIbI/+PDg60s7pZJbBQ=="/>
         </item>
     </channel>
 </rss>
