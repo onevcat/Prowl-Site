@@ -220,22 +220,46 @@ import Nav from "../components/Nav.astro";
       </div>
 
       <!-- Paw prints between title and terminal -->
-      <div class="paw-bridge" aria-hidden="true">
-        <svg class="paw p1" viewBox="0 0 20 20" fill="currentColor">
+      <div class="paw-bridge">
+        <svg
+          class="paw p1"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
           <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
           <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
           <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
         </svg>
-        <svg class="paw p2" viewBox="0 0 20 20" fill="currentColor">
+        <svg
+          class="paw p2"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
           <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
           <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
           <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
         </svg>
-        <svg class="paw p3" viewBox="0 0 20 20" fill="currentColor">
+        <svg
+          class="paw p3"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
           <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
           <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
@@ -349,6 +373,37 @@ import Nav from "../components/Nav.astro";
         brewCopyButton.textContent = "Copy";
       }, 1200);
     }
+  });
+
+  const pawPrints = document.querySelectorAll<HTMLElement>(".paw[data-paw]");
+  pawPrints.forEach((paw) => {
+    paw.setAttribute("aria-pressed", "false");
+  });
+
+  function togglePaw(paw: HTMLElement) {
+    const isLit = paw.classList.toggle("lit");
+    paw.setAttribute("aria-pressed", String(isLit));
+  }
+
+  document.addEventListener("click", (event) => {
+    const x = event.clientX;
+    const y = event.clientY;
+    for (const paw of pawPrints) {
+      const rect = paw.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        togglePaw(paw);
+        break;
+      }
+    }
+  });
+
+  pawPrints.forEach((paw) => {
+    paw.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        togglePaw(paw);
+      }
+    });
   });
 
   // Start auto-rotation
@@ -913,6 +968,14 @@ import Nav from "../components/Nav.astro";
     color: rgba(90, 228, 192, 0.22);
     opacity: 0;
     animation: paw-appear 0.8s ease-out forwards;
+    cursor: pointer;
+    transition:
+      color 0.25s ease,
+      filter 0.25s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
+    outline: none;
+    pointer-events: auto;
   }
 
   .p1 {
@@ -937,6 +1000,16 @@ import Nav from "../components/Nav.astro";
     left: 65%;
     transform: rotate(-65deg);
     animation-delay: 1.2s;
+  }
+
+  .paw.lit {
+    color: rgba(142, 255, 219, 0.98);
+    filter: drop-shadow(0 0 12px rgba(90, 228, 192, 0.65));
+  }
+
+  .paw:focus-visible {
+    outline: 1px solid rgba(90, 228, 192, 0.55);
+    outline-offset: 3px;
   }
 
   @keyframes paw-appear {
