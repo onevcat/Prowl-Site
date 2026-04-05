@@ -1,0 +1,262 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import { marked } from "marked";
+
+const changelogUrl =
+  `https://raw.githubusercontent.com/onevcat/Prowl/main/CHANGELOG.md?t=${Date.now()}`;
+const response = await fetch(changelogUrl);
+const markdown = await response.text();
+
+const body = markdown.replace(/^# Changelog\s*\n/, "");
+
+// Split into version sections to isolate the latest release
+const sections = body.split(/\n(?=## )/);
+const latestHtml = await marked.parse(sections[0] || "");
+const olderHtml = await marked.parse(sections.slice(1).join("\n"));
+---
+
+<Layout title="Prowl — Releases">
+  <Nav active="releases" />
+
+  <main class="releases-page">
+    <header class="releases-header">
+      <h1 class="releases-title">Releases</h1>
+      <p class="releases-sub">
+        What's new in each release of Prowl.
+      </p>
+    </header>
+
+    <section class="latest-card">
+      <span class="latest-badge">Latest</span>
+      <article class="latest-content" set:html={latestHtml} />
+    </section>
+
+    <article class="releases-content" set:html={olderHtml} />
+  </main>
+</Layout>
+
+<style>
+  .releases-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8rem 1.5rem 4rem;
+  }
+
+  .releases-header {
+    margin-bottom: 3rem;
+  }
+
+  .releases-title {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .releases-sub {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+
+  /* Latest version card */
+  .latest-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .latest-badge {
+    position: absolute;
+    top: -0.65rem;
+    left: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--bg-primary);
+    background: var(--accent);
+    padding: 0.15rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .latest-content :global(h2) {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .latest-content :global(h2 a) {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .latest-content :global(h2 a:hover) {
+    color: var(--accent);
+  }
+
+  /* Summary paragraph in latest card — prominent */
+  .latest-content :global(h2 + p) {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .latest-content :global(h3) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-dim);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .latest-content :global(p) {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .latest-content :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .latest-content :global(li) {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .latest-content :global(li::before) {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .latest-content :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .latest-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(90, 228, 192, 0.08);
+    color: var(--accent-dim);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  /* Older version entries */
+  .releases-content :global(h2) {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 3rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .releases-content :global(h2 a) {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .releases-content :global(h2 a:hover) {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  /* Summary paragraph in older versions — slightly emphasized */
+  .releases-content :global(h2 + p) {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .releases-content :global(h3) {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .releases-content :global(p) {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .releases-content :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .releases-content :global(li) {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .releases-content :global(li::before) {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .releases-content :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .releases-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(90, 228, 192, 0.08);
+    color: var(--accent-dim);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .releases-page {
+      padding-top: 6rem;
+    }
+
+    .releases-title {
+      font-size: 1.5rem;
+    }
+
+    .latest-card {
+      padding: 1.5rem;
+    }
+
+    .latest-content :global(h2) {
+      font-size: 1.25rem;
+    }
+  }
+</style>

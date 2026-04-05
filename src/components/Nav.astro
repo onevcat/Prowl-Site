@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active?: "home" | "details" | "changelog";
+  active?: "home" | "details" | "releases";
 }
 
 const { active = "home" } = Astro.props;
@@ -22,10 +22,10 @@ const { active = "home" } = Astro.props;
       Details
     </a>
     <a
-      href="/changelog"
-      class:list={["nav-link", { active: active === "changelog" }]}
+      href="/releases"
+      class:list={["nav-link", { active: active === "releases" }]}
     >
-      Changelog
+      Releases
     </a>
     <a
       href="https://github.com/onevcat/Prowl"
