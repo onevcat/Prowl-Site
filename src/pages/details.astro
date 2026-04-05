@@ -27,6 +27,13 @@ import Nav from "../components/Nav.astro";
           </svg>
         </div>
       </div>
+      <div class="prologue-hero-image">
+        <img
+          src="/images/promotion.webp"
+          alt="Prowl app — vertical tabs, terminal, command palette, and split view"
+          class="hero-screenshot"
+        />
+      </div>
     </section>
 
     <!-- ═══ Act 1 — Canvas ═══ -->
@@ -41,22 +48,23 @@ import Nav from "../components/Nav.astro";
               <br />Where?
             </p>
             <p class="act-resolve">
-              Canvas gives you the bird's-eye view — every agent as a
-              draggable card, all on one screen.
+              Canvas gives you the bird's-eye view — every card is a
+              real, live terminal you can read and interact with.
             </p>
             <ul class="act-details">
-              <li>Every tab as a resizable, draggable card</li>
+              <li>Each card is a live terminal — not a thumbnail, not a preview</li>
+              <li>Finished tasks light up instantly so you never miss a completion</li>
               <li>Broadcast one message to multiple agents at once</li>
-              <li>Auto-organize with a balanced grid layout</li>
             </ul>
           </div>
           <div class="act-visual">
             <div class="canvas-demo" id="canvas-demo">
               <div class="canvas-card c-card" id="cc-1">
-                <div class="cc-title">prowl <span class="cc-badge running"></span></div>
+                <div class="cc-title" id="cc-1-title">prowl <span class="cc-badge running" id="cc-1-badge"></span></div>
                 <div class="cc-body">
                   <span class="cc-line ok">&#10003; 23 tests passed</span>
                 </div>
+                <div class="canvas-done-pulse" id="canvas-done-pulse"></div>
               </div>
               <div class="canvas-card c-card" id="cc-2">
                 <div class="cc-title">kingfisher <span class="cc-badge running"></span></div>
@@ -81,8 +89,6 @@ import Nav from "../components/Nav.astro";
                 <span class="broadcast-icon">&#9654;</span>
                 <span class="broadcast-text">Send to all: <span class="accent">npm run lint</span></span>
               </div>
-              <!-- Done overlay on card 1 -->
-              <div class="canvas-done-pulse" id="canvas-done-pulse"></div>
             </div>
           </div>
         </div>
@@ -102,14 +108,16 @@ import Nav from "../components/Nav.astro";
               <br />In most terminals, it's flying blind.
             </p>
             <p class="act-resolve">
-              Prowl's CLI turns your terminal into a programmable API — send
-              commands, wait for completion, and capture output atomically.
+              Prowl exposes a full CLI that both you and your agents
+              can use to control the terminal programmatically — send
+              commands, capture output, orchestrate multiple panes.
             </p>
             <ul class="act-details">
-              <li><kbd>prowl list</kbd> — discover all panes &amp; status</li>
-              <li><kbd>prowl send --capture</kbd> — execute &amp; capture output</li>
+              <li><kbd>prowl list</kbd> — discover all panes &amp; their status</li>
+              <li><kbd>prowl send --capture</kbd> — execute &amp; capture output in one shot</li>
               <li><kbd>prowl read</kbd> — read screen content on demand</li>
               <li><kbd>prowl key</kbd> — send keystrokes programmatically</li>
+              <li>Multi-agent orchestration, CI scripting, automated workflows — the only limit is your imagination</li>
             </ul>
           </div>
           <div class="act-visual">
@@ -148,16 +156,18 @@ import Nav from "../components/Nav.astro";
             <span class="act-label">03</span>
             <h2 class="act-title">Custom Actions</h2>
             <p class="act-scene">
-              Same three commands. Every repo. Every day.
-              <br />Muscle memory shouldn't need a terminal prompt.
+              Build, test, deploy — the same commands, typed out the same way,
+              in every repo, every single day. Stop repeating yourself.
             </p>
             <p class="act-resolve">
-              Pin your workflows to buttons. Trigger them with a single keystroke.
+              Pin any workflow to a button. Trigger it with a keystroke.
+              Pair it with <kbd>claude&nbsp;-p</kbd> or <kbd>codex&nbsp;exec</kbd>
+              to turn your terminal into a daily AI-powered assistant.
             </p>
             <ul class="act-details">
-              <li>Up to 3 command buttons per repo</li>
-              <li>Shell script or terminal input execution</li>
-              <li>Custom keyboard shortcuts with modifiers</li>
+              <li>Unlimited action buttons per repo — add as many as you need</li>
+              <li>Shell script or direct terminal input, each with its own shortcut</li>
+              <li>One keystroke to kick off builds, tests, agents, or deploy pipelines</li>
             </ul>
           </div>
           <div class="act-visual">
@@ -210,7 +220,8 @@ import Nav from "../components/Nav.astro";
             <h3 class="ic-title">Full Native</h3>
             <p class="ic-desc">
               Powered by libghostty. No Electron, no web views —
-              just raw native performance on your Mac.
+              just raw native speed. No surprising edge cases,
+              no rendering glitches. CJK-friendly out of the box.
             </p>
           </div>
           <div class="interlude-card" id="ic-tabs">
@@ -246,6 +257,7 @@ import Nav from "../components/Nav.astro";
     <section class="act act-finale" id="act-finale">
       <div class="finale-inner">
         <p class="finale-title">Start prowling.</p>
+        <p class="oss-note">Free &amp; Open Source</p>
         <div class="finale-cta">
           <a
             href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
@@ -311,6 +323,19 @@ import Nav from "../components/Nav.astro";
     });
   }
 
+  /* ── Prologue hero image: scale up gently ── */
+  if (!prefersReduced) {
+    gsap.from(".prologue-hero-image", {
+      opacity: 0, y: 40, scale: 0.96,
+      duration: 1, ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".prologue-hero-image",
+        start: "top 90%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
+
   /* ── Act 1: Canvas ── */
   if (!prefersReduced) {
     const canvasTl = gsap.timeline({
@@ -336,10 +361,20 @@ import Nav from "../components/Nav.astro";
         x: 0, y: 0, rotation: 0, opacity: 1,
         duration: 0.4, stagger: 0.05, ease: "power2.out",
       })
-      // Phase 2: done pulse on card 1
+      // Phase 2: done pulse on card 1 + title turns golden
+      .to("#cc-1-title", {
+        background: "rgba(245, 166, 35, 0.15)",
+        borderBottomColor: "rgba(245, 166, 35, 0.2)",
+        duration: 0.2,
+      }, "+=0.1")
+      .to("#cc-1-badge", {
+        background: "#f5a623",
+        boxShadow: "0 0 6px rgba(245, 166, 35, 0.5)",
+        duration: 0.2,
+      }, "<")
       .to("#canvas-done-pulse", {
         opacity: 1, scale: 1, duration: 0.2,
-      }, "+=0.1")
+      }, "<")
       // Phase 3: broadcast bar
       .to("#canvas-broadcast", {
         opacity: 1, y: 0, duration: 0.2,
@@ -575,6 +610,7 @@ import Nav from "../components/Nav.astro";
   .act-prologue {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -612,8 +648,27 @@ import Nav from "../components/Nav.astro";
     margin-top: 1.5rem;
   }
 
-  .scroll-hint {
+  .prologue-hero-image {
     margin-top: 3rem;
+    max-width: 1350px;
+    width: 100%;
+  }
+
+  .hero-screenshot {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .oss-note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .scroll-hint {
+    margin-top: 2rem;
     color: var(--text-muted);
     animation: bounce 2s ease-in-out infinite;
   }
@@ -661,7 +716,10 @@ import Nav from "../components/Nav.astro";
     display: flex;
     align-items: center;
     gap: 6px;
+    margin: -10px -12px 0;
+    padding: 10px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px 8px 0 0;
     padding-bottom: 5px;
   }
 
@@ -709,13 +767,14 @@ import Nav from "../components/Nav.astro";
     font-size: 0.55rem;
   }
 
+  .c-card {
+    position: relative;
+  }
+
   .canvas-done-pulse {
     position: absolute;
-    top: 16px;
-    left: 16px;
-    width: calc(50% - 21px);
-    height: calc(50% - 35px);
-    border-radius: 8px;
+    inset: -2px;
+    border-radius: 10px;
     border: 2px solid var(--accent);
     box-shadow: 0 0 16px rgba(90, 228, 192, 0.3);
     pointer-events: none;
