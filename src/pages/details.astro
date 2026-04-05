@@ -7,359 +7,585 @@ import Nav from "../components/Nav.astro";
   <Nav active="details" />
 
   <main class="details-page">
-    <section class="details-hero">
-      <h1 class="page-title">What makes <span class="prowl-accent">Prowl</span> different</h1>
-      <p class="page-subtitle">
-        Features forked with intent — built for a terminal-first, agent-driven
-        workflow.
-      </p>
-    </section>
 
-    <!-- Feature 1: Custom Actions -->
-    <section class="feature-section" id="custom-actions">
-      <div class="feature-content">
-        <div class="feature-header">
-          <span class="feature-number">01</span>
-          <h2 class="feature-title">Custom Actions</h2>
-        </div>
-        <p class="feature-tagline">Your repo, your rules. IDE-like workflows.</p>
-        <ul class="feature-details">
-          <li>Up to 3 command buttons per repo</li>
-          <li>Shell Script or Terminal Input execution</li>
-          <li>Custom keyboard shortcuts with modifiers</li>
-        </ul>
-        <div class="feature-shortcut">
-          <kbd>&#8984;</kbd> + custom key per action
+    <!-- ═══ Prologue ═══ -->
+    <section class="act act-prologue" id="prologue">
+      <div class="act-inner">
+        <h1 class="prologue-title">
+          Your terminal wasn't built for <span class="accent">agents</span>.
+        </h1>
+        <p class="prologue-sub">
+          You're not just typing commands anymore — you're orchestrating AI agents
+          across repos, branches, and ideas. Everything changed. Except your terminal.
+        </p>
+        <p class="prologue-sub prologue-sub-alt">
+          Until now.
+        </p>
+        <div class="scroll-hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24">
+            <path d="M12 5v14m0 0l-5-5m5 5l5-5" />
+          </svg>
         </div>
       </div>
-      <div class="feature-image-wrapper">
-        <div class="image-placeholder">
-          <img src="/images/feature-custom-actions.png" alt="Custom Actions screenshot" class="feature-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-          <div class="placeholder-fallback">
-            <span>Screenshot coming soon</span>
+      <div class="prologue-hero-image">
+        <img
+          src="/images/promotion.webp"
+          alt="Prowl app — vertical tabs, terminal, command palette, and split view"
+          class="hero-screenshot"
+        />
+      </div>
+    </section>
+
+    <!-- ═══ Act 1 — Canvas ═══ -->
+    <section class="act act-canvas" id="act-canvas">
+      <div class="act-pin-wrap">
+        <div class="act-layout">
+          <div class="act-text">
+            <span class="act-label">01</span>
+            <h2 class="act-title">Canvas</h2>
+            <p class="act-scene">
+              Three agents running. One just finished.
+              <br />Where?
+            </p>
+            <p class="act-resolve">
+              Canvas gives you the bird's-eye view — every card is a
+              real, live terminal you can read and interact with.
+            </p>
+            <ul class="act-details">
+              <li>Each card is a live terminal — not a thumbnail, not a preview</li>
+              <li>Finished tasks light up instantly so you never miss a completion</li>
+              <li>Broadcast one message to multiple agents at once</li>
+            </ul>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Paw divider -->
-    <div class="paw-divider" aria-hidden="true">
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
-        <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
-        <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
-        <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
-        <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
-        <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
-      </svg>
-    </div>
-
-    <!-- Feature 2: Diff View (reversed side-by-side) -->
-    <section class="feature-section feature-reverse" id="diff-view">
-      <div class="feature-content">
-        <div class="feature-header">
-          <span class="feature-number">02</span>
-          <h2 class="feature-title">Diff View</h2>
-        </div>
-        <p class="feature-tagline">See what changed, instantly.</p>
-        <ul class="feature-details">
-          <li>Quickly open and inspect diffs</li>
-          <li>Split view and unified diff modes</li>
-          <li>File tree sidebar + instant switching</li>
-        </ul>
-      </div>
-      <div class="feature-image-wrapper">
-        <div class="image-placeholder">
-          <img src="/images/feature-diff-view.png" alt="Diff View screenshot" class="feature-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-          <div class="placeholder-fallback">
-            <span>Screenshot coming soon</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Paw divider -->
-    <div class="paw-divider" aria-hidden="true">
-      <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
-        <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
-        <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
-        <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
-        <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
-        <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
-      </svg>
-    </div>
-
-    <!-- Feature 3: Canvas (highlight card — full-width star) -->
-    <section class="feature-card" id="canvas">
-      <div class="feature-card-inner">
-        <div class="feature-image-wrapper feature-card-image">
-          <div class="image-placeholder">
-            <img src="/images/feature-canvas.png" alt="Canvas screenshot" class="feature-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-            <div class="placeholder-fallback">
-              <span>Screenshot coming soon</span>
+          <div class="act-visual">
+            <div class="canvas-demo" id="canvas-demo">
+              <div class="canvas-card c-card" id="cc-1">
+                <div class="cc-title" id="cc-1-title">prowl <span class="cc-badge running" id="cc-1-badge"></span></div>
+                <div class="cc-body">
+                  <span class="cc-line ok">&#10003; 23 tests passed</span>
+                </div>
+                <div class="canvas-done-pulse" id="canvas-done-pulse"></div>
+              </div>
+              <div class="canvas-card c-card" id="cc-2">
+                <div class="cc-title">kingfisher <span class="cc-badge running"></span></div>
+                <div class="cc-body">
+                  <span class="cc-line">codex &#8230; 3 files</span>
+                </div>
+              </div>
+              <div class="canvas-card c-card" id="cc-3">
+                <div class="cc-title">MeetCat <span class="cc-badge running"></span></div>
+                <div class="cc-body">
+                  <span class="cc-line">vitest run &#8230;</span>
+                </div>
+              </div>
+              <div class="canvas-card c-card" id="cc-4">
+                <div class="cc-title">YiTong <span class="cc-badge idle"></span></div>
+                <div class="cc-body">
+                  <span class="cc-line muted">idle</span>
+                </div>
+              </div>
+              <!-- Broadcast bar -->
+              <div class="canvas-broadcast" id="canvas-broadcast">
+                <span class="broadcast-icon">&#9654;</span>
+                <span class="broadcast-text">Send to all: <span class="accent">npm run lint</span></span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="feature-content feature-card-text">
-          <div class="feature-header">
-            <span class="feature-number">03</span>
-            <h2 class="feature-title feature-title-lg">Canvas</h2>
+      </div>
+    </section>
+
+    <!-- ═══ Act 2 — CLI ═══ -->
+    <section class="act act-cli" id="act-cli">
+      <div class="act-pin-wrap">
+        <div class="act-layout act-layout-reverse">
+          <div class="act-text">
+            <span class="act-label">02</span>
+            <h2 class="act-title">CLI</h2>
+            <p class="act-scene">
+              Your agent needs to run a test, read the result,
+              and decide what to do next.
+              <br />In most terminals, it's flying blind.
+            </p>
+            <p class="act-resolve">
+              Prowl exposes a full CLI that both you and your agents
+              can use to control the terminal programmatically — send
+              commands, capture output, orchestrate multiple panes.
+            </p>
+            <ul class="act-details">
+              <li><kbd>prowl list</kbd> — discover all panes &amp; their status</li>
+              <li><kbd>prowl send --capture</kbd> — execute &amp; capture output in one shot</li>
+              <li><kbd>prowl read</kbd> — read screen content on demand</li>
+              <li><kbd>prowl key</kbd> — send keystrokes programmatically</li>
+              <li>Multi-agent orchestration, CI scripting, automated workflows — the only limit is your imagination</li>
+            </ul>
           </div>
-          <p class="feature-tagline">All your agents, one view.</p>
-          <ul class="feature-details">
-            <li>Every tab as a draggable, resizable card</li>
-            <li>Send one message to multiple cards at once</li>
-            <li>Auto-organize with balanced grid layout</li>
-          </ul>
+          <div class="act-visual">
+            <div class="cli-demo" id="cli-demo">
+              <div class="cli-titlebar">
+                <span class="cli-dot r"></span>
+                <span class="cli-dot y"></span>
+                <span class="cli-dot g"></span>
+                <span class="cli-title">Terminal</span>
+              </div>
+              <div class="cli-body">
+                <div class="cli-line" id="cli-l1"><span class="cli-prompt">$</span> prowl list --json</div>
+                <div class="cli-line cli-out" id="cli-l2">&#9656; prowl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3 tabs) <span class="ok">&#9679; running</span></div>
+                <div class="cli-line cli-out" id="cli-l3">&#9656; kingfisher &nbsp;(1 tab) &nbsp;<span class="muted">&#9675; idle</span></div>
+                <div class="cli-line cli-blank" id="cli-l4">&nbsp;</div>
+                <div class="cli-line" id="cli-l5"><span class="cli-prompt">$</span> prowl send "npm test" --capture</div>
+                <div class="cli-line cli-out" id="cli-l6"><span class="muted">&#9203; waiting for shell&#8230;</span></div>
+                <div class="cli-line cli-out" id="cli-l7"><span class="ok">&#10003; exit 0</span> <span class="muted">(3.2s)</span></div>
+                <div class="cli-line cli-blank" id="cli-l8">&nbsp;</div>
+                <div class="cli-line cli-out cli-captured" id="cli-l9">captured output:</div>
+                <div class="cli-line cli-out cli-captured" id="cli-l10">&nbsp;&nbsp;Tests &nbsp;12 passed</div>
+                <div class="cli-line cli-out cli-captured" id="cli-l11">&nbsp;&nbsp;Time &nbsp;&nbsp;3.18s</div>
+                <div class="cli-line" id="cli-l12"><span class="cli-prompt">$</span> <span class="cli-cursor">&#9646;</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <p class="upstream-note">
-      …and everything else great from <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>.
-    </p>
-
-    <ul class="highlights">
-      <li>Full Native <span class="hl-sub">— libghostty, no Electron</span></li>
-      <li>Vertical Tabs <span class="hl-sub">— repos &amp; worktrees</span></li>
-      <li>GitHub Integration <span class="hl-sub">— PR notifications</span></li>
-      <li>Agent Reminder <span class="hl-sub">— task completion alerts</span></li>
-    </ul>
-
-    <section class="cta-section">
-      <p class="cta-text">Start prowling.</p>
-      <div class="cta-group">
-        <a
-          href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
-          class="btn btn-primary"
-          target="_blank"
-          rel="noopener"
-        >
-          Download Prowl
-        </a>
-        <a
-          href="https://github.com/onevcat/Prowl"
-          class="btn btn-secondary"
-          target="_blank"
-          rel="noopener"
-        >
-          View on GitHub
-        </a>
+    <!-- ═══ Act 3 — Custom Actions ═══ -->
+    <section class="act act-actions" id="act-actions">
+      <div class="act-pin-wrap">
+        <div class="act-layout">
+          <div class="act-text">
+            <span class="act-label">03</span>
+            <h2 class="act-title">Custom Actions</h2>
+            <p class="act-scene">
+              Build, test, deploy — the same commands, typed out the same way,
+              in every repo, every single day. Stop repeating yourself.
+            </p>
+            <p class="act-resolve">
+              Pin any workflow to a button. Trigger it with a keystroke.
+              Pair it with <kbd>claude&nbsp;-p</kbd> or <kbd>codex&nbsp;exec</kbd>
+              to turn your terminal into a daily AI-powered assistant.
+            </p>
+            <ul class="act-details">
+              <li>Unlimited action buttons per repo — add as many as you need</li>
+              <li>Shell script or direct terminal input, each with its own shortcut</li>
+              <li>One keystroke to kick off builds, tests, agents, or deploy pipelines</li>
+            </ul>
+          </div>
+          <div class="act-visual">
+            <div class="actions-demo" id="actions-demo">
+              <div class="actions-titlebar">
+                <span class="actions-repo">prowl</span>
+                <div class="actions-buttons">
+                  <div class="action-pill" id="pill-build">
+                    <span class="pill-icon">&#9654;</span> Build
+                    <kbd class="pill-kbd">&#8984;B</kbd>
+                  </div>
+                  <div class="action-pill" id="pill-test">
+                    <span class="pill-icon">&#9881;</span> Test
+                    <kbd class="pill-kbd">&#8984;T</kbd>
+                  </div>
+                  <div class="action-pill" id="pill-deploy">
+                    <span class="pill-icon">&#9650;</span> Deploy
+                    <kbd class="pill-kbd">&#8984;D</kbd>
+                  </div>
+                </div>
+              </div>
+              <div class="actions-terminal" id="actions-terminal">
+                <div class="actions-line" id="al-1"><span class="cli-prompt">&#10095;</span> swift build</div>
+                <div class="actions-line actions-out" id="al-2">&nbsp;&nbsp;Compiling Prowl (42 sources)&#8230;</div>
+                <div class="actions-line actions-out ok" id="al-3">&nbsp;&nbsp;Build complete! (4.8s)</div>
+                <div class="actions-line" id="al-4"><span class="cli-prompt">&#10095;</span> <span class="cli-cursor">&#9646;</span></div>
+              </div>
+              <!-- Keystroke overlay -->
+              <div class="keystroke-overlay" id="keystroke-overlay">
+                <kbd class="keystroke-big">&#8984; B</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <footer class="footer">
-      <p>
-        Built by <a
-          href="https://github.com/onevcat"
-          target="_blank"
-          rel="noopener">@onevcat</a
-        > with <span class="heart">&hearts;</span>
-      </p>
-    </footer>
-    <!-- Lightbox modal -->
-    <div class="lightbox" id="lightbox">
-      <img class="lightbox-img" id="lightbox-img" alt="Enlarged screenshot" />
-    </div>
+    <!-- ═══ Interlude — Quick Features ═══ -->
+    <section class="act act-interlude" id="act-interlude">
+      <div class="interlude-inner">
+        <p class="interlude-lead">And everything you'd expect from a modern terminal — done right.</p>
+        <div class="interlude-grid">
+          <div class="interlude-card" id="ic-native">
+            <div class="ic-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
+            </div>
+            <h3 class="ic-title">Full Native</h3>
+            <p class="ic-desc">
+              Powered by libghostty. No Electron, no web views —
+              just raw native speed. No surprising edge cases,
+              no rendering glitches. CJK-friendly out of the box.
+            </p>
+          </div>
+          <div class="interlude-card" id="ic-tabs">
+            <div class="ic-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                <rect x="3" y="3" width="4" height="18" rx="1" />
+                <path d="M10 6h8M10 10h6M10 14h8M10 18h4" />
+              </svg>
+            </div>
+            <h3 class="ic-title">Vertical Tabs</h3>
+            <p class="ic-desc">
+              Repos, branches, and worktrees — organized in a sidebar.
+              Switch context without losing your place.
+            </p>
+          </div>
+          <div class="interlude-card" id="ic-reminder">
+            <div class="ic-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+                <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+            </div>
+            <h3 class="ic-title">Agent Reminder</h3>
+            <p class="ic-desc">
+              Get notified the moment an agent finishes — never miss
+              a completion buried in background tabs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Finale — CTA ═══ -->
+    <section class="act act-finale" id="act-finale">
+      <div class="finale-inner">
+        <p class="finale-title">Start prowling.</p>
+        <p class="oss-note">Free &amp; Open Source</p>
+        <div class="finale-cta">
+          <a
+            href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
+            class="btn btn-primary"
+            target="_blank"
+            rel="noopener"
+          >
+            Download Prowl
+          </a>
+          <a
+            href="https://github.com/onevcat/Prowl"
+            class="btn btn-secondary"
+            target="_blank"
+            rel="noopener"
+          >
+            View on GitHub
+          </a>
+        </div>
+        <p class="brew-note">
+          Or install via Homebrew:
+          <br />
+          <span class="brew-command" id="brew-command">brew install --cask onevcat/tap/prowl</span>
+          <button type="button" class="brew-copy" id="brew-copy" aria-label="Copy Homebrew command">Copy</button>
+        </p>
+        <p class="fork-note">
+          A personal fork of <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>, built for daily use.
+        </p>
+      </div>
+      <footer class="footer">
+        <p>
+          Built by <a href="https://github.com/onevcat" target="_blank" rel="noopener">@onevcat</a>
+          with <span class="heart">&hearts;</span>
+        </p>
+      </footer>
+    </section>
+
   </main>
 </Layout>
 
-<script>
-  const lightbox = document.getElementById("lightbox")!;
-  const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement;
+<!-- GSAP + ScrollTrigger -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 
-  document.querySelectorAll(".feature-image").forEach((img) => {
-    img.addEventListener("click", () => {
-      lightboxImg.src = (img as HTMLImageElement).src;
-      lightbox.classList.add("open");
+<script is:inline>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── Helpers ── */
+  const mm = gsap.matchMedia();
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ── Prologue: fade out on scroll ── */
+  if (!prefersReduced) {
+    gsap.to("#prologue .act-inner", {
+      opacity: 0,
+      y: -60,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#prologue",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
     });
-  });
+  }
 
-  lightbox.addEventListener("click", () => {
-    lightbox.classList.remove("open");
-  });
+  /* ── Prologue hero image: scale up gently ── */
+  if (!prefersReduced) {
+    gsap.from(".prologue-hero-image", {
+      opacity: 0, y: 40, scale: 0.96,
+      duration: 1, ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".prologue-hero-image",
+        start: "top 90%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") lightbox.classList.remove("open");
-  });
+  /* ── Act 1: Canvas ── */
+  if (!prefersReduced) {
+    const canvasTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#act-canvas",
+        pin: "#act-canvas .act-pin-wrap",
+        start: "top top",
+        end: "+=200%",
+        scrub: 0.6,
+      },
+    });
+
+    // Phase 1: cards start offset and scattered, animate to grid
+    gsap.set("#cc-1", { x: -40, y: 30, rotation: -8, opacity: 0 });
+    gsap.set("#cc-2", { x: 60, y: -20, rotation: 6, opacity: 0 });
+    gsap.set("#cc-3", { x: -30, y: -40, rotation: 4, opacity: 0 });
+    gsap.set("#cc-4", { x: 50, y: 50, rotation: -5, opacity: 0 });
+    gsap.set("#canvas-broadcast", { opacity: 0, y: 20 });
+    gsap.set("#canvas-done-pulse", { opacity: 0, scale: 0.8 });
+
+    canvasTl
+      .to(["#cc-1", "#cc-2", "#cc-3", "#cc-4"], {
+        x: 0, y: 0, rotation: 0, opacity: 1,
+        duration: 0.4, stagger: 0.05, ease: "power2.out",
+      })
+      // Phase 2: done pulse on card 1 + title turns golden
+      .to("#cc-1-title", {
+        background: "rgba(245, 166, 35, 0.15)",
+        borderBottomColor: "rgba(245, 166, 35, 0.2)",
+        duration: 0.2,
+      }, "+=0.1")
+      .to("#cc-1-badge", {
+        background: "#f5a623",
+        boxShadow: "0 0 6px rgba(245, 166, 35, 0.5)",
+        duration: 0.2,
+      }, "<")
+      .to("#canvas-done-pulse", {
+        opacity: 1, scale: 1, duration: 0.2,
+      }, "<")
+      // Phase 3: broadcast bar
+      .to("#canvas-broadcast", {
+        opacity: 1, y: 0, duration: 0.2,
+      }, "+=0.1");
+
+    // Text fade in
+    gsap.from("#act-canvas .act-text", {
+      opacity: 0, x: -40,
+      scrollTrigger: {
+        trigger: "#act-canvas",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Act 2: CLI ── */
+  if (!prefersReduced) {
+    const cliLines = Array.from({ length: 12 }, (_, i) => `#cli-l${i + 1}`);
+    cliLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
+
+    const cliTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#act-cli",
+        pin: "#act-cli .act-pin-wrap",
+        start: "top top",
+        end: "+=250%",
+        scrub: 0.6,
+      },
+    });
+
+    // Reveal lines one by one
+    cliLines.forEach((sel) => {
+      cliTl.to(sel, { opacity: 1, y: 0, duration: 0.08 });
+    });
+
+    gsap.from("#act-cli .act-text", {
+      opacity: 0, x: 40,
+      scrollTrigger: {
+        trigger: "#act-cli",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Act 3: Custom Actions ── */
+  if (!prefersReduced) {
+    gsap.set("#pill-build", { opacity: 0, y: 12 });
+    gsap.set("#pill-test", { opacity: 0, y: 12 });
+    gsap.set("#pill-deploy", { opacity: 0, y: 12 });
+    gsap.set("#keystroke-overlay", { opacity: 0, scale: 1.3 });
+    const actionLines = ["#al-1", "#al-2", "#al-3", "#al-4"];
+    actionLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
+
+    const actionsTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#act-actions",
+        pin: "#act-actions .act-pin-wrap",
+        start: "top top",
+        end: "+=180%",
+        scrub: 0.6,
+      },
+    });
+
+    actionsTl
+      // Phase 1: buttons appear
+      .to("#pill-build", { opacity: 1, y: 0, duration: 0.1 })
+      .to("#pill-test", { opacity: 1, y: 0, duration: 0.1 })
+      .to("#pill-deploy", { opacity: 1, y: 0, duration: 0.1 })
+      // Phase 2: keystroke flash
+      .to("#keystroke-overlay", { opacity: 1, scale: 1, duration: 0.1 }, "+=0.05")
+      .to("#keystroke-overlay", { opacity: 0, duration: 0.15 }, "+=0.1")
+      .to("#pill-build", { background: "rgba(90,228,192,0.25)", duration: 0.1 }, "<")
+      // Phase 3: terminal output
+      .to("#al-1", { opacity: 1, y: 0, duration: 0.08 })
+      .to("#al-2", { opacity: 1, y: 0, duration: 0.08 })
+      .to("#al-3", { opacity: 1, y: 0, duration: 0.08 })
+      .to("#al-4", { opacity: 1, y: 0, duration: 0.08 });
+
+    gsap.from("#act-actions .act-text", {
+      opacity: 0, x: -40,
+      scrollTrigger: {
+        trigger: "#act-actions",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Interlude: stagger fade-in ── */
+  if (!prefersReduced) {
+    gsap.from(".interlude-card", {
+      opacity: 0, y: 40,
+      stagger: 0.15,
+      scrollTrigger: {
+        trigger: "#act-interlude",
+        start: "top 75%",
+        end: "top 35%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Brew copy ── */
+  (function () {
+    var btn = document.getElementById("brew-copy");
+    var cmd = document.getElementById("brew-command");
+    if (!btn || !cmd) return;
+    btn.addEventListener("click", function () {
+      navigator.clipboard.writeText(cmd.textContent.trim()).then(function () {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(function () {
+          btn.textContent = "Copy";
+          btn.classList.remove("copied");
+        }, 1200);
+      });
+    });
+  })();
 </script>
 
 <style>
+  /* ═══════════════════════════════════════
+     Base
+     ═══════════════════════════════════════ */
   .details-page {
     position: relative;
     z-index: 1;
-    padding-top: 4rem;
   }
 
-  .prowl-accent {
-    color: var(--accent);
+  .accent { color: var(--accent); }
+  .ok { color: var(--accent-dim); }
+  .muted { color: var(--text-muted); }
+
+  /* ═══════════════════════════════════════
+     Act — shared
+     ═══════════════════════════════════════ */
+  .act {
+    position: relative;
   }
 
-  /* Hero */
-  .details-hero {
-    text-align: center;
-    padding: 6rem 2rem 4rem;
-  }
-
-  .page-title {
-    font-family: var(--font-mono);
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-  }
-
-  .page-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* Feature sections */
-  .feature-section {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-    gap: 3rem;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 4rem 4rem;
-  }
-
-  /* Reverse variation (Diff View — image left, text right) */
-  .feature-reverse {
-    grid-template-columns: 3fr 2fr;
-  }
-
-  .feature-reverse .feature-content {
-    order: 2;
-  }
-
-  .feature-reverse .feature-image-wrapper {
-    order: 1;
-  }
-
-  /* Highlight card variation (Canvas — the star, full-width stacked) */
-  .feature-card {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 4rem;
-  }
-
-  .feature-card-inner {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
+  .act-pin-wrap {
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 3rem;
   }
 
-  .feature-card-image {
+  .act-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1100px;
     width: 100%;
   }
 
-  .feature-card-image .image-placeholder {
-    border-radius: 0;
-  }
+  .act-layout-reverse .act-text { order: 2; }
+  .act-layout-reverse .act-visual { order: 1; }
 
-  .feature-card-image .feature-image {
-    border-radius: 0;
-  }
-
-  .feature-card-text {
-    padding: 1.5rem 3rem 2rem;
-    text-align: center;
-    align-items: center;
-  }
-
-  .feature-card-text .feature-header {
-    justify-content: center;
-  }
-
-  .feature-card-text .feature-details {
-    align-items: center;
-  }
-
-  .feature-title-lg {
-    font-size: 2.25rem;
-  }
-
-  /* Keyboard shortcut badge */
-  .feature-shortcut {
-    margin-top: 1.25rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .feature-shortcut kbd,
-  .feature-details kbd {
-    display: inline-block;
-    padding: 1px 6px;
+  .act-label {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    line-height: 1.4;
-  }
-
-  /* Paw print divider */
-  .paw-divider {
-    display: flex;
-    justify-content: center;
-    padding: 0.5rem 0;
-    color: rgba(90, 228, 192, 0.15);
-  }
-
-  .feature-header {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-number {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
     color: var(--accent-dim);
-    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
-  .feature-title {
+  .act-title {
     font-family: var(--font-mono);
-    font-size: 1.75rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
+    margin: 0.25rem 0 1rem;
   }
 
-  .feature-tagline {
+  .act-scene {
     font-size: 1.1rem;
-    color: var(--accent);
-    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.7;
     margin-bottom: 1rem;
   }
 
-  .feature-details {
+  .act-resolve {
+    font-size: 1rem;
+    color: var(--accent);
+    font-weight: 500;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .act-details {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .feature-details li {
+  .act-details li {
     color: var(--text-secondary);
     font-size: 0.9rem;
     padding-left: 1.25rem;
     position: relative;
   }
 
-  .feature-details li::before {
+  .act-details li::before {
     content: "›";
     position: absolute;
     left: 0;
@@ -367,139 +593,465 @@ import Nav from "../components/Nav.astro";
     font-weight: 700;
   }
 
-  /* Image area */
-  .feature-image-wrapper {
-    position: relative;
-  }
-
-  .image-placeholder {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .feature-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    cursor: zoom-in;
-    transition: opacity 0.2s;
-  }
-
-  .feature-image:hover {
-    opacity: 0.85;
-  }
-
-  /* Lightbox */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-    cursor: zoom-out;
-  }
-
-  .lightbox.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .lightbox-img {
-    max-width: 90vw;
-    max-height: 90vh;
-    border-radius: 8px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.95);
-    transition: transform 0.25s;
-  }
-
-  .lightbox.open .lightbox-img {
-    transform: scale(1);
-  }
-
-  .placeholder-fallback {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    position: absolute;
-    inset: 0;
-    color: var(--text-muted);
-  }
-
-  .placeholder-fallback span {
-    font-size: 0.85rem;
-    font-family: var(--font-mono);
-  }
-
-  /* Upstream note */
-  .upstream-note {
-    text-align: center;
-    padding: 2rem 2rem 0;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .upstream-note a {
-    color: var(--text-secondary);
-    text-decoration: underline;
-    text-decoration-color: rgba(136, 153, 180, 0.3);
-    text-underline-offset: 2px;
-  }
-
-  .upstream-note a:hover {
-    color: var(--accent);
-    opacity: 1;
-  }
-
-  /* Highlights */
-  .highlights {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.75rem 2rem;
-    list-style: none;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 1.5rem 4rem 2rem;
+  .act-details kbd {
+    display: inline-block;
+    padding: 1px 6px;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
   }
 
-  .hl-sub {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-  }
-
-  /* Bottom CTA */
-  .cta-section {
+  /* ═══════════════════════════════════════
+     Prologue
+     ═══════════════════════════════════════ */
+  .act-prologue {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 5rem 2rem;
-    border-top: 1px solid var(--border);
-    margin-top: 2rem;
+    padding: 6rem 2rem;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 40%, rgba(90, 228, 192, 0.05) 0%, transparent 70%),
+      var(--bg-primary);
   }
 
-  .cta-text {
-    font-size: 1.25rem;
+  .act-inner {
+    max-width: 700px;
+  }
+
+  .prologue-title {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 1.5rem;
+  }
+
+  .prologue-sub {
+    font-size: 1.15rem;
     color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 540px;
+    margin: 0 auto 1rem;
+  }
+
+  .prologue-sub-alt {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+
+  .prologue-hero-image {
+    margin-top: 3rem;
+    max-width: 1350px;
+    width: 100%;
+  }
+
+  .hero-screenshot {
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .oss-note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .scroll-hint {
+    margin-top: 2rem;
+    color: var(--text-muted);
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* ═══════════════════════════════════════
+     Canvas demo
+     ═══════════════════════════════════════ */
+  .canvas-demo {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr auto;
+    gap: 10px;
+    padding: 16px;
+    background: #0a1018;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    border-radius: 12px;
+    min-height: 320px;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .c-card {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.025);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.2s;
+  }
+
+  .cc-title {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -10px -12px 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px 8px 0 0;
+    padding-bottom: 5px;
+  }
+
+  .cc-badge {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cc-badge.running { background: var(--accent); }
+  .cc-badge.idle { background: var(--text-muted); }
+
+  .cc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cc-line {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .cc-line.ok { color: var(--accent-dim); }
+
+  .canvas-broadcast {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(90, 228, 192, 0.06);
+    border: 1px solid rgba(90, 228, 192, 0.15);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+  }
+
+  .broadcast-icon {
+    color: var(--accent);
+    font-size: 0.55rem;
+  }
+
+  .c-card {
+    position: relative;
+  }
+
+  .canvas-done-pulse {
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 16px rgba(90, 228, 192, 0.3);
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════
+     CLI demo
+     ═══════════════════════════════════════ */
+  .cli-demo {
+    background: #0a1018;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .cli-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .cli-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .cli-dot.r { background: #ff5f57; }
+  .cli-dot.y { background: #febc2e; }
+  .cli-dot.g { background: #28c840; }
+
+  .cli-title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-right: 28px;
+  }
+
+  .cli-body {
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 2;
+  }
+
+  .cli-line {
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .cli-out {
+    color: var(--text-muted);
+  }
+
+  .cli-captured {
+    color: var(--accent-dim);
+  }
+
+  .cli-prompt {
+    color: var(--accent);
+    margin-right: 8px;
+    user-select: none;
+  }
+
+  .cli-cursor {
+    color: var(--accent);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════
+     Custom Actions demo
+     ═══════════════════════════════════════ */
+  .actions-demo {
+    position: relative;
+    background: #0a1018;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .actions-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .actions-repo {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .actions-buttons {
+    display: flex;
+    gap: 6px;
+  }
+
+  .action-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: rgba(90, 228, 192, 0.08);
+    border: 1px solid rgba(90, 228, 192, 0.12);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent-dim);
+    transition: background 0.15s;
+  }
+
+  .pill-icon {
+    font-size: 0.6rem;
+  }
+
+  .pill-kbd {
+    display: inline-block;
+    padding: 0 4px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+
+  .actions-terminal {
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 2;
+    min-height: 160px;
+  }
+
+  .actions-line {
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .actions-out {
+    color: var(--text-muted);
+  }
+
+  .actions-out.ok {
+    color: var(--accent-dim);
+  }
+
+  .keystroke-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+  }
+
+  .keystroke-big {
+    display: inline-block;
+    padding: 12px 28px;
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.1);
+    border: 2px solid rgba(90, 228, 192, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(90, 228, 192, 0.2);
+  }
+
+  /* ═══════════════════════════════════════
+     Interlude
+     ═══════════════════════════════════════ */
+  .act-interlude {
+    padding: 6rem 3rem;
+  }
+
+  .interlude-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .interlude-lead {
+    text-align: center;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    font-style: italic;
+  }
+
+  .interlude-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .interlude-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .interlude-card:hover {
+    border-color: rgba(90, 228, 192, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .ic-icon {
+    color: var(--accent-dim);
+    margin-bottom: 1rem;
+  }
+
+  .ic-title {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .ic-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ═══════════════════════════════════════
+     Finale
+     ═══════════════════════════════════════ */
+  .act-finale {
+    text-align: center;
+    padding: 6rem 2rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .finale-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .finale-title {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
     margin-bottom: 2rem;
   }
 
-  .cta-group {
+  .finale-cta {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    margin-bottom: 1.5rem;
   }
 
   .btn {
@@ -543,65 +1095,151 @@ import Nav from "../components/Nav.astro";
     transform: translateY(-1px);
   }
 
-  /* Footer */
+  .brew-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0.5rem 0 1.5rem;
+    line-height: 1.6;
+  }
+
+  .brew-command {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    background: rgba(90, 228, 192, 0.08);
+    border-radius: 4px;
+    padding: 0.08rem 0.35rem;
+  }
+
+  .brew-copy {
+    margin-left: 0.45rem;
+    padding: 0.08rem 0.35rem;
+    border-radius: 4px;
+    border: 1px solid rgba(136, 153, 180, 0.28);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+  }
+
+  .brew-copy:hover {
+    opacity: 1;
+    border-color: rgba(136, 153, 180, 0.45);
+  }
+
+  .brew-copy.copied {
+    color: var(--accent);
+    border-color: rgba(90, 228, 192, 0.45);
+    background: rgba(90, 228, 192, 0.12);
+  }
+
+  .fork-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .fork-note a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-decoration-color: rgba(136, 153, 180, 0.3);
+    text-underline-offset: 2px;
+  }
+
+  .fork-note a:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+
   .footer {
     text-align: center;
     padding: 2rem;
     color: var(--text-muted);
     font-size: 0.8rem;
     border-top: 1px solid var(--border);
+    margin-top: 4rem;
   }
 
   .footer a {
     color: var(--text-secondary);
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .feature-section {
+  .heart {
+    color: #f87171;
+  }
+
+  /* ═══════════════════════════════════════
+     Responsive
+     ═══════════════════════════════════════ */
+  @media (max-width: 840px) {
+    .act-layout {
       grid-template-columns: 1fr;
-      gap: 2rem;
-      padding: 3rem 1.5rem;
+      gap: 2.5rem;
+      text-align: center;
     }
 
-    .feature-reverse .feature-content,
-    .feature-reverse .feature-image-wrapper {
+    .act-layout-reverse .act-text,
+    .act-layout-reverse .act-visual {
       order: unset;
     }
 
-    .feature-card {
-      padding: 1rem 1.5rem;
+    .act-pin-wrap {
+      padding: 4rem 1.5rem;
     }
 
-    .feature-card-inner {
-      border-radius: 12px;
+    .act-details {
+      align-items: center;
     }
 
-    .feature-card-text {
-      padding: 2rem 1.5rem;
+    .prologue-title {
+      font-size: 2.2rem;
     }
 
-    .page-title {
+    .act-title {
       font-size: 2rem;
     }
 
-    .feature-title {
-      font-size: 1.4rem;
+    .interlude-grid {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+      margin: 0 auto;
     }
 
-    .feature-title-lg {
+    .canvas-demo {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .cli-demo,
+    .actions-demo {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .prologue-title {
+      font-size: 1.75rem;
+    }
+
+    .act-title {
       font-size: 1.6rem;
     }
 
-    .highlights {
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem 1.5rem;
-    }
-
-    .cta-group {
+    .finale-cta {
       flex-direction: column;
       align-items: center;
+    }
+
+    .actions-buttons {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-hint {
+      animation: none;
     }
   }
 </style>

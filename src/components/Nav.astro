@@ -23,11 +23,14 @@ const { active = "home" } = Astro.props;
     </a>
     <a
       href="https://github.com/onevcat/Prowl"
-      class="nav-link"
+      class="nav-link nav-github"
       target="_blank"
       rel="noopener"
     >
       GitHub
+      <svg class="nav-star-icon" viewBox="0 0 16 16" fill="currentColor" width="14" height="14" aria-label="Star on GitHub">
+        <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z" />
+      </svg>
     </a>
   </div>
 </nav>
@@ -108,5 +111,21 @@ const { active = "home" } = Astro.props;
 
   .nav-link.active {
     color: var(--accent);
+  }
+
+  .nav-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav-star-icon {
+    color: var(--text-muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .nav-github:hover .nav-star-icon {
+    color: #f5a623;
+    transform: scale(1.15);
   }
 </style>
