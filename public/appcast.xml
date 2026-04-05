@@ -3,6 +3,30 @@
     <channel>
         <title>Prowl</title>
         <item>
+            <title>2026.4.5</title>
+            <pubDate>Sun, 05 Apr 2026 20:45:47 +0900</pubDate>
+            <sparkle:version>20260405</sparkle:version>
+            <sparkle:shortVersionString>2026.4.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description sparkle:format="markdown"><![CDATA[This release introduces the `prowl` command-line tool, enabling scripted control of Prowl from the terminal.
+
+## New
+
+- **`prowl` CLI**: Control Prowl from the command line with `open`, `focus`, `send`, `read`, `list`, and `key` commands. Run `prowl --help` to get started.
+- **Install the CLI from within the app**: Go to Settings > Advanced, the Prowl menu, or the Command Palette (Cmd+P) and choose "Install Command Line Tool" to add `prowl` to `/usr/local/bin`.
+- **Auto-launch on `prowl open`**: If Prowl is not running when you invoke `prowl open <path>`, it launches automatically and then opens the requested path.
+- **Auto-target resolution**: All selector commands (`focus`, `send`, `read`, `key`) now accept a positional `<target>` argument or `-t`/`--target` flag. Pass any pane UUID, tab UUID, or worktree name and Prowl resolves the type automatically.
+- **`prowl send --capture`**: Snapshots the screen buffer before and after command execution and returns the diff as captured output, useful for scripted workflows that need to inspect command results.
+- **Layout restore warning**: When a saved terminal layout snapshot cannot be restored, Prowl now shows a warning in the toolbar instead of silently resetting.
+
+## Fixed
+
+- Clicking anywhere on the Canvas row in the sidebar (including padding) now correctly selects Canvas. Previously only the icon and label text were responsive.
+- Exiting Canvas could leave the terminal blank until you switched away and back. The surface state is now refreshed immediately on Canvas exit.
+]]></description>
+            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.4.5/Prowl.app.zip" length="25555553" type="application/octet-stream" sparkle:edSignature="WppKpSzmWkfcfLFLlqWrhSO6FvUIVH2Kkc0stqckpNpFdxhhCVARkbiIIYDJNmx6JKAZUAxB4GsXw8QZKPuvBA=="/>
+        </item>
+        <item>
             <title>2026.4.2</title>
             <pubDate>Thu, 02 Apr 2026 01:51:18 +0900</pubDate>
             <sparkle:version>20260402</sparkle:version>
@@ -149,22 +173,6 @@
 - Fixed: Prowl no longer deletes `~/.supacode` on first launch when co-installed with Supacode. Migration now copies data to `~/.prowl` instead of moving it.
 ]]></description>
             <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.20/Prowl.app.zip" length="24109618" type="application/octet-stream" sparkle:edSignature="gu6N4neTCOmiP5u8GDhjmeh1TlBOhULfomgwT3gkpMcEnL/ryn9EhFEG69AFyBmNzerS3BAS3TOmmEvSSiynBA=="/>
-        </item>
-        <item>
-            <title>2026.3.19</title>
-            <pubDate>Thu, 19 Mar 2026 22:42:28 +0900</pubDate>
-            <sparkle:version>20260320</sparkle:version>
-            <sparkle:shortVersionString>2026.3.19</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <description sparkle:format="markdown"><![CDATA[This release focuses on Canvas improvements: better card layout, smarter focus behavior, and a keyboard shortcut to toggle the view.
-
-- Press `⌥⌘↩` to toggle Canvas view. The command has also moved to the View menu.
-- Canvas now auto-arranges cards on first entry using a masonry-style packing algorithm, which produces a more compact, better-scaled layout.
-- When entering Canvas, focus automatically returns to the card you were last working on. When exiting, focus restores to the exact worktree and tab you had active inside Canvas.
-- Fixed: file paths containing Unicode characters (e.g., Chinese filenames) were not shown correctly in diffs and untracked file lists.
-- Added notification settings for focus events, allowing you to control when Prowl alerts you about focus changes.
-]]></description>
-            <enclosure url="https://github.com/onevcat/Prowl/releases/download/v2026.3.19/Prowl.app.zip" length="24072882" type="application/octet-stream" sparkle:edSignature="h8uujNFAOZMdf7iRmVRCABqjasyrBQe3B08nrgDFT2LtBWAPlu2RxeuTuNw6hdkhFIspXyHo/t5SOnAmOmLPAA=="/>
         </item>
     </channel>
 </rss>
