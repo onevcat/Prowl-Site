@@ -1,0 +1,138 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import { marked } from "marked";
+
+const changelogUrl =
+  "https://raw.githubusercontent.com/onevcat/Prowl/main/CHANGELOG.md";
+const response = await fetch(changelogUrl);
+const markdown = await response.text();
+
+// Strip the top-level "# Changelog" heading — we render our own
+const body = markdown.replace(/^# Changelog\s*\n/, "");
+const html = await marked.parse(body);
+---
+
+<Layout title="Prowl — Changelog">
+  <Nav active="changelog" />
+
+  <main class="changelog-page">
+    <header class="changelog-header">
+      <h1 class="changelog-title">Changelog</h1>
+      <p class="changelog-sub">
+        What's new in each release of Prowl.
+      </p>
+    </header>
+
+    <article class="changelog-content" set:html={html} />
+  </main>
+</Layout>
+
+<style>
+  .changelog-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 8rem 1.5rem 4rem;
+  }
+
+  .changelog-header {
+    margin-bottom: 3rem;
+  }
+
+  .changelog-title {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .changelog-sub {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+
+  /* Version entries */
+  .changelog-content :global(h2) {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 3rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .changelog-content :global(h2 a) {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .changelog-content :global(h2 a:hover) {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  /* Section headings (New / Fixed) */
+  .changelog-content :global(h3) {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .changelog-content :global(p) {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .changelog-content :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .changelog-content :global(li) {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .changelog-content :global(li::before) {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .changelog-content :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .changelog-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(90, 228, 192, 0.08);
+    color: var(--accent-dim);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .changelog-page {
+      padding-top: 6rem;
+    }
+
+    .changelog-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
