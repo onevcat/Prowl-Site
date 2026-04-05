@@ -4,7 +4,7 @@ import Nav from "../components/Nav.astro";
 import { marked } from "marked";
 
 const changelogUrl =
-  "https://raw.githubusercontent.com/onevcat/Prowl/main/CHANGELOG.md";
+  `https://raw.githubusercontent.com/onevcat/Prowl/main/CHANGELOG.md?t=${Date.now()}`;
 const response = await fetch(changelogUrl);
 const markdown = await response.text();
 
