@@ -134,4 +134,18 @@ const { active = "home" } = Astro.props;
     color: #f5a623;
     transform: scale(1.15);
   }
+
+  @media (max-width: 640px) {
+    .nav {
+      padding: 1rem 1.25rem;
+    }
+
+    .nav-links {
+      gap: 1.1rem;
+    }
+
+    .nav-link[href="/"] {
+      display: none;
+    }
+  }
 </style>
