@@ -113,7 +113,6 @@ import Nav from "../components/Nav.astro";
             </p>
             <ul class="act-details">
               <li>Spine icons follow the running command — codex, vitest, swift, git… one glance tells you what's alive</li>
-              <li>200&nbsp;ms spine-flow on switch; the terminal in the middle never moves</li>
               <li><kbd>&#8984;&#8963;&larr;/&rarr;</kbd> cycles books · <kbd>&#8984;&#8963;&uarr;/&darr;</kbd> cycles tabs</li>
               <li>Canvas zooms out to orchestrate. Shelf zooms in to focus — and switches without breaking it.</li>
             </ul>
@@ -172,17 +171,17 @@ import Nav from "../components/Nav.astro";
                 </div>
 
                 <div class="dshelf-stack dshelf-stack-right" id="dshelf-right">
+                  <div class="dspine" data-book="yitong" data-color="sky" id="dspine-yitong">
+                    <span class="dspine-label">YiTong</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon">▦</span>
+                    </div>
+                  </div>
                   <div class="dspine" data-book="meetcat" data-color="teal" id="dspine-meetcat">
                     <span class="dspine-label">MeetCat</span>
                     <div class="dspine-icons">
                       <span class="dsicon">▣</span>
                       <span class="dsicon">✓</span>
-                    </div>
-                  </div>
-                  <div class="dspine" data-book="yitong" data-color="sky" id="dspine-yitong">
-                    <span class="dspine-label">YiTong</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon">▦</span>
                     </div>
                   </div>
                 </div>
@@ -551,38 +550,66 @@ import Nav from "../components/Nav.astro";
       },
     };
 
+    const dshelfLeftBooks = ["ai-ship", "kingfisher", "prowl"];
+    const dshelfRightBooks = ["yitong", "meetcat"];
+
     function applyShelfScene(key) {
       const scene = shelfScenes[key];
       if (!scene || !shelfDemo || !dbookRepo || !dbookBranch || !dbookTerm || !dshelfTitle) return;
+
+      // FIRST: snapshot every spine's current visual position
+      const allSpines = Array.prototype.slice.call(document.querySelectorAll(".dspine[data-book]"));
+      const firstRects = new Map();
+      allSpines.forEach(function (sp) { firstRects.set(sp, sp.getBoundingClientRect()); });
+
+      // LAST: apply scene state — colour, terminal content, tinted spine, order
       shelfDemo.dataset.color = scene.color;
       shelfDemo.dataset.open = scene.open;
       dbookRepo.textContent = scene.open === "meetcat" ? "MeetCat" : scene.open;
       dbookBranch.textContent = scene.branch;
       dbookTerm.innerHTML = scene.term;
       dshelfTitle.textContent = scene.title;
-      // Mark the open spine; reorder spines inside their stacks so the open one
-      // sits at the inner edge.
-      const leftStack = document.getElementById("dshelf-left");
-      const rightStack = document.getElementById("dshelf-right");
-      document.querySelectorAll(".dspine[data-book]").forEach((sp) => {
+
+      allSpines.forEach(function (sp) {
         sp.classList.toggle("dspine-open", sp.dataset.book === scene.open);
       });
-      // Reorder via flex order so the open spine lands at the inner edge of
-      // its stack (left stack: rightmost; right stack: leftmost).
-      const leftBooks = ["ai-ship", "kingfisher", "prowl"];
-      const rightBooks = ["meetcat", "yitong"];
-      if (leftStack && leftBooks.indexOf(scene.open) !== -1) {
-        leftStack.querySelectorAll(".dspine").forEach((sp) => {
+
+      const leftStack = document.getElementById("dshelf-left");
+      const rightStack = document.getElementById("dshelf-right");
+      if (leftStack) {
+        leftStack.querySelectorAll(".dspine").forEach(function (sp) {
           const book = sp.dataset.book;
-          sp.style.order = book === scene.open ? "10" : String(leftBooks.indexOf(book));
+          sp.style.order = book === scene.open ? "10" : String(dshelfLeftBooks.indexOf(book));
         });
       }
-      if (rightStack && rightBooks.indexOf(scene.open) !== -1) {
-        rightStack.querySelectorAll(".dspine").forEach((sp) => {
+      if (rightStack) {
+        rightStack.querySelectorAll(".dspine").forEach(function (sp) {
           const book = sp.dataset.book;
-          sp.style.order = book === scene.open ? "-10" : String(rightBooks.indexOf(book));
+          sp.style.order = book === scene.open ? "-10" : String(dshelfRightBooks.indexOf(book));
         });
       }
+
+      // INVERT each spine back to its FIRST position
+      allSpines.forEach(function (sp) {
+        const first = firstRects.get(sp);
+        const dx = first.left - sp.getBoundingClientRect().left;
+        if (Math.abs(dx) < 0.5) {
+          sp.style.transition = "";
+          sp.style.transform = "";
+          return;
+        }
+        sp.style.transition = "none";
+        sp.style.transform = "translateX(" + dx + "px)";
+      });
+
+      // PLAY: commit the invert, then animate transform to identity
+      void (leftStack && leftStack.offsetWidth);
+      requestAnimationFrame(function () {
+        allSpines.forEach(function (sp) {
+          sp.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+          sp.style.transform = "";
+        });
+      });
     }
 
     // Initialise to prowl scene
@@ -1127,10 +1154,10 @@ import Nav from "../components/Nav.astro";
     align-items: center;
     padding: 10px 0 8px;
     gap: 10px;
+    /* transform managed by GSAP for FLIP reorder; CSS handles colors only */
     transition:
       background 0.4s ease,
-      border-color 0.4s ease,
-      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-color 0.4s ease;
   }
 
   .dspine-label {

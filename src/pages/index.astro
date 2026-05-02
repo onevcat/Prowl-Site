@@ -143,17 +143,17 @@ import Nav from "../components/Nav.astro";
                   </div>
                 </div>
                 <div class="shelf-stack shelf-stack-right">
+                  <div class="spine spine-yitong" data-book="yitong">
+                    <span class="spine-label">YiTong</span>
+                    <span class="spine-icons">
+                      <i class="sicon" data-glyph="vim">▦</i>
+                    </span>
+                  </div>
                   <div class="spine spine-meetcat" data-book="meetcat">
                     <span class="spine-label">MeetCat</span>
                     <span class="spine-icons">
                       <i class="sicon" data-glyph="vitest">✓</i>
                       <i class="sicon" data-glyph="npm">▣</i>
-                    </span>
-                  </div>
-                  <div class="spine spine-yitong" data-book="yitong">
-                    <span class="spine-label">YiTong</span>
-                    <span class="spine-icons">
-                      <i class="sicon" data-glyph="vim">▦</i>
                     </span>
                   </div>
                 </div>
@@ -404,16 +404,62 @@ import Nav from "../components/Nav.astro";
     canvasToggle.classList.add("active");
   }
 
+  const shelfLeftBooks = ["prowl", "kingfisher"];
+  const shelfRightBooks = ["yitong", "meetcat"];
+
+  function applyShelfSpineOrder(openName: string) {
+    shelfPanel.querySelectorAll<HTMLElement>(".shelf-stack-left .spine").forEach((s) => {
+      const book = s.dataset.book!;
+      s.style.order = book === openName ? "10" : String(shelfLeftBooks.indexOf(book));
+    });
+    shelfPanel.querySelectorAll<HTMLElement>(".shelf-stack-right .spine").forEach((s) => {
+      const book = s.dataset.book!;
+      s.style.order = book === openName ? "-10" : String(shelfRightBooks.indexOf(book));
+    });
+  }
+
   function openShelfBook(name: string) {
     const book = shelfBooks[name];
     if (!book) return;
+
+    // FIRST: snapshot every spine's current visual position
+    const allSpines = Array.from(shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]"));
+    const firstRects = new Map<HTMLElement, DOMRect>();
+    allSpines.forEach((s) => firstRects.set(s, s.getBoundingClientRect()));
+
+    // LAST: apply the new state (terminal content, tinted spine, layout order)
     shelfBookRepo.textContent = book.repo;
     shelfBookTerm.innerHTML = book.lines;
     shelfPanel.dataset.open = name;
     shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]").forEach((s) => {
       s.classList.toggle("spine-open", s.dataset.book === name);
     });
+    applyShelfSpineOrder(name);
+
+    // INVERT: each spine jumps back to its FIRST position with no transition
+    allSpines.forEach((s) => {
+      const dx = firstRects.get(s)!.left - s.getBoundingClientRect().left;
+      if (Math.abs(dx) < 0.5) {
+        s.style.transition = "";
+        s.style.transform = "";
+        return;
+      }
+      s.style.transition = "none";
+      s.style.transform = `translateX(${dx}px)`;
+    });
+
+    // PLAY: commit the invert, then animate transform back to identity
+    void shelfPanel.offsetWidth;
+    requestAnimationFrame(() => {
+      allSpines.forEach((s) => {
+        s.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+        s.style.transform = "";
+      });
+    });
   }
+
+  // Initialise spine order to match the markup's default open state
+  applyShelfSpineOrder(shelfPanel.dataset.open || "kingfisher");
 
   function showShelf() {
     panels.forEach((p) => p.classList.remove("active"));
@@ -1042,13 +1088,13 @@ import Nav from "../components/Nav.astro";
     padding: 6px 0 5px;
     gap: 5px;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    /* transform managed by GSAP for FLIP reorder; CSS handles colors only */
+    transition: background 0.2s, border-color 0.2s;
   }
 
   .spine:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.12);
-    transform: translateY(-1px);
   }
 
   .spine-label {
