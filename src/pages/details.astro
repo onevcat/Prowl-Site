@@ -543,11 +543,9 @@ import Nav from "../components/Nav.astro";
       },
     };
 
-    /* Mutable book order. Selected lives at dshelfSelectedIdx; everything
-       before it sits in the left stack, everything after sits in the right
-       stack. Clicking a right-stack book mutates the array (the clicked
-       book is spliced into the selected slot and the previous selected
-       slides to the head of the right stack). */
+    /* Spines are arranged in a fixed order, like books on a shelf. The
+       terminal slots in just to the right of the selected spine — selecting
+       a different spine moves the terminal, never the spine order. */
     const dshelfBookOrder = ["ai-ship", "kingfisher", "prowl", "yitong", "meetcat"];
     let dshelfSelectedIdx = 2; // markup default: prowl is selected
 
@@ -577,17 +575,9 @@ import Nav from "../components/Nav.astro";
       const firstRects = new Map();
       allTargets.forEach(function (el) { firstRects.set(el, el.getBoundingClientRect()); });
 
-      // LAST: mutate state + reapply order
-      if (idx < dshelfSelectedIdx) {
-        // Clicked spine is already to the left of terminal — just move the
-        // pointer; the previously selected naturally falls into the right stack.
-        dshelfSelectedIdx = idx;
-      } else {
-        // Clicked spine is on the right — pull it into the selected slot.
-        const moved = dshelfBookOrder.splice(idx, 1)[0];
-        dshelfBookOrder.splice(dshelfSelectedIdx, 0, moved);
-        // dshelfSelectedIdx stays — moved book now occupies that slot.
-      }
+      // LAST: spine order is fixed; only the selected pointer moves, which
+      // shifts the terminal's slot.
+      dshelfSelectedIdx = idx;
       dshelfApplyOrder();
 
       // INVERT: each target jumps back to its FIRST position with no transition

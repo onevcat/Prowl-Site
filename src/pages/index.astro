@@ -401,10 +401,8 @@ import Nav from "../components/Nav.astro";
     canvasToggle.classList.add("active");
   }
 
-  // Mutable book order; selected lives at shelfSelectedIdx. Books before it
-  // sit on the left of the terminal, books after sit on the right. Clicking
-  // a right-side book splices it into the selected slot and the previously
-  // selected book is pushed to the head of the right side.
+  // Spine order is fixed (like books on a shelf). Only the selected pointer
+  // moves; the terminal slots in just to the right of the selected spine.
   const shelfBookOrder = ["prowl", "kingfisher", "yitong", "meetcat"];
   let shelfSelectedIdx = 1; // markup default: kingfisher is selected
 
@@ -441,13 +439,9 @@ import Nav from "../components/Nav.astro";
     const firstRects = new Map<HTMLElement, DOMRect>();
     allTargets.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
 
-    // LAST: mutate state + reapply order
-    if (idx < shelfSelectedIdx) {
-      shelfSelectedIdx = idx;
-    } else {
-      const moved = shelfBookOrder.splice(idx, 1)[0];
-      shelfBookOrder.splice(shelfSelectedIdx, 0, moved);
-    }
+    // LAST: spine order stays put; only the selected pointer (and thus the
+    // terminal's slot) moves.
+    shelfSelectedIdx = idx;
     shelfApplyOrder();
 
     // INVERT: each target jumps back to its FIRST position with no transition
