@@ -112,23 +112,21 @@ import Nav from "../components/Nav.astro";
             </div>
             <!-- Main area -->
             <div class="frame-main">
-              <!-- Shelf view: [left stack][open book][right stack] -->
-              <div class="shelf-panel" id="shelf-panel" data-open="kingfisher">
-                <div class="shelf-stack shelf-stack-left">
-                  <div class="spine spine-prowl" data-book="prowl">
-                    <span class="spine-label">prowl</span>
-                    <span class="spine-icons">
-                      <i class="sicon" data-glyph="swift">▲</i>
-                      <i class="sicon" data-glyph="claude">✦</i>
-                    </span>
-                  </div>
-                  <div class="spine spine-kingfisher spine-open" data-book="kingfisher">
-                    <span class="spine-label">kingfisher</span>
-                    <span class="spine-icons">
-                      <i class="sicon active" data-glyph="codex">❯</i>
-                      <i class="sicon" data-glyph="git">◆</i>
-                    </span>
-                  </div>
+              <!-- Shelf view: [unselected spines] [selected spine] [book/terminal] [unselected spines] -->
+              <div class="shelf-panel" id="shelf-panel">
+                <div class="spine" data-book="prowl" id="shelf-spine-prowl">
+                  <span class="spine-label">prowl</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="swift">▲</i>
+                    <i class="sicon" data-glyph="claude">✦</i>
+                  </span>
+                </div>
+                <div class="spine spine-selected" data-book="kingfisher" id="shelf-spine-kingfisher">
+                  <span class="spine-label">kingfisher</span>
+                  <span class="spine-icons">
+                    <i class="sicon active" data-glyph="codex">❯</i>
+                    <i class="sicon" data-glyph="git">◆</i>
+                  </span>
                 </div>
                 <div class="shelf-book" id="shelf-book">
                   <div class="book-toolbar">
@@ -142,20 +140,18 @@ import Nav from "../components/Nav.astro";
                     <div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>
                   </div>
                 </div>
-                <div class="shelf-stack shelf-stack-right">
-                  <div class="spine spine-yitong" data-book="yitong">
-                    <span class="spine-label">YiTong</span>
-                    <span class="spine-icons">
-                      <i class="sicon" data-glyph="vim">▦</i>
-                    </span>
-                  </div>
-                  <div class="spine spine-meetcat" data-book="meetcat">
-                    <span class="spine-label">MeetCat</span>
-                    <span class="spine-icons">
-                      <i class="sicon" data-glyph="vitest">✓</i>
-                      <i class="sicon" data-glyph="npm">▣</i>
-                    </span>
-                  </div>
+                <div class="spine" data-book="yitong" id="shelf-spine-yitong">
+                  <span class="spine-label">YiTong</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="vim">▦</i>
+                  </span>
+                </div>
+                <div class="spine" data-book="meetcat" id="shelf-spine-meetcat">
+                  <span class="spine-label">MeetCat</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="vitest">✓</i>
+                    <i class="sicon" data-glyph="npm">▣</i>
+                  </span>
                 </div>
               </div>
               <!-- Canvas 2x2 grid view -->
@@ -338,6 +334,7 @@ import Nav from "../components/Nav.astro";
   const canvasToggle = document.getElementById("canvas-toggle")!;
   const shelfPanel = document.getElementById("shelf-panel")!;
   const shelfToggle = document.getElementById("shelf-toggle")!;
+  const shelfBook = document.getElementById("shelf-book")!;
   const shelfBookRepo = document.getElementById("shelf-book-repo")!;
   const shelfBookTerm = document.getElementById("shelf-book-term")!;
   const tabNames = ["prowl", "kingfisher", "meetcat", "yitong"];
@@ -404,62 +401,79 @@ import Nav from "../components/Nav.astro";
     canvasToggle.classList.add("active");
   }
 
-  const shelfLeftBooks = ["prowl", "kingfisher"];
-  const shelfRightBooks = ["yitong", "meetcat"];
+  // Mutable book order; selected lives at shelfSelectedIdx. Books before it
+  // sit on the left of the terminal, books after sit on the right. Clicking
+  // a right-side book splices it into the selected slot and the previously
+  // selected book is pushed to the head of the right side.
+  const shelfBookOrder = ["prowl", "kingfisher", "yitong", "meetcat"];
+  let shelfSelectedIdx = 1; // markup default: kingfisher is selected
 
-  function applyShelfSpineOrder(openName: string) {
-    shelfPanel.querySelectorAll<HTMLElement>(".shelf-stack-left .spine").forEach((s) => {
-      const book = s.dataset.book!;
-      s.style.order = book === openName ? "10" : String(shelfLeftBooks.indexOf(book));
+  function shelfElementOf(book: string): HTMLElement | null {
+    return document.getElementById("shelf-spine-" + book);
+  }
+
+  function shelfApplyOrder() {
+    shelfBookOrder.forEach((book, idx) => {
+      const el = shelfElementOf(book);
+      if (!el) return;
+      el.style.order = String(idx <= shelfSelectedIdx ? idx : idx + 1);
+      el.classList.toggle("spine-selected", idx === shelfSelectedIdx);
     });
-    shelfPanel.querySelectorAll<HTMLElement>(".shelf-stack-right .spine").forEach((s) => {
-      const book = s.dataset.book!;
-      s.style.order = book === openName ? "-10" : String(shelfRightBooks.indexOf(book));
-    });
+    shelfBook.style.order = String(shelfSelectedIdx + 1);
   }
 
   function openShelfBook(name: string) {
     const book = shelfBooks[name];
     if (!book) return;
 
-    // FIRST: snapshot every spine's current visual position
-    const allSpines = Array.from(shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]"));
-    const firstRects = new Map<HTMLElement, DOMRect>();
-    allSpines.forEach((s) => firstRects.set(s, s.getBoundingClientRect()));
-
-    // LAST: apply the new state (terminal content, tinted spine, layout order)
+    // Always update visual cues (terminal content + repo label)
     shelfBookRepo.textContent = book.repo;
     shelfBookTerm.innerHTML = book.lines;
-    shelfPanel.dataset.open = name;
-    shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]").forEach((s) => {
-      s.classList.toggle("spine-open", s.dataset.book === name);
-    });
-    applyShelfSpineOrder(name);
 
-    // INVERT: each spine jumps back to its FIRST position with no transition
-    allSpines.forEach((s) => {
-      const dx = firstRects.get(s)!.left - s.getBoundingClientRect().left;
+    const idx = shelfBookOrder.indexOf(name);
+    if (idx === -1 || idx === shelfSelectedIdx) return;
+
+    // FIRST: snapshot every spine + the terminal book
+    const allTargets: HTMLElement[] = shelfBookOrder
+      .map(shelfElementOf)
+      .filter((el): el is HTMLElement => el !== null);
+    allTargets.push(shelfBook);
+    const firstRects = new Map<HTMLElement, DOMRect>();
+    allTargets.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
+
+    // LAST: mutate state + reapply order
+    if (idx < shelfSelectedIdx) {
+      shelfSelectedIdx = idx;
+    } else {
+      const moved = shelfBookOrder.splice(idx, 1)[0];
+      shelfBookOrder.splice(shelfSelectedIdx, 0, moved);
+    }
+    shelfApplyOrder();
+
+    // INVERT: each target jumps back to its FIRST position with no transition
+    allTargets.forEach((el) => {
+      const dx = firstRects.get(el)!.left - el.getBoundingClientRect().left;
       if (Math.abs(dx) < 0.5) {
-        s.style.transition = "";
-        s.style.transform = "";
+        el.style.transition = "";
+        el.style.transform = "";
         return;
       }
-      s.style.transition = "none";
-      s.style.transform = `translateX(${dx}px)`;
+      el.style.transition = "none";
+      el.style.transform = `translateX(${dx}px)`;
     });
 
-    // PLAY: commit the invert, then animate transform back to identity
+    // PLAY: commit the invert, then animate to identity in the next frame
     void shelfPanel.offsetWidth;
     requestAnimationFrame(() => {
-      allSpines.forEach((s) => {
-        s.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
-        s.style.transform = "";
+      allTargets.forEach((el) => {
+        el.style.transition = "transform 380ms cubic-bezier(0.4, 0, 0.2, 1)";
+        el.style.transform = "";
       });
     });
   }
 
-  // Initialise spine order to match the markup's default open state
-  applyShelfSpineOrder(shelfPanel.dataset.open || "kingfisher");
+  // Initialise flex order to match the markup default
+  shelfApplyOrder();
 
   function showShelf() {
     panels.forEach((p) => p.classList.remove("active"));
@@ -1060,20 +1074,15 @@ import Nav from "../components/Nav.astro";
     background: rgba(90, 228, 192, 0.1);
   }
 
-  /* ── Shelf wireframe ── */
+  /* ── Shelf wireframe ──
+     Single flex container holds all spines + the book; flex order positions
+     each item. The selected spine sits at the book's left edge and merges
+     visually with it. */
   .shelf-panel {
     display: flex;
     align-items: stretch;
     padding: 6px;
-    gap: 0;
-  }
-
-  .shelf-stack {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
     gap: 3px;
-    flex-shrink: 0;
   }
 
   .spine {
@@ -1088,7 +1097,8 @@ import Nav from "../components/Nav.astro";
     padding: 6px 0 5px;
     gap: 5px;
     cursor: pointer;
-    /* transform managed by GSAP for FLIP reorder; CSS handles colors only */
+    flex-shrink: 0;
+    /* transform managed by JS for FLIP; CSS handles colours only */
     transition: background 0.2s, border-color 0.2s;
   }
 
@@ -1137,25 +1147,18 @@ import Nav from "../components/Nav.astro";
     color: var(--accent);
   }
 
-  /* Open spine: tinted to match terminal area, no right radius (visually merges with book) */
-  .spine-open {
+  /* Selected spine: tinted, sits at book's left edge, merges visually */
+  .spine-selected {
     background: rgba(90, 228, 192, 0.08);
     border-color: rgba(90, 228, 192, 0.22);
-  }
-
-  .shelf-stack-left .spine-open {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border-right-color: transparent;
-    border-radius: 4px 0 0 4px;
-    margin-right: -1px;
+    margin-right: -4px; /* cancel container gap (3px) + 1px overlap */
+    z-index: 1;
   }
 
-  .shelf-stack-right .spine-open {
-    border-left-color: transparent;
-    border-radius: 0 4px 4px 0;
-    margin-left: -1px;
-  }
-
-  .spine-open .spine-label {
+  .spine-selected .spine-label {
     color: var(--accent);
   }
 
@@ -1164,8 +1167,7 @@ import Nav from "../components/Nav.astro";
     min-width: 0;
     background: rgba(90, 228, 192, 0.04);
     border: 1px solid rgba(90, 228, 192, 0.18);
-    border-radius: 4px;
-    margin: 0 4px;
+    border-radius: 0 4px 4px 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;

@@ -125,33 +125,30 @@ import Nav from "../components/Nav.astro";
                 <span class="shelf-dot g"></span>
                 <span class="shelf-title" id="shelf-title">Prowl</span>
               </div>
-              <div class="shelf-body">
-                <div class="dshelf-stack dshelf-stack-left" id="dshelf-left">
-                  <div class="dspine" data-book="ai-ship" data-color="violet" id="dspine-ai-ship">
-                    <span class="dspine-label">ai-ship</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon">▦</span>
-                      <span class="dsicon">◆</span>
-                    </div>
-                  </div>
-                  <div class="dspine" data-book="kingfisher" data-color="amber" id="dspine-kingfisher">
-                    <span class="dspine-label">kingfisher</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon" id="dspine-kf-i1">◆</span>
-                      <span class="dsicon" id="dspine-kf-i2">❯</span>
-                      <span class="dsicon" id="dspine-kf-i3">✓</span>
-                    </div>
-                  </div>
-                  <div class="dspine dspine-open" data-book="prowl" data-color="rose" id="dspine-prowl">
-                    <span class="dspine-label">prowl</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon active">▲</span>
-                      <span class="dsicon">✦</span>
-                      <span class="dsicon">◆</span>
-                    </div>
+              <div class="shelf-body" id="dshelf-body">
+                <div class="dspine" data-book="ai-ship" id="dspine-ai-ship">
+                  <span class="dspine-label">ai-ship</span>
+                  <div class="dspine-icons">
+                    <span class="dsicon">▦</span>
+                    <span class="dsicon">◆</span>
                   </div>
                 </div>
-
+                <div class="dspine" data-book="kingfisher" id="dspine-kingfisher">
+                  <span class="dspine-label">kingfisher</span>
+                  <div class="dspine-icons">
+                    <span class="dsicon" id="dspine-kf-i1">◆</span>
+                    <span class="dsicon" id="dspine-kf-i2">❯</span>
+                    <span class="dsicon" id="dspine-kf-i3">✓</span>
+                  </div>
+                </div>
+                <div class="dspine dspine-selected" data-book="prowl" id="dspine-prowl">
+                  <span class="dspine-label">prowl</span>
+                  <div class="dspine-icons">
+                    <span class="dsicon active">▲</span>
+                    <span class="dsicon">✦</span>
+                    <span class="dsicon">◆</span>
+                  </div>
+                </div>
                 <div class="dshelf-book" id="dshelf-book">
                   <div class="dbook-toolbar">
                     <span class="dbook-repo" id="dbook-repo">prowl</span>
@@ -162,27 +159,23 @@ import Nav from "../components/Nav.astro";
                     </span>
                   </div>
                   <div class="dbook-terminal" id="dbook-terminal">
-                    <!-- replaced by JS as scenes advance -->
                     <div class="dbl"><span class="dbp">&#10095;</span> swift test</div>
                     <div class="dbl out">  Build complete! (1.2s)</div>
                     <div class="dbl out ok">  Test Suite passed — 23 tests, 0 failures</div>
                     <div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>
                   </div>
                 </div>
-
-                <div class="dshelf-stack dshelf-stack-right" id="dshelf-right">
-                  <div class="dspine" data-book="yitong" data-color="sky" id="dspine-yitong">
-                    <span class="dspine-label">YiTong</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon">▦</span>
-                    </div>
+                <div class="dspine" data-book="yitong" id="dspine-yitong">
+                  <span class="dspine-label">YiTong</span>
+                  <div class="dspine-icons">
+                    <span class="dsicon">▦</span>
                   </div>
-                  <div class="dspine" data-book="meetcat" data-color="teal" id="dspine-meetcat">
-                    <span class="dspine-label">MeetCat</span>
-                    <div class="dspine-icons">
-                      <span class="dsicon">▣</span>
-                      <span class="dsicon">✓</span>
-                    </div>
+                </div>
+                <div class="dspine" data-book="meetcat" id="dspine-meetcat">
+                  <span class="dspine-label">MeetCat</span>
+                  <div class="dspine-icons">
+                    <span class="dsicon">▣</span>
+                    <span class="dsicon">✓</span>
                   </div>
                 </div>
               </div>
@@ -550,19 +543,82 @@ import Nav from "../components/Nav.astro";
       },
     };
 
-    const dshelfLeftBooks = ["ai-ship", "kingfisher", "prowl"];
-    const dshelfRightBooks = ["yitong", "meetcat"];
+    /* Mutable book order. Selected lives at dshelfSelectedIdx; everything
+       before it sits in the left stack, everything after sits in the right
+       stack. Clicking a right-stack book mutates the array (the clicked
+       book is spliced into the selected slot and the previous selected
+       slides to the head of the right stack). */
+    const dshelfBookOrder = ["ai-ship", "kingfisher", "prowl", "yitong", "meetcat"];
+    let dshelfSelectedIdx = 2; // markup default: prowl is selected
+
+    function dshelfElementOf(book) {
+      return document.getElementById("dspine-" + book);
+    }
+
+    function dshelfApplyOrder() {
+      const bookEl = document.getElementById("dshelf-book");
+      dshelfBookOrder.forEach(function (book, idx) {
+        const el = dshelfElementOf(book);
+        if (!el) return;
+        el.style.order = String(idx <= dshelfSelectedIdx ? idx : idx + 1);
+        el.classList.toggle("dspine-selected", idx === dshelfSelectedIdx);
+      });
+      if (bookEl) bookEl.style.order = String(dshelfSelectedIdx + 1);
+    }
+
+    function dshelfSelect(book) {
+      const idx = dshelfBookOrder.indexOf(book);
+      if (idx === -1 || idx === dshelfSelectedIdx) return;
+
+      // FIRST: snapshot every spine + the terminal book
+      const allTargets = dshelfBookOrder.map(dshelfElementOf).filter(Boolean);
+      const bookEl = document.getElementById("dshelf-book");
+      if (bookEl) allTargets.push(bookEl);
+      const firstRects = new Map();
+      allTargets.forEach(function (el) { firstRects.set(el, el.getBoundingClientRect()); });
+
+      // LAST: mutate state + reapply order
+      if (idx < dshelfSelectedIdx) {
+        // Clicked spine is already to the left of terminal — just move the
+        // pointer; the previously selected naturally falls into the right stack.
+        dshelfSelectedIdx = idx;
+      } else {
+        // Clicked spine is on the right — pull it into the selected slot.
+        const moved = dshelfBookOrder.splice(idx, 1)[0];
+        dshelfBookOrder.splice(dshelfSelectedIdx, 0, moved);
+        // dshelfSelectedIdx stays — moved book now occupies that slot.
+      }
+      dshelfApplyOrder();
+
+      // INVERT: each target jumps back to its FIRST position with no transition
+      allTargets.forEach(function (el) {
+        const first = firstRects.get(el);
+        const dx = first.left - el.getBoundingClientRect().left;
+        if (Math.abs(dx) < 0.5) {
+          el.style.transition = "";
+          el.style.transform = "";
+          return;
+        }
+        el.style.transition = "none";
+        el.style.transform = "translateX(" + dx + "px)";
+      });
+
+      // PLAY: commit the invert, then animate to identity in the next frame
+      const body = document.getElementById("dshelf-body");
+      if (body) void body.offsetWidth;
+      requestAnimationFrame(function () {
+        allTargets.forEach(function (el) {
+          el.style.transition = "transform 380ms cubic-bezier(0.4, 0, 0.2, 1)";
+          el.style.transform = "";
+        });
+      });
+    }
 
     function applyShelfScene(key) {
       const scene = shelfScenes[key];
       if (!scene || !shelfDemo || !dbookRepo || !dbookBranch || !dbookTerm || !dshelfTitle) return;
 
-      // FIRST: snapshot every spine's current visual position
-      const allSpines = Array.prototype.slice.call(document.querySelectorAll(".dspine[data-book]"));
-      const firstRects = new Map();
-      allSpines.forEach(function (sp) { firstRects.set(sp, sp.getBoundingClientRect()); });
-
-      // LAST: apply scene state — colour, terminal content, tinted spine, order
+      // Visual cues update immediately (no FLIP needed — they're tints/text)
       shelfDemo.dataset.color = scene.color;
       shelfDemo.dataset.open = scene.open;
       dbookRepo.textContent = scene.open === "meetcat" ? "MeetCat" : scene.open;
@@ -570,47 +626,12 @@ import Nav from "../components/Nav.astro";
       dbookTerm.innerHTML = scene.term;
       dshelfTitle.textContent = scene.title;
 
-      allSpines.forEach(function (sp) {
-        sp.classList.toggle("dspine-open", sp.dataset.book === scene.open);
-      });
-
-      const leftStack = document.getElementById("dshelf-left");
-      const rightStack = document.getElementById("dshelf-right");
-      if (leftStack) {
-        leftStack.querySelectorAll(".dspine").forEach(function (sp) {
-          const book = sp.dataset.book;
-          sp.style.order = book === scene.open ? "10" : String(dshelfLeftBooks.indexOf(book));
-        });
-      }
-      if (rightStack) {
-        rightStack.querySelectorAll(".dspine").forEach(function (sp) {
-          const book = sp.dataset.book;
-          sp.style.order = book === scene.open ? "-10" : String(dshelfRightBooks.indexOf(book));
-        });
-      }
-
-      // INVERT each spine back to its FIRST position
-      allSpines.forEach(function (sp) {
-        const first = firstRects.get(sp);
-        const dx = first.left - sp.getBoundingClientRect().left;
-        if (Math.abs(dx) < 0.5) {
-          sp.style.transition = "";
-          sp.style.transform = "";
-          return;
-        }
-        sp.style.transition = "none";
-        sp.style.transform = "translateX(" + dx + "px)";
-      });
-
-      // PLAY: commit the invert, then animate transform to identity
-      void (leftStack && leftStack.offsetWidth);
-      requestAnimationFrame(function () {
-        allSpines.forEach(function (sp) {
-          sp.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
-          sp.style.transform = "";
-        });
-      });
+      // Spine selection — animates if scene.open differs from current selected
+      dshelfSelect(scene.open);
     }
+
+    // Sync the initial flex order to match the markup default
+    dshelfApplyOrder();
 
     // Initialise to prowl scene
     applyShelfScene("prowl");
@@ -625,19 +646,17 @@ import Nav from "../components/Nav.astro";
       },
     });
 
-    // Phase 1 (entry): spines slide in from their respective sides.
-    gsap.set(".dshelf-stack-left .dspine", { x: -60, opacity: 0 });
-    gsap.set(".dshelf-stack-right .dspine", { x: 60, opacity: 0 });
-    gsap.set("#dshelf-book", { opacity: 0, y: 18 });
+    // Phase 1 (entry): spines + book fade in. We avoid x/y transforms here
+    // because dshelfSelect() owns the transform property via FLIP — having
+    // GSAP and FLIP both write to it would clobber.
+    gsap.set(".dspine", { opacity: 0 });
+    gsap.set("#dshelf-book", { opacity: 0 });
 
     shelfTl
-      .to(".dshelf-stack-left .dspine", {
-        x: 0, opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
+      .to(".dspine", {
+        opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
       })
-      .to(".dshelf-stack-right .dspine", {
-        x: 0, opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
-      }, "<")
-      .to("#dshelf-book", { opacity: 1, y: 0, duration: 0.25 }, "<+0.1")
+      .to("#dshelf-book", { opacity: 1, duration: 0.25 }, "<+0.1")
       // Phase 2: switch to kingfisher (left-stack flow).
       .add(() => applyShelfScene("kingfisher"), "+=0.25")
       // Phase 3: morph kingfisher's tab icon focus + change terminal to test run.
@@ -1127,20 +1146,15 @@ import Nav from "../components/Nav.astro";
     margin-right: 28px;
   }
 
+  /* Single flex container holds all spines + the terminal book; flex order
+     decides who sits on which side. The selected spine always lands on the
+     terminal's left edge and visually merges with it. */
   .shelf-body {
     display: flex;
     align-items: stretch;
     min-height: 320px;
     padding: 10px;
-    gap: 0;
-  }
-
-  .dshelf-stack {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
     gap: 4px;
-    flex-shrink: 0;
   }
 
   .dspine {
@@ -1154,7 +1168,8 @@ import Nav from "../components/Nav.astro";
     align-items: center;
     padding: 10px 0 8px;
     gap: 10px;
-    /* transform managed by GSAP for FLIP reorder; CSS handles colors only */
+    flex-shrink: 0;
+    /* transform managed by JS for FLIP; CSS handles colours only */
     transition:
       background 0.4s ease,
       border-color 0.4s ease;
@@ -1201,26 +1216,19 @@ import Nav from "../components/Nav.astro";
     transform: scale(1.08);
   }
 
-  /* Open spine: tinted to match the terminal area */
-  .dspine-open {
+  /* Selected spine: tinted, sits at terminal's left edge, merges visually */
+  .dspine-selected {
     background: var(--book-tint);
     border-color: var(--book-edge);
-  }
-
-  .dspine-open .dspine-label {
-    color: var(--book-text);
-  }
-
-  /* Visual seam: open spine merges with terminal (no rounded edge on inner side) */
-  .dshelf-stack-left .dspine-open {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border-right-color: transparent;
-    border-radius: 6px 0 0 6px;
-    margin-right: -1px;
+    margin-right: -5px; /* cancel the 4px container gap + 1px border overlap */
+    z-index: 1;
   }
-  .dshelf-stack-right .dspine-open {
-    border-left-color: transparent;
-    border-radius: 0 6px 6px 0;
-    margin-left: -1px;
+
+  .dspine-selected .dspine-label {
+    color: var(--book-text);
   }
 
   .dshelf-book {
@@ -1228,8 +1236,7 @@ import Nav from "../components/Nav.astro";
     min-width: 0;
     background: var(--book-tint);
     border: 1px solid var(--book-edge);
-    border-radius: 6px;
-    margin: 0 6px;
+    border-radius: 0 6px 6px 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
