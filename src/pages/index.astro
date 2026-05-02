@@ -85,7 +85,10 @@ import Nav from "../components/Nav.astro";
           <div class="frame-content">
             <!-- Vertical tab sidebar -->
             <div class="frame-sidebar">
-              <div class="sidebar-action canvas-link" id="canvas-toggle" title="Toggle Canvas view">Canvas</div>
+              <div class="sidebar-action view-toggles">
+                <span class="view-link" id="canvas-toggle" title="Toggle Canvas view">Canvas</span>
+                <span class="view-link" id="shelf-toggle" title="Toggle Shelf view">Shelf</span>
+              </div>
               <div class="tab active" data-tab="prowl">
                 <span class="tab-icon">&#9733;</span>
                 <span class="tab-label">prowl</span>
@@ -109,6 +112,52 @@ import Nav from "../components/Nav.astro";
             </div>
             <!-- Main area -->
             <div class="frame-main">
+              <!-- Shelf view: [left stack][open book][right stack] -->
+              <div class="shelf-panel" id="shelf-panel" data-open="kingfisher">
+                <div class="shelf-stack shelf-stack-left">
+                  <div class="spine spine-prowl" data-book="prowl">
+                    <span class="spine-label">prowl</span>
+                    <span class="spine-icons">
+                      <i class="sicon" data-glyph="swift">▲</i>
+                      <i class="sicon" data-glyph="claude">✦</i>
+                    </span>
+                  </div>
+                  <div class="spine spine-kingfisher spine-open" data-book="kingfisher">
+                    <span class="spine-label">kingfisher</span>
+                    <span class="spine-icons">
+                      <i class="sicon active" data-glyph="codex">❯</i>
+                      <i class="sicon" data-glyph="git">◆</i>
+                    </span>
+                  </div>
+                </div>
+                <div class="shelf-book" id="shelf-book">
+                  <div class="book-toolbar">
+                    <span class="book-repo" id="shelf-book-repo">kingfisher</span>
+                    <span class="book-branch">main</span>
+                  </div>
+                  <div class="book-terminal" id="shelf-book-term">
+                    <div class="bl"><span class="bp">&#10095;</span> codex "Add retry to ImageDownloader"</div>
+                    <div class="bl out">  &#8987; Reading ImageDownloader.swift</div>
+                    <div class="bl out ok">  &#10003; Done. 3 files changed.</div>
+                    <div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>
+                  </div>
+                </div>
+                <div class="shelf-stack shelf-stack-right">
+                  <div class="spine spine-meetcat" data-book="meetcat">
+                    <span class="spine-label">MeetCat</span>
+                    <span class="spine-icons">
+                      <i class="sicon" data-glyph="vitest">✓</i>
+                      <i class="sicon" data-glyph="npm">▣</i>
+                    </span>
+                  </div>
+                  <div class="spine spine-yitong" data-book="yitong">
+                    <span class="spine-label">YiTong</span>
+                    <span class="spine-icons">
+                      <i class="sicon" data-glyph="vim">▦</i>
+                    </span>
+                  </div>
+                </div>
+              </div>
               <!-- Canvas 2x2 grid view -->
               <div class="canvas-panel" id="canvas-panel">
                 <div class="canvas-grid">
@@ -287,16 +336,62 @@ import Nav from "../components/Nav.astro";
   const panels = document.querySelectorAll<HTMLElement>(".tab-panel[data-panel]");
   const canvasPanel = document.getElementById("canvas-panel")!;
   const canvasToggle = document.getElementById("canvas-toggle")!;
+  const shelfPanel = document.getElementById("shelf-panel")!;
+  const shelfToggle = document.getElementById("shelf-toggle")!;
+  const shelfBookRepo = document.getElementById("shelf-book-repo")!;
+  const shelfBookTerm = document.getElementById("shelf-book-term")!;
   const tabNames = ["prowl", "kingfisher", "meetcat", "yitong"];
-  // Rotation: canvas → prowl → kingfisher → meetcat → yitong → canvas ...
-  const sequence = ["canvas", ...tabNames];
+  // Rotation: canvas → shelf → prowl → kingfisher → meetcat → yitong → canvas ...
+  const sequence = ["canvas", "shelf", ...tabNames];
   let seqIndex = sequence.indexOf("prowl");
   let timer: ReturnType<typeof setInterval>;
   const INTERVAL = 5000;
 
-  function showTab(name: string) {
-    canvasPanel.classList.remove("active");
+  type BookContent = { repo: string; lines: string };
+  const shelfBooks: Record<string, BookContent> = {
+    prowl: {
+      repo: "prowl",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> swift test</div>' +
+        '<div class="bl out">  Build complete! (1.2s)</div>' +
+        '<div class="bl out ok">  Test Suite passed — 23 tests</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    kingfisher: {
+      repo: "kingfisher",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> codex "Add retry to ImageDownloader"</div>' +
+        '<div class="bl out">  &#8987; Reading ImageDownloader.swift</div>' +
+        '<div class="bl out ok">  &#10003; Done. 3 files changed.</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    meetcat: {
+      repo: "MeetCat",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> npx vitest run</div>' +
+        '<div class="bl out">  &#10003; src/utils.test.ts (6) 12ms</div>' +
+        '<div class="bl out ok">  Tests  10 passed</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    yitong: {
+      repo: "YiTong",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> vim README.md</div>' +
+        '<div class="bl out">  -- INSERT --</div>' +
+        '<div class="bl out">  saved · 1 file</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+  };
+
+  function clearViewToggles() {
     canvasToggle.classList.remove("active");
+    shelfToggle.classList.remove("active");
+    canvasPanel.classList.remove("active");
+    shelfPanel.classList.remove("active");
+  }
+
+  function showTab(name: string) {
+    clearViewToggles();
     tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
     panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
   }
@@ -304,14 +399,36 @@ import Nav from "../components/Nav.astro";
   function showCanvas() {
     panels.forEach((p) => p.classList.remove("active"));
     tabs.forEach((t) => t.classList.remove("active"));
+    clearViewToggles();
     canvasPanel.classList.add("active");
     canvasToggle.classList.add("active");
+  }
+
+  function openShelfBook(name: string) {
+    const book = shelfBooks[name];
+    if (!book) return;
+    shelfBookRepo.textContent = book.repo;
+    shelfBookTerm.innerHTML = book.lines;
+    shelfPanel.dataset.open = name;
+    shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]").forEach((s) => {
+      s.classList.toggle("spine-open", s.dataset.book === name);
+    });
+  }
+
+  function showShelf() {
+    panels.forEach((p) => p.classList.remove("active"));
+    tabs.forEach((t) => t.classList.remove("active"));
+    clearViewToggles();
+    shelfPanel.classList.add("active");
+    shelfToggle.classList.add("active");
   }
 
   function showByIndex(i: number) {
     const name = sequence[i];
     if (name === "canvas") {
       showCanvas();
+    } else if (name === "shelf") {
+      showShelf();
     } else {
       showTab(name);
     }
@@ -341,9 +458,22 @@ import Nav from "../components/Nav.astro";
   // Canvas toggle
   canvasToggle.addEventListener("click", () => switchTo("canvas"));
 
+  // Shelf toggle
+  shelfToggle.addEventListener("click", () => switchTo("shelf"));
+
   // Canvas card clicks → switch to that tab
   document.querySelectorAll<HTMLElement>(".canvas-card[data-card]").forEach((card) => {
     card.addEventListener("click", () => switchTo(card.dataset.card!));
+  });
+
+  // Shelf spine clicks → open that book inside the shelf
+  shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]").forEach((spine) => {
+    spine.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openShelfBook(spine.dataset.book!);
+      // Stay in shelf view; reset rotation timer for breathing room
+      switchTo("shelf");
+    });
   });
 
   // Action button flash
@@ -709,17 +839,23 @@ import Nav from "../components/Nav.astro";
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
 
-  .canvas-link {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    text-decoration: none;
-    color: var(--text-muted);
-    transition: color 0.15s;
+  .view-toggles {
+    gap: 4px;
   }
 
-  .canvas-link:hover {
+  .view-link {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 1px 6px;
+    border-radius: 3px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .view-link:hover {
     color: var(--accent);
-    opacity: 1;
+    background: rgba(90, 228, 192, 0.06);
   }
 
   /* Main area */
@@ -782,7 +918,8 @@ import Nav from "../components/Nav.astro";
 
   /* Tab panels */
   .tab-panel,
-  .canvas-panel {
+  .canvas-panel,
+  .shelf-panel {
     flex: 1;
     opacity: 0;
     pointer-events: none;
@@ -802,7 +939,8 @@ import Nav from "../components/Nav.astro";
   }
 
   .tab-panel.active,
-  .canvas-panel.active {
+  .canvas-panel.active,
+  .shelf-panel.active {
     opacity: 1;
     pointer-events: auto;
     position: relative;
@@ -870,9 +1008,163 @@ import Nav from "../components/Nav.astro";
     color: var(--accent);
   }
 
-  /* Canvas toggle active state */
-  .canvas-link.active {
+  /* View toggle active state */
+  .view-link.active {
     color: var(--accent);
+    background: rgba(90, 228, 192, 0.1);
+  }
+
+  /* ── Shelf wireframe ── */
+  .shelf-panel {
+    display: flex;
+    align-items: stretch;
+    padding: 6px;
+    gap: 0;
+  }
+
+  .shelf-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .spine {
+    width: 22px;
+    min-height: 110px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0 5px;
+    gap: 5px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .spine:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .spine-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 70px;
+    white-space: nowrap;
+  }
+
+  .spine-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .sicon {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .sicon.active {
+    background: rgba(90, 228, 192, 0.18);
+    color: var(--accent);
+  }
+
+  /* Open spine: tinted to match terminal area, no right radius (visually merges with book) */
+  .spine-open {
+    background: rgba(90, 228, 192, 0.08);
+    border-color: rgba(90, 228, 192, 0.22);
+  }
+
+  .shelf-stack-left .spine-open {
+    border-right-color: transparent;
+    border-radius: 4px 0 0 4px;
+    margin-right: -1px;
+  }
+
+  .shelf-stack-right .spine-open {
+    border-left-color: transparent;
+    border-radius: 0 4px 4px 0;
+    margin-left: -1px;
+  }
+
+  .spine-open .spine-label {
+    color: var(--accent);
+  }
+
+  .shelf-book {
+    flex: 1;
+    min-width: 0;
+    background: rgba(90, 228, 192, 0.04);
+    border: 1px solid rgba(90, 228, 192, 0.18);
+    border-radius: 4px;
+    margin: 0 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .book-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+
+  .book-repo {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .book-branch {
+    color: var(--text-muted);
+    font-size: 0.55rem;
+  }
+
+  .book-terminal {
+    flex: 1;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.85;
+  }
+
+  .bl {
+    white-space: nowrap;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bl.out { color: var(--text-muted); }
+  .bl.ok { color: var(--accent-dim); }
+
+  .bp {
+    color: var(--accent);
+    margin-right: 6px;
   }
 
   /* Terminal output inside frame */
@@ -1120,8 +1412,25 @@ import Nav from "../components/Nav.astro";
       font-size: 0.85rem;
     }
 
-    .canvas-link {
-      font-size: 0.55rem;
+    .view-link {
+      font-size: 0.5rem;
+      padding: 1px 4px;
+    }
+
+    .spine {
+      width: 18px;
+      min-height: 90px;
+    }
+
+    .spine-label {
+      font-size: 0.45rem;
+      max-height: 56px;
+    }
+
+    .sicon {
+      width: 10px;
+      height: 10px;
+      font-size: 6px;
     }
 
     .icon-float {

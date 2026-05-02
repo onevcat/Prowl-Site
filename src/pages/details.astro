@@ -95,12 +95,110 @@ import Nav from "../components/Nav.astro";
       </div>
     </section>
 
-    <!-- ═══ Act 2 — CLI ═══ -->
-    <section class="act act-cli" id="act-cli">
+    <!-- ═══ Act 2 — Shelf ═══ -->
+    <section class="act act-shelf" id="act-shelf">
       <div class="act-pin-wrap">
         <div class="act-layout act-layout-reverse">
           <div class="act-text">
             <span class="act-label">02</span>
+            <h2 class="act-title">Shelf</h2>
+            <p class="act-scene">
+              Five repos open. Each one a different agent, a different command.
+              <br />You need the next one — without losing this one.
+            </p>
+            <p class="act-resolve">
+              Shelf gives every worktree its own spine. One book open, the rest
+              standing by — click a spine, the shelf flows aside, your
+              terminal opens like a book.
+            </p>
+            <ul class="act-details">
+              <li>Spine icons follow the running command — codex, vitest, swift, git… one glance tells you what's alive</li>
+              <li>200&nbsp;ms spine-flow on switch; the terminal in the middle never moves</li>
+              <li><kbd>&#8984;&#8963;&larr;/&rarr;</kbd> cycles books · <kbd>&#8984;&#8963;&uarr;/&darr;</kbd> cycles tabs</li>
+              <li>Canvas zooms out to orchestrate. Shelf zooms in to focus — and switches without breaking it.</li>
+            </ul>
+          </div>
+          <div class="act-visual">
+            <div class="shelf-demo" id="shelf-demo">
+              <div class="shelf-titlebar">
+                <span class="shelf-dot r"></span>
+                <span class="shelf-dot y"></span>
+                <span class="shelf-dot g"></span>
+                <span class="shelf-title" id="shelf-title">Prowl</span>
+              </div>
+              <div class="shelf-body">
+                <div class="dshelf-stack dshelf-stack-left" id="dshelf-left">
+                  <div class="dspine" data-book="ai-ship" data-color="violet" id="dspine-ai-ship">
+                    <span class="dspine-label">ai-ship</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon">▦</span>
+                      <span class="dsicon">◆</span>
+                    </div>
+                  </div>
+                  <div class="dspine" data-book="kingfisher" data-color="amber" id="dspine-kingfisher">
+                    <span class="dspine-label">kingfisher</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon" id="dspine-kf-i1">◆</span>
+                      <span class="dsicon" id="dspine-kf-i2">❯</span>
+                      <span class="dsicon" id="dspine-kf-i3">✓</span>
+                    </div>
+                  </div>
+                  <div class="dspine dspine-open" data-book="prowl" data-color="rose" id="dspine-prowl">
+                    <span class="dspine-label">prowl</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon active">▲</span>
+                      <span class="dsicon">✦</span>
+                      <span class="dsicon">◆</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dshelf-book" id="dshelf-book">
+                  <div class="dbook-toolbar">
+                    <span class="dbook-repo" id="dbook-repo">prowl</span>
+                    <span class="dbook-branch" id="dbook-branch">main</span>
+                    <span class="dbook-controls">
+                      <span class="dbook-ctrl">+</span>
+                      <span class="dbook-ctrl">⊟</span>
+                    </span>
+                  </div>
+                  <div class="dbook-terminal" id="dbook-terminal">
+                    <!-- replaced by JS as scenes advance -->
+                    <div class="dbl"><span class="dbp">&#10095;</span> swift test</div>
+                    <div class="dbl out">  Build complete! (1.2s)</div>
+                    <div class="dbl out ok">  Test Suite passed — 23 tests, 0 failures</div>
+                    <div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>
+                  </div>
+                </div>
+
+                <div class="dshelf-stack dshelf-stack-right" id="dshelf-right">
+                  <div class="dspine" data-book="meetcat" data-color="teal" id="dspine-meetcat">
+                    <span class="dspine-label">MeetCat</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon">▣</span>
+                      <span class="dsicon">✓</span>
+                    </div>
+                  </div>
+                  <div class="dspine" data-book="yitong" data-color="sky" id="dspine-yitong">
+                    <span class="dspine-label">YiTong</span>
+                    <div class="dspine-icons">
+                      <span class="dsicon">▦</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Act 3 — CLI ═══ -->
+    <section class="act act-cli" id="act-cli">
+      <div class="act-pin-wrap">
+        <div class="act-layout act-layout-reverse">
+          <div class="act-text">
+            <span class="act-label">03</span>
             <h2 class="act-title">CLI</h2>
             <p class="act-scene">
               Your agent needs to run a test, read the result,
@@ -148,12 +246,12 @@ import Nav from "../components/Nav.astro";
       </div>
     </section>
 
-    <!-- ═══ Act 3 — Custom Actions ═══ -->
+    <!-- ═══ Act 4 — Custom Actions ═══ -->
     <section class="act act-actions" id="act-actions">
       <div class="act-pin-wrap">
         <div class="act-layout">
           <div class="act-text">
-            <span class="act-label">03</span>
+            <span class="act-label">04</span>
             <h2 class="act-title">Custom Actions</h2>
             <p class="act-scene">
               Build, test, deploy — the same commands, typed out the same way,
@@ -392,7 +490,164 @@ import Nav from "../components/Nav.astro";
     });
   }
 
-  /* ── Act 2: CLI ── */
+  /* ── Act 2: Shelf ──
+     Spine flow stays inside its stack; "open" = innermost spine of a stack,
+     visually merged with the terminal area. Terminal content + tint follows
+     the open book; tab icons on the open spine cycle to suggest live commands.
+  */
+  if (!prefersReduced) {
+    const shelfDemo = document.getElementById("shelf-demo");
+    const dbookRepo = document.getElementById("dbook-repo");
+    const dbookBranch = document.getElementById("dbook-branch");
+    const dbookTerm = document.getElementById("dbook-terminal");
+    const dshelfTitle = document.getElementById("shelf-title");
+
+    const shelfScenes = {
+      prowl: {
+        open: "prowl",
+        color: "rose",
+        title: "Prowl",
+        branch: "main",
+        term:
+          '<div class="dbl"><span class="dbp">&#10095;</span> swift test</div>' +
+          '<div class="dbl out">  Build complete! (1.2s)</div>' +
+          '<div class="dbl out ok">  Test Suite passed — 23 tests, 0 failures</div>' +
+          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
+      },
+      kingfisher: {
+        open: "kingfisher",
+        color: "amber",
+        title: "Kingfisher",
+        branch: "main",
+        term:
+          '<div class="dbl"><span class="dbp">&#10095;</span> codex "Add retry to ImageDownloader"</div>' +
+          '<div class="dbl out">  &#8987; Reading ImageDownloader.swift</div>' +
+          '<div class="dbl out">  &#8987; Applying changes to 2 files</div>' +
+          '<div class="dbl out ok">  &#10003; Done. 3 files changed.</div>' +
+          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
+      },
+      "kingfisher-test": {
+        open: "kingfisher",
+        color: "amber",
+        title: "Kingfisher",
+        branch: "main",
+        term:
+          '<div class="dbl"><span class="dbp">&#10095;</span> swift test</div>' +
+          '<div class="dbl out">  Test Suite started…</div>' +
+          '<div class="dbl out ok">  &#10003; 142 passed (4.6s)</div>' +
+          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
+      },
+      meetcat: {
+        open: "meetcat",
+        color: "teal",
+        title: "MeetCat",
+        branch: "feature/auth",
+        term:
+          '<div class="dbl"><span class="dbp">&#10095;</span> npx vitest run</div>' +
+          '<div class="dbl out">  &#10003; src/utils.test.ts (6 tests) 12ms</div>' +
+          '<div class="dbl out">  &#10003; src/hooks.test.ts (4 tests) 8ms</div>' +
+          '<div class="dbl out ok">  Tests  10 passed</div>' +
+          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
+      },
+    };
+
+    function applyShelfScene(key) {
+      const scene = shelfScenes[key];
+      if (!scene || !shelfDemo || !dbookRepo || !dbookBranch || !dbookTerm || !dshelfTitle) return;
+      shelfDemo.dataset.color = scene.color;
+      shelfDemo.dataset.open = scene.open;
+      dbookRepo.textContent = scene.open === "meetcat" ? "MeetCat" : scene.open;
+      dbookBranch.textContent = scene.branch;
+      dbookTerm.innerHTML = scene.term;
+      dshelfTitle.textContent = scene.title;
+      // Mark the open spine; reorder spines inside their stacks so the open one
+      // sits at the inner edge.
+      const leftStack = document.getElementById("dshelf-left");
+      const rightStack = document.getElementById("dshelf-right");
+      document.querySelectorAll(".dspine[data-book]").forEach((sp) => {
+        sp.classList.toggle("dspine-open", sp.dataset.book === scene.open);
+      });
+      // Reorder via flex order so the open spine lands at the inner edge of
+      // its stack (left stack: rightmost; right stack: leftmost).
+      const leftBooks = ["ai-ship", "kingfisher", "prowl"];
+      const rightBooks = ["meetcat", "yitong"];
+      if (leftStack && leftBooks.indexOf(scene.open) !== -1) {
+        leftStack.querySelectorAll(".dspine").forEach((sp) => {
+          const book = sp.dataset.book;
+          sp.style.order = book === scene.open ? "10" : String(leftBooks.indexOf(book));
+        });
+      }
+      if (rightStack && rightBooks.indexOf(scene.open) !== -1) {
+        rightStack.querySelectorAll(".dspine").forEach((sp) => {
+          const book = sp.dataset.book;
+          sp.style.order = book === scene.open ? "-10" : String(rightBooks.indexOf(book));
+        });
+      }
+    }
+
+    // Initialise to prowl scene
+    applyShelfScene("prowl");
+
+    const shelfTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#act-shelf",
+        pin: "#act-shelf .act-pin-wrap",
+        start: "top top",
+        end: "+=260%",
+        scrub: 0.6,
+      },
+    });
+
+    // Phase 1 (entry): spines slide in from their respective sides.
+    gsap.set(".dshelf-stack-left .dspine", { x: -60, opacity: 0 });
+    gsap.set(".dshelf-stack-right .dspine", { x: 60, opacity: 0 });
+    gsap.set("#dshelf-book", { opacity: 0, y: 18 });
+
+    shelfTl
+      .to(".dshelf-stack-left .dspine", {
+        x: 0, opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
+      })
+      .to(".dshelf-stack-right .dspine", {
+        x: 0, opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
+      }, "<")
+      .to("#dshelf-book", { opacity: 1, y: 0, duration: 0.25 }, "<+0.1")
+      // Phase 2: switch to kingfisher (left-stack flow).
+      .add(() => applyShelfScene("kingfisher"), "+=0.25")
+      // Phase 3: morph kingfisher's tab icon focus + change terminal to test run.
+      .add(() => {
+        const i1 = document.getElementById("dspine-kf-i1");
+        const i2 = document.getElementById("dspine-kf-i2");
+        const i3 = document.getElementById("dspine-kf-i3");
+        i1?.classList.remove("active");
+        i2?.classList.add("active");
+        i3?.classList.remove("active");
+      }, "+=0.3")
+      .add(() => {
+        applyShelfScene("kingfisher-test");
+        const i1 = document.getElementById("dspine-kf-i1");
+        const i2 = document.getElementById("dspine-kf-i2");
+        const i3 = document.getElementById("dspine-kf-i3");
+        i1?.classList.remove("active");
+        i2?.classList.remove("active");
+        i3?.classList.add("active");
+      }, "+=0.3")
+      // Phase 4: switch to meetcat (right-stack flow).
+      .add(() => applyShelfScene("meetcat"), "+=0.3")
+      // Tail dwell so the final scene reads.
+      .to({}, { duration: 0.4 });
+
+    gsap.from("#act-shelf .act-text", {
+      opacity: 0, x: 40,
+      scrollTrigger: {
+        trigger: "#act-shelf",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Act 3: CLI ── */
   if (!prefersReduced) {
     const cliLines = Array.from({ length: 12 }, (_, i) => `#cli-l${i + 1}`);
     cliLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
@@ -423,7 +678,7 @@ import Nav from "../components/Nav.astro";
     });
   }
 
-  /* ── Act 3: Custom Actions ── */
+  /* ── Act 4: Custom Actions ── */
   if (!prefersReduced) {
     gsap.set("#pill-build", { opacity: 0, y: 12 });
     gsap.set("#pill-test", { opacity: 0, y: 12 });
@@ -778,6 +1033,246 @@ import Nav from "../components/Nav.astro";
     border: 2px solid var(--accent);
     box-shadow: 0 0 16px rgba(90, 228, 192, 0.3);
     pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════
+     Shelf demo
+     ═══════════════════════════════════════ */
+  .shelf-demo {
+    --book-tint: rgba(244, 114, 182, 0.16);   /* default: rose / prowl */
+    --book-edge: rgba(244, 114, 182, 0.32);
+    --book-text: #f9a8d4;
+    background: #0a1018;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+    transition: background 0.45s ease;
+  }
+
+  .shelf-demo[data-color="amber"] {
+    --book-tint: rgba(245, 158, 11, 0.18);
+    --book-edge: rgba(245, 158, 11, 0.36);
+    --book-text: #fcd34d;
+  }
+  .shelf-demo[data-color="teal"] {
+    --book-tint: rgba(45, 212, 191, 0.16);
+    --book-edge: rgba(45, 212, 191, 0.34);
+    --book-text: #5eead4;
+  }
+  .shelf-demo[data-color="violet"] {
+    --book-tint: rgba(167, 139, 250, 0.16);
+    --book-edge: rgba(167, 139, 250, 0.34);
+    --book-text: #c4b5fd;
+  }
+  .shelf-demo[data-color="sky"] {
+    --book-tint: rgba(56, 189, 248, 0.16);
+    --book-edge: rgba(56, 189, 248, 0.34);
+    --book-text: #7dd3fc;
+  }
+
+  .shelf-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .shelf-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .shelf-dot.r { background: #ff5f57; }
+  .shelf-dot.y { background: #febc2e; }
+  .shelf-dot.g { background: #28c840; }
+
+  .shelf-title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-right: 28px;
+  }
+
+  .shelf-body {
+    display: flex;
+    align-items: stretch;
+    min-height: 320px;
+    padding: 10px;
+    gap: 0;
+  }
+
+  .dshelf-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .dspine {
+    width: 34px;
+    min-height: 200px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0 8px;
+    gap: 10px;
+    transition:
+      background 0.4s ease,
+      border-color 0.4s ease,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dspine-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 120px;
+    white-space: nowrap;
+  }
+
+  .dspine-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .dsicon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+  }
+
+  .dsicon.active {
+    background: var(--book-tint);
+    color: var(--book-text);
+    transform: scale(1.08);
+  }
+
+  /* Open spine: tinted to match the terminal area */
+  .dspine-open {
+    background: var(--book-tint);
+    border-color: var(--book-edge);
+  }
+
+  .dspine-open .dspine-label {
+    color: var(--book-text);
+  }
+
+  /* Visual seam: open spine merges with terminal (no rounded edge on inner side) */
+  .dshelf-stack-left .dspine-open {
+    border-right-color: transparent;
+    border-radius: 6px 0 0 6px;
+    margin-right: -1px;
+  }
+  .dshelf-stack-right .dspine-open {
+    border-left-color: transparent;
+    border-radius: 0 6px 6px 0;
+    margin-left: -1px;
+  }
+
+  .dshelf-book {
+    flex: 1;
+    min-width: 0;
+    background: var(--book-tint);
+    border: 1px solid var(--book-edge);
+    border-radius: 6px;
+    margin: 0 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.45s ease, border-color 0.45s ease;
+  }
+
+  .dbook-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .dbook-repo {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .dbook-branch {
+    color: var(--book-text);
+    font-size: 0.62rem;
+    opacity: 0.85;
+  }
+
+  .dbook-controls {
+    margin-left: auto;
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .dbook-ctrl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    font-size: 0.65rem;
+  }
+
+  .dbook-terminal {
+    flex: 1;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.95;
+  }
+
+  .dbl {
+    white-space: nowrap;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dbl.out { color: var(--text-muted); }
+  .dbl.ok { color: var(--accent-dim); }
+
+  .dbp {
+    color: var(--book-text);
+    margin-right: 8px;
+  }
+
+  .dblink {
+    color: var(--book-text);
+    animation: blink 1s step-end infinite;
   }
 
   /* ═══════════════════════════════════════
@@ -1213,6 +1708,39 @@ import Nav from "../components/Nav.astro";
     .actions-demo {
       max-width: 420px;
       margin: 0 auto;
+    }
+
+    .shelf-demo {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .shelf-body {
+      min-height: 240px;
+      padding: 8px;
+    }
+
+    .dspine {
+      width: 26px;
+      min-height: 160px;
+      padding: 8px 0 6px;
+      gap: 8px;
+    }
+
+    .dspine-label {
+      font-size: 0.55rem;
+      max-height: 90px;
+    }
+
+    .dsicon {
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
+    }
+
+    .dbook-terminal {
+      font-size: 0.7rem;
+      padding: 10px 12px;
     }
   }
 
