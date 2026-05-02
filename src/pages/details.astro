@@ -1165,6 +1165,36 @@ import Nav from "../components/Nav.astro";
       border-color 0.4s ease;
   }
 
+  /* Each spine carries its own colour identity (book-cover style). The selected
+     spine and the terminal share the same colour by definition — we keep the
+     scene-level --book-* on .shelf-demo so the terminal can read it, and mirror
+     the same palette per book on the spines themselves. */
+  .dspine[data-book="ai-ship"] {
+    --spine-tint: rgba(167, 139, 250, 0.16);
+    --spine-edge: rgba(167, 139, 250, 0.34);
+    --spine-text: #c4b5fd;
+  }
+  .dspine[data-book="kingfisher"] {
+    --spine-tint: rgba(245, 158, 11, 0.18);
+    --spine-edge: rgba(245, 158, 11, 0.36);
+    --spine-text: #fcd34d;
+  }
+  .dspine[data-book="prowl"] {
+    --spine-tint: rgba(244, 114, 182, 0.16);
+    --spine-edge: rgba(244, 114, 182, 0.32);
+    --spine-text: #f9a8d4;
+  }
+  .dspine[data-book="yitong"] {
+    --spine-tint: rgba(56, 189, 248, 0.16);
+    --spine-edge: rgba(56, 189, 248, 0.34);
+    --spine-text: #7dd3fc;
+  }
+  .dspine[data-book="meetcat"] {
+    --spine-tint: rgba(45, 212, 191, 0.16);
+    --spine-edge: rgba(45, 212, 191, 0.34);
+    --spine-text: #5eead4;
+  }
+
   .dspine-label {
     writing-mode: vertical-rl;
     text-orientation: mixed;
@@ -1201,15 +1231,15 @@ import Nav from "../components/Nav.astro";
   }
 
   .dsicon.active {
-    background: var(--book-tint);
-    color: var(--book-text);
+    background: var(--spine-tint);
+    color: var(--spine-text);
     transform: scale(1.08);
   }
 
-  /* Selected spine: tinted, sits at terminal's left edge, merges visually */
+  /* Selected spine: tinted with its OWN colour, sits at terminal's left edge */
   .dspine-selected {
-    background: var(--book-tint);
-    border-color: var(--book-edge);
+    background: var(--spine-tint);
+    border-color: var(--spine-edge);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right-color: transparent;
@@ -1218,7 +1248,7 @@ import Nav from "../components/Nav.astro";
   }
 
   .dspine-selected .dspine-label {
-    color: var(--book-text);
+    color: var(--spine-text);
   }
 
   .dshelf-book {
