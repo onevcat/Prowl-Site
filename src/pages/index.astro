@@ -72,6 +72,22 @@ import Nav from "../components/Nav.astro";
 
       <!-- Right: interactive mini app wireframe + icon -->
       <div class="hero-visual">
+        <div class="app-frame-wrap">
+        <button
+          type="button"
+          class="video-trigger"
+          id="video-trigger"
+          aria-label="Watch the Prowl demo video"
+          aria-haspopup="dialog"
+          aria-controls="video-modal"
+        >
+          <span class="video-trigger-icon" aria-hidden="true">
+            <svg viewBox="0 0 12 12" fill="currentColor" width="9" height="9">
+              <polygon points="2.5,1.5 10.5,6 2.5,10.5" />
+            </svg>
+          </span>
+          <span class="video-trigger-label">Watch demo</span>
+        </button>
         <div class="app-frame" id="app-frame">
           <!-- Title bar -->
           <div class="frame-titlebar">
@@ -252,6 +268,7 @@ import Nav from "../components/Nav.astro";
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Floating icon -->
         <div class="icon-float">
@@ -325,6 +342,23 @@ import Nav from "../components/Nav.astro";
     </footer>
 
   </main>
+
+  <div class="video-modal" id="video-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Prowl demo video">
+    <div class="video-modal-backdrop" data-close></div>
+    <div class="video-modal-content">
+      <button
+        type="button"
+        class="video-modal-close"
+        id="video-modal-close"
+        aria-label="Close video"
+      >
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+          <path d="M3 3l10 10M13 3L3 13" />
+        </svg>
+      </button>
+      <div class="video-modal-frame" id="video-modal-frame"></div>
+    </div>
+  </div>
 </Layout>
 
 <script>
@@ -564,9 +598,27 @@ import Nav from "../components/Nav.astro";
     paw.setAttribute("aria-pressed", "false");
   });
 
+  const videoTrigger = document.getElementById("video-trigger");
+  let autoPawComplete = false;
+  let easterTriggered = false;
+
+  function activateTriggerPulse() {
+    videoTrigger?.classList.add("pulse");
+  }
+
+  function maybeTriggerEaster() {
+    if (autoPawComplete || easterTriggered) return;
+    const allLit = Array.from(pawPrints).every((p) => p.classList.contains("lit"));
+    if (!allLit) return;
+    easterTriggered = true;
+    videoTrigger?.classList.add("rainbow");
+    // No pulse — the Nyan Cat carries the attention on its own.
+  }
+
   function togglePaw(paw: HTMLElement) {
     const isLit = paw.classList.toggle("lit");
     paw.setAttribute("aria-pressed", String(isLit));
+    maybeTriggerEaster();
   }
 
   document.addEventListener("click", (event) => {
@@ -590,8 +642,85 @@ import Nav from "../components/Nav.astro";
     });
   });
 
+  // Auto paw-light sequence: kicks in after all three appear animations finish
+  // (max delay 2.0s + 0.8s duration ≈ 2.8s). Each paw not yet lit by the user
+  // lights up on a 600ms cadence; already-lit paws are preserved as-is.
+  // Once the sequence completes, the Watch demo trigger starts its pulse ring.
+  function startAutoPawSequence() {
+    const APPEAR_END_MS = 3000;
+    const STEP_MS = 600;
+    // Right-to-left, matching the appear order (p3 first, then p2, then p1).
+    const sequence = Array.from(pawPrints).reverse();
+    let idx = 0;
+    function step() {
+      if (idx >= sequence.length) {
+        autoPawComplete = true;
+        if (!easterTriggered) activateTriggerPulse();
+        return;
+      }
+      const paw = sequence[idx++];
+      if (!easterTriggered && !paw.classList.contains("lit")) {
+        paw.classList.add("lit");
+        paw.setAttribute("aria-pressed", "true");
+      }
+      window.setTimeout(step, STEP_MS);
+    }
+    window.setTimeout(step, APPEAR_END_MS);
+  }
+  startAutoPawSequence();
+
   // Start auto-rotation
   resetTimer();
+
+  // Video modal
+  const videoModal = document.getElementById("video-modal");
+  const videoModalFrame = document.getElementById("video-modal-frame");
+  const videoModalClose = document.getElementById("video-modal-close");
+  const VIDEO_EMBED_SRC =
+    "https://www.youtube-nocookie.com/embed/4GYlXPttwi0?autoplay=1&rel=0&modestbranding=1";
+
+  function openVideoModal() {
+    if (!videoModal || !videoModalFrame) return;
+    // Astro scopes <style> selectors, but the iframe is injected at runtime
+    // and won't carry the scope hash — so size it via inline style instead.
+    const IFRAME_STYLE =
+      "position:absolute;inset:0;width:100%;height:100%;border:0;display:block";
+    videoModalFrame.innerHTML =
+      '<iframe src="' +
+      VIDEO_EMBED_SRC +
+      '" title="Prowl demo" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen style="' +
+      IFRAME_STYLE +
+      '"></iframe>';
+    videoModal.hidden = false;
+    videoModal.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(() => videoModal.classList.add("open"));
+    document.body.style.overflow = "hidden";
+    videoModalClose?.focus();
+  }
+
+  function closeVideoModal() {
+    if (!videoModal || !videoModalFrame) return;
+    videoModal.classList.remove("open");
+    videoModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    // Wait for fade-out, then unmount iframe to stop playback
+    window.setTimeout(() => {
+      if (!videoModal.classList.contains("open")) {
+        videoModalFrame.innerHTML = "";
+        videoModal.hidden = true;
+      }
+    }, 240);
+    videoTrigger?.focus();
+  }
+
+  videoTrigger?.addEventListener("click", openVideoModal);
+  videoModalClose?.addEventListener("click", closeVideoModal);
+  videoModal?.querySelector("[data-close]")?.addEventListener("click", closeVideoModal);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && videoModal && !videoModal.hidden) {
+      closeVideoModal();
+    }
+  });
 </script>
 
 <style>
@@ -1316,7 +1445,7 @@ import Nav from "../components/Nav.astro";
   .p1 {
     width: 32px;
     bottom: 8%;
-    left: 50%;
+    left: 58%;
     transform: rotate(-75deg);
     animation-delay: 2.0s;
   }
@@ -1324,7 +1453,7 @@ import Nav from "../components/Nav.astro";
   .p2 {
     width: 28px;
     bottom: 4%;
-    left: 58%;
+    left: 66%;
     transform: rotate(-70deg);
     animation-delay: 1.6s;
   }
@@ -1332,7 +1461,7 @@ import Nav from "../components/Nav.astro";
   .p3 {
     width: 24px;
     bottom: 8%;
-    left: 65%;
+    left: 73%;
     transform: rotate(-65deg);
     animation-delay: 1.2s;
   }
@@ -1350,6 +1479,214 @@ import Nav from "../components/Nav.astro";
   @keyframes paw-appear {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+
+  /* Watch demo trigger — floats at the wireframe's top-right */
+  .app-frame-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+  }
+
+  .video-trigger {
+    position: absolute;
+    bottom: -16px;
+    left: -14px;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem 0.5rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bg-primary);
+    background: var(--accent);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 10px 28px rgba(90, 228, 192, 0.4),
+      0 0 0 4px var(--bg-primary);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .video-trigger::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .video-trigger.pulse::after {
+    animation: trigger-pulse 2.4s ease-out infinite;
+  }
+
+  /* Easter egg — Nyan Cat takeover when all paws lit before auto-sequence finishes.
+     Use contain + matching aspect so the gif is shown whole, head-to-tail. */
+  .video-trigger.rainbow {
+    padding: 0;
+    width: 110px;
+    height: 64px;
+    color: transparent;
+    font-size: 0;
+    background-color: transparent;
+    background-image: url("https://media.tenor.com/8lR3_1m-i94AAAAi/cat.gif");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    box-shadow: none;
+    filter: drop-shadow(0 8px 18px rgba(90, 228, 192, 0.35));
+  }
+
+  .video-trigger.rainbow .video-trigger-icon,
+  .video-trigger.rainbow .video-trigger-label {
+    display: none;
+  }
+
+  /* No pulse ring during the easter-egg state — the cat is the show. */
+  .video-trigger.rainbow::after {
+    display: none;
+  }
+
+  /* Easter-egg hover: just scale, no extra glow. */
+  .video-trigger.rainbow:hover {
+    transform: scale(1.06);
+    box-shadow: none;
+  }
+
+  @keyframes trigger-pulse {
+    0% { transform: scale(0.95); opacity: 0.55; }
+    80% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  .video-trigger:hover {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow:
+      0 12px 32px rgba(90, 228, 192, 0.5),
+      0 0 0 4px var(--bg-primary);
+    opacity: 1;
+  }
+
+  .video-trigger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .video-trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(11, 18, 33, 0.92);
+    color: var(--accent);
+  }
+
+  .video-trigger-label {
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* Video modal */
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .video-modal[hidden] {
+    display: none;
+  }
+
+  .video-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .video-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 10, 20, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    aspect-ratio: 16 / 9;
+    max-height: calc(100vh - 6rem);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0a1018;
+    box-shadow:
+      0 32px 100px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    transform: scale(0.96);
+    transition: transform 0.22s ease;
+  }
+
+  .video-modal.open .video-modal-content {
+    transform: scale(1);
+  }
+
+  .video-modal-frame {
+    position: absolute;
+    inset: 0;
+  }
+
+  .video-modal-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .video-modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  }
+
+  .video-modal-close:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: scale(1.06);
+    opacity: 1;
+  }
+
+  .video-modal-close:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
   }
 
   /* Footer */
@@ -1420,6 +1757,16 @@ import Nav from "../components/Nav.astro";
     .cta-group {
       justify-content: center;
     }
+
+    .video-modal {
+      padding: 1.25rem;
+    }
+
+    .video-modal-close {
+      top: -38px;
+      width: 28px;
+      height: 28px;
+    }
   }
 
   @media (max-width: 480px) {
@@ -1485,6 +1832,23 @@ import Nav from "../components/Nav.astro";
       width: 96px;
       height: 96px;
       border-radius: 22px;
+    }
+
+    .video-trigger {
+      bottom: -14px;
+      left: -8px;
+      padding: 0.4rem 0.75rem 0.4rem 0.5rem;
+      font-size: 0.7rem;
+    }
+
+    .video-trigger.rainbow {
+      width: 92px;
+      height: 54px;
+    }
+
+    .video-trigger-icon {
+      width: 17px;
+      height: 17px;
     }
   }
 </style>
