@@ -185,12 +185,81 @@ import Nav from "../components/Nav.astro";
       </div>
     </section>
 
-    <!-- ═══ Act 3 — CLI ═══ -->
+    <!-- ═══ Act 3 — Active Agents ═══ -->
+    <section class="act act-agents" id="act-agents">
+      <div class="act-pin-wrap">
+        <div class="act-layout">
+          <div class="act-text">
+            <span class="act-label">03</span>
+            <h2 class="act-title">Active Agents</h2>
+            <p class="act-scene">
+              Three agents running across two projects.
+              <br />One blocked. One working. One waiting.
+            </p>
+            <p class="act-resolve">
+              Active Agents lifts every running agent out of the sidebar — a
+              single panel that always shows who's working, who's blocked,
+              and who just finished, regardless of which repo they live in.
+            </p>
+            <ul class="act-details">
+              <li>One panel, every agent, every repo — no hunting through tabs</li>
+              <li>Status flips live: <span class="warm">working</span> · <span class="warn">blocked</span> · <span class="info">done</span> · <span class="muted">idle</span></li>
+              <li>Click an entry to jump straight into that agent's tab</li>
+            </ul>
+          </div>
+          <div class="act-visual">
+            <div class="agents-demo" id="agents-demo">
+              <div class="agents-panel" id="agents-panel">
+                <div class="agents-head">
+                  <span class="agents-head-title">Active Agents</span>
+                  <span class="agents-head-count">3</span>
+                </div>
+                <div class="agents-row" id="agents-row-codex">
+                  <div class="agent-icon agent-icon-codex">&#10095;</div>
+                  <div class="agent-meta">
+                    <div class="agent-name"><span class="agent-tool">codex</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-prowl">Prowl</span></div>
+                    <div class="agent-branch">main</div>
+                  </div>
+                  <div class="agent-status agent-status-working" id="agents-status-codex">
+                    <span class="agent-status-dot"></span>
+                    <span class="agent-status-label">Working</span>
+                  </div>
+                </div>
+                <div class="agents-row" id="agents-row-claude">
+                  <div class="agent-icon agent-icon-claude">&#10022;</div>
+                  <div class="agent-meta">
+                    <div class="agent-name"><span class="agent-tool">claude</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-prowl">Prowl</span></div>
+                    <div class="agent-branch">main</div>
+                  </div>
+                  <div class="agent-status agent-status-blocked" id="agents-status-claude">
+                    <span class="agent-status-dot"></span>
+                    <span class="agent-status-label">Blocked</span>
+                  </div>
+                </div>
+                <div class="agents-row" id="agents-row-pi">
+                  <div class="agent-icon agent-icon-pi">&#960;</div>
+                  <div class="agent-meta">
+                    <div class="agent-name"><span class="agent-tool">pi</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-kingfisher">Kingfisher</span></div>
+                    <div class="agent-branch">master</div>
+                  </div>
+                  <div class="agent-status agent-status-idle">
+                    <span class="agent-status-dot"></span>
+                    <span class="agent-status-label">Idle</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Act 4 — CLI ═══ -->
     <section class="act act-cli" id="act-cli">
       <div class="act-pin-wrap">
         <div class="act-layout act-layout-reverse">
           <div class="act-text">
-            <span class="act-label">03</span>
+            <span class="act-label">04</span>
             <h2 class="act-title">CLI</h2>
             <p class="act-scene">
               Your agent needs to run a test, read the result,
@@ -238,12 +307,12 @@ import Nav from "../components/Nav.astro";
       </div>
     </section>
 
-    <!-- ═══ Act 4 — Custom Actions ═══ -->
+    <!-- ═══ Act 5 — Custom Actions ═══ -->
     <section class="act act-actions" id="act-actions">
       <div class="act-pin-wrap">
         <div class="act-layout">
           <div class="act-text">
-            <span class="act-label">04</span>
+            <span class="act-label">05</span>
             <h2 class="act-title">Custom Actions</h2>
             <p class="act-scene">
               Build, test, deploy — the same commands, typed out the same way,
@@ -683,7 +752,76 @@ import Nav from "../components/Nav.astro";
     });
   }
 
-  /* ── Act 3: CLI ── */
+  /* ── Act 3: Active Agents ──
+     Panel slides in from the lower-left. Then as scroll progresses, status
+     pills flip — codex working → done, claude blocked → working — driven by
+     timeline progress so scrubbing backwards rewinds the states too. */
+  if (!prefersReduced) {
+    function setAgentStatus(statusId, newStatus, newLabel) {
+      const statusEl = document.getElementById(statusId);
+      if (!statusEl) return;
+      ["working", "blocked", "done", "idle"].forEach(function (s) {
+        statusEl.classList.remove("agent-status-" + s);
+      });
+      statusEl.classList.add("agent-status-" + newStatus);
+      const labelEl = statusEl.querySelector(".agent-status-label");
+      if (labelEl) labelEl.textContent = newLabel;
+    }
+
+    let codexStatus = "working";
+    let claudeStatus = "blocked";
+
+    gsap.set("#agents-panel", { opacity: 0, x: -60, y: 50 });
+
+    const agentsTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#act-agents",
+        pin: "#act-agents .act-pin-wrap",
+        start: "top top",
+        end: "+=220%",
+        scrub: 0.6,
+        onUpdate: function (self) {
+          const p = self.progress;
+          const wantCodex = p > 0.55 ? "done" : "working";
+          if (wantCodex !== codexStatus) {
+            codexStatus = wantCodex;
+            setAgentStatus(
+              "agents-status-codex",
+              wantCodex,
+              wantCodex === "done" ? "Done" : "Working"
+            );
+          }
+          const wantClaude = p > 0.8 ? "working" : "blocked";
+          if (wantClaude !== claudeStatus) {
+            claudeStatus = wantClaude;
+            setAgentStatus(
+              "agents-status-claude",
+              wantClaude,
+              wantClaude === "working" ? "Working" : "Blocked"
+            );
+          }
+        },
+      },
+    });
+
+    agentsTl
+      .to("#agents-panel", {
+        opacity: 1, x: 0, y: 0, duration: 0.4, ease: "power2.out",
+      })
+      .to({}, { duration: 1.2 });
+
+    gsap.from("#act-agents .act-text", {
+      opacity: 0, x: -40,
+      scrollTrigger: {
+        trigger: "#act-agents",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: true,
+      },
+    });
+  }
+
+  /* ── Act 4: CLI ── */
   if (!prefersReduced) {
     const cliLines = Array.from({ length: 12 }, (_, i) => `#cli-l${i + 1}`);
     cliLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
@@ -714,7 +852,7 @@ import Nav from "../components/Nav.astro";
     });
   }
 
-  /* ── Act 4: Custom Actions ── */
+  /* ── Act 5: Custom Actions ── */
   if (!prefersReduced) {
     gsap.set("#pill-build", { opacity: 0, y: 12 });
     gsap.set("#pill-test", { opacity: 0, y: 12 });
@@ -803,6 +941,9 @@ import Nav from "../components/Nav.astro";
   .accent { color: var(--accent); }
   .ok { color: var(--accent-dim); }
   .muted { color: var(--text-muted); }
+  .warn { color: #f87171; }
+  .warm { color: #fcd34d; }
+  .info { color: #7dd3fc; }
 
   /* ═══════════════════════════════════════
      Act — shared
@@ -1331,6 +1472,199 @@ import Nav from "../components/Nav.astro";
   }
 
   /* ═══════════════════════════════════════
+     Active Agents demo
+     ═══════════════════════════════════════ */
+  .agents-demo {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    min-height: 320px;
+  }
+
+  .agents-panel {
+    width: 100%;
+    max-width: 380px;
+    background: #0a1018;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .agents-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .agents-head-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .agents-head-count {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 8px;
+    border-radius: 999px;
+  }
+
+  .agents-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.25s;
+  }
+
+  .agents-row:last-child {
+    border-bottom: 0;
+  }
+
+  .agent-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+  }
+
+  .agent-icon-codex {
+    color: #fcd34d;
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+
+  .agent-icon-claude {
+    color: #f9a8d4;
+    background: rgba(244, 114, 182, 0.1);
+    border-color: rgba(244, 114, 182, 0.25);
+  }
+
+  .agent-icon-pi {
+    color: #7dd3fc;
+    background: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.25);
+  }
+
+  .agent-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .agent-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .agent-tool {
+    font-weight: 600;
+  }
+
+  .agent-sep {
+    color: var(--text-muted);
+    margin: 0 2px;
+  }
+
+  .agent-project-prowl {
+    color: #f9a8d4;
+  }
+
+  .agent-project-kingfisher {
+    color: #fcd34d;
+  }
+
+  .agent-branch {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .agent-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: color 0.3s;
+  }
+
+  .agent-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .agent-status-working {
+    color: #fcd34d;
+  }
+
+  .agent-status-working .agent-status-dot {
+    background: #fcd34d;
+    box-shadow: 0 0 8px rgba(252, 211, 77, 0.55);
+    animation: agent-blink 1.4s ease-in-out infinite;
+  }
+
+  @keyframes agent-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  .agent-status-blocked {
+    color: #f87171;
+  }
+
+  .agent-status-blocked .agent-status-dot {
+    background: #f87171;
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
+  }
+
+  .agent-status-done {
+    color: #7dd3fc;
+  }
+
+  .agent-status-done .agent-status-dot {
+    background: #7dd3fc;
+    box-shadow: 0 0 8px rgba(125, 211, 252, 0.45);
+  }
+
+  .agent-status-idle {
+    color: var(--text-muted);
+  }
+
+  .agent-status-idle .agent-status-dot {
+    background: var(--text-muted);
+  }
+
+  /* ═══════════════════════════════════════
      CLI demo
      ═══════════════════════════════════════ */
   .cli-demo {
@@ -1768,6 +2102,12 @@ import Nav from "../components/Nav.astro";
     .shelf-demo {
       max-width: 460px;
       margin: 0 auto;
+    }
+
+    .agents-demo {
+      max-width: 380px;
+      margin: 0 auto;
+      justify-content: center;
     }
 
     .shelf-body {
