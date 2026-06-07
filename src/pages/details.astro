@@ -36,6 +36,33 @@ import Nav from "../components/Nav.astro";
       </div>
     </section>
 
+    <!-- ═══ Interstitial — Learn the agentic way ═══ -->
+    <section class="act act-agentic" id="act-agentic">
+      <div class="agentic-inner">
+        <p class="agentic-kicker">Reading docs is so pre-agent.</p>
+        <h2 class="agentic-title">Don't read it like a caveman.</h2>
+        <p class="agentic-lead">
+          Why scroll when your agent can read the whole manual for you? Paste this into Claude Code,
+          Codex, or any AI assistant — it learns Prowl from the docs and gives you a tour tailored to
+          how <em>you</em> work, in your language.
+        </p>
+        <div class="agentic-prompt-wrap">
+          <pre class="agentic-prompt" id="agentic-prompt">Read Prowl's documentation and introduce it to me.
+
+Prowl is a native macOS command center for running many AI coding agents in parallel. Its full manual lives here:
+https://raw.githubusercontent.com/onevcat/Prowl/refs/heads/main/docs/README.md
+
+Fetch that index and read it (it links to an overview and per-feature manuals in the same docs/ folder — read the relevant ones). Then:
+1. Briefly tell me what Prowl is and why it's worth my time.
+2. Based on what you know about how I work, suggest 3–4 Prowl features that would genuinely help me, each with a one-line "how".
+3. Then answer my follow-up questions, consulting the matching doc.
+
+Reply in my preferred language.</pre>
+          <button type="button" class="agentic-copy" id="agentic-copy" aria-label="Copy the prompt">Copy prompt</button>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══ Act 1 — Canvas ═══ -->
     <section class="act act-canvas" id="act-canvas">
       <div class="act-pin-wrap">
@@ -910,6 +937,23 @@ import Nav from "../components/Nav.astro";
       },
     });
   }
+
+  /* ── Agentic prompt copy ── */
+  (function () {
+    var btn = document.getElementById("agentic-copy");
+    var pre = document.getElementById("agentic-prompt");
+    if (!btn || !pre) return;
+    btn.addEventListener("click", function () {
+      navigator.clipboard.writeText(pre.textContent.trim()).then(function () {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(function () {
+          btn.textContent = "Copy prompt";
+          btn.classList.remove("copied");
+        }, 1400);
+      });
+    });
+  })();
 
   /* ── Brew copy ── */
   (function () {
@@ -1855,6 +1899,82 @@ import Nav from "../components/Nav.astro";
      ═══════════════════════════════════════ */
   .act-interlude {
     padding: 6rem 3rem;
+  }
+
+  /* ── Interstitial: learn the agentic way ── */
+  .act-agentic {
+    padding: 5rem 3rem;
+  }
+
+  .agentic-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .agentic-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .agentic-title {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .agentic-lead {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .agentic-prompt-wrap {
+    text-align: left;
+  }
+
+  .agentic-prompt {
+    margin: 0;
+    padding: 1.1rem 1.25rem;
+    background: rgba(90, 228, 192, 0.06);
+    border: 1px solid rgba(90, 228, 192, 0.18);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .agentic-copy {
+    margin-top: 0.85rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid rgba(90, 228, 192, 0.3);
+    background: rgba(90, 228, 192, 0.1);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .agentic-copy:hover {
+    background: rgba(90, 228, 192, 0.16);
+    border-color: rgba(90, 228, 192, 0.5);
+  }
+
+  .agentic-copy.copied {
+    border-color: rgba(90, 228, 192, 0.6);
+    background: rgba(90, 228, 192, 0.2);
   }
 
   .interlude-inner {
