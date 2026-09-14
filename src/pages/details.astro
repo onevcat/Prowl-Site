@@ -3,6 +3,13 @@ import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
 import AgentPrompt from "../components/AgentPrompt.astro";
 
+/** Responsive screenshot: 1200w for 1x displays, 2000w for 2x. */
+const shot = (name: string, gallery = false) => ({
+  src: `/images/shots/${name}.webp`,
+  srcset: `/images/shots/${name}-1200.webp 1200w, /images/shots/${name}.webp 2000w`,
+  sizes: gallery ? "(max-width: 1000px) calc(100vw - 4rem), 360px" : "(max-width: 1100px) calc(100vw - 4rem), 1040px",
+});
+
 const runtimes = [
   "Claude Code",
   "Codex",
@@ -49,10 +56,9 @@ const runtimes = [
       </div>
       <figure class="intro-figure">
         <img
-          src="/images/shots/hero.webp"
-          alt="Prowl with a sidebar of repositories and worktrees, a Codex session in the terminal, the Active Agents panel showing Working, Blocked and Done agents, and custom command buttons in the toolbar"
-          width="2400"
-          height="1418"
+          {...shot("hero")}
+          alt="Prowl in Shelf view with the Prowl book open and mint-tinted chrome, Kingfisher, MeetCat and Notes as closed spines, and the Active Agents panel showing Blocked, Done and Idle agents"
+          fetchpriority="high"
           data-lightbox
         />
       </figure>
@@ -95,7 +101,7 @@ const runtimes = [
               <p class="toggle">Toggle with <kbd>⌘⌥↩</kbd> · <a href="/manual/components/canvas/">Canvas in the manual</a></p>
             </div>
             <figure class="panel-visual">
-              <img src="/images/shots/canvas.webp" alt="Canvas view with agent terminals tiled as cards" loading="lazy" data-lightbox />
+              <img {...shot("canvas")} alt="Canvas view with agent terminals tiled as cards" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -116,7 +122,7 @@ const runtimes = [
               <p class="toggle">Toggle with <kbd>⌘⇧↩</kbd> · <a href="/manual/components/shelf/">Shelf in the manual</a></p>
             </div>
             <figure class="panel-visual">
-              <img src="/images/shots/shelf.webp" alt="Shelf view with worktree spines on both sides and one open terminal" loading="lazy" data-lightbox />
+              <img {...shot("shelf")} alt="Shelf view with worktree spines on both sides and one open terminal" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -137,7 +143,7 @@ const runtimes = [
               <p class="toggle"><a href="/manual/components/repositories-and-worktrees/">Repositories &amp; worktrees</a> · <a href="/manual/components/terminal/">Terminal</a></p>
             </div>
             <figure class="panel-visual">
-              <img src="/images/shots/new-worktree.webp" alt="The New Worktree sheet with an on-device branch name suggestion, over a Claude Code session; the sidebar row shows a +26 line-change badge" loading="lazy" data-lightbox />
+              <img {...shot("new-worktree")} alt="The New Worktree sheet with an on-device branch name suggestion, over a Claude Code session; the sidebar row shows a +26 line-change badge" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -268,7 +274,7 @@ const runtimes = [
               <p class="toggle"><a href="/manual/components/agent-profiles/">Agent Profiles in the manual</a></p>
             </div>
             <figure class="panel-visual">
-              <img src="/images/shots/agents-popover.webp" alt="The toolbar Agents menu open: a Run a workflow section with Hello World and Handoff, then one launch row per Agent Profile for fifteen runtimes" loading="lazy" data-lightbox />
+              <img {...shot("agents-popover")} alt="The toolbar Agents menu open: a Run a workflow section with Hello World and Handoff, then one launch row per Agent Profile for fifteen runtimes" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -313,7 +319,7 @@ const runtimes = [
             <figure class="panel-visual panel-code">
               <div class="notif-stack" aria-hidden="true">
                 <div class="notif">
-                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <img src="/images/prowl-icon-64.png" alt="" width="36" height="36" />
                   <div>
                     <span class="notif-title">Claude Code finished</span>
                     <span class="notif-body">Kingfisher · feature/retry-downloader</span>
@@ -321,7 +327,7 @@ const runtimes = [
                   <span class="notif-time">now</span>
                 </div>
                 <div class="notif">
-                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <img src="/images/prowl-icon-64.png" alt="" width="36" height="36" />
                   <div>
                     <span class="notif-title">Codex needs your input</span>
                     <span class="notif-body">MeetCat · feature/auth</span>
@@ -329,7 +335,7 @@ const runtimes = [
                   <span class="notif-time">2m</span>
                 </div>
                 <div class="notif">
-                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <img src="/images/prowl-icon-64.png" alt="" width="36" height="36" />
                   <div>
                     <span class="notif-title">Command finished · exit 0</span>
                     <span class="notif-body">swift test · 2m 41s</span>
@@ -405,7 +411,7 @@ const runtimes = [
               <p class="toggle"><a href="/manual/components/workflows/">Workflows in the manual</a></p>
             </div>
             <figure class="panel-visual">
-              <img src="/images/shots/workflow-history.webp" alt="Workflow History panel over a Handoff run that needs attention, with the Prepare handoff briefing step expanded and Focus Pane / Cancel Run actions; the toolbar shows the run's status item" loading="lazy" data-lightbox />
+              <img {...shot("workflow-history")} alt="Workflow History panel over a Handoff run that needs attention, with the Prepare handoff briefing step expanded and Focus Pane / Cancel Run actions; the toolbar shows the run's status item" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -653,15 +659,15 @@ EOF
       </dl>
       <div class="gallery">
         <figure>
-          <img src="/images/shots/command-palette.webp" alt="The Command Palette open over Canvas, listing recent and suggested actions with their shortcuts" loading="lazy" data-lightbox />
+          <img {...shot("command-palette", true)} alt="The Command Palette open over Canvas, listing recent and suggested actions with their shortcuts" loading="lazy" data-lightbox />
           <figcaption><kbd>⌘P</kbd> Command Palette</figcaption>
         </figure>
         <figure>
-          <img src="/images/shots/diff.webp" alt="The Diff window for feature/retry-downloader: a file list with two modified files and a side-by-side diff of RetryStrategy.swift" loading="lazy" data-lightbox />
+          <img {...shot("diff", true)} alt="The Diff window for feature/retry-downloader: a file list with two modified files and a side-by-side diff of RetryStrategy.swift" loading="lazy" data-lightbox />
           <figcaption><kbd>⌘⇧Y</kbd> Show Diff, working tree against HEAD</figcaption>
         </figure>
         <figure>
-          <img src="/images/shots/settings.webp" alt="Settings window with General, Notifications, Shortcuts, Worktree, Updates, GitHub, Commands, Advanced, and the Agents section: Display, Profiles, CLI & Skills, Workflows" loading="lazy" data-lightbox />
+          <img {...shot("settings", true)} alt="Settings window with General, Notifications, Shortcuts, Worktree, Updates, GitHub, Commands, Advanced, and the Agents section: Display, Profiles, CLI & Skills, Workflows" loading="lazy" data-lightbox />
           <figcaption><kbd>⌘,</kbd> Settings, with the Agents section</figcaption>
         </figure>
       </div>
