@@ -1,2060 +1,1519 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
+import AgentPrompt from "../components/AgentPrompt.astro";
+
+const runtimes = [
+  "Claude Code",
+  "Codex",
+  "Gemini CLI",
+  "Cursor Agent",
+  "Cline",
+  "OpenCode",
+  "GitHub Copilot",
+  "Kimi Code",
+  "Factory Droid",
+  "Amp",
+  "Qoder CLI",
+  "Qwen Code",
+  "Grok Build",
+  "Pi",
+  "Oh My Pi",
+];
 ---
 
-<Layout title="Prowl — Details">
+<Layout
+  title="Prowl — What it does"
+  description="Canvas, Shelf, Active Agents, Agent Island, Agent Profiles, Workflows, Custom Commands and the prowl CLI: everything Prowl does for people who run several coding agents at once."
+>
   <Nav active="details" />
 
-  <main class="details-page">
-
-    <!-- ═══ Prologue ═══ -->
-    <section class="act act-prologue" id="prologue">
-      <div class="act-inner">
-        <h1 class="prologue-title">
-          Your terminal wasn't built for <span class="accent">agents</span>.
-        </h1>
-        <p class="prologue-sub">
-          You're not just typing commands anymore — you're orchestrating AI agents
-          across repos, branches, and ideas. Everything changed. Except your terminal.
+  <main class="details">
+    <!-- ═══ Intro ═══ -->
+    <section class="intro" id="intro">
+      <div class="intro-copy">
+        <h1>Your terminal wasn't built for agents.</h1>
+        <p class="intro-lead">
+          You're not typing commands any more. You're running Claude Code in one branch, Codex in
+          another, and a third agent on a migration, and the hard part is knowing who needs you
+          next. Prowl is a native macOS terminal built around exactly that: many agents, many
+          worktrees, all legible at a glance.
         </p>
-        <p class="prologue-sub prologue-sub-alt">
-          Until now.
-        </p>
-        <div class="scroll-hint" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24">
-            <path d="M12 5v14m0 0l-5-5m5 5l5-5" />
-          </svg>
-        </div>
+        <nav class="intro-jump" aria-label="Sections">
+          <a href="#layout">Layout</a>
+          <a href="#agents">Agents</a>
+          <a href="#automate">Automation</a>
+          <a href="#cli">CLI &amp; skills</a>
+          <a href="#foundation">Fundamentals</a>
+        </nav>
       </div>
-      <div class="prologue-hero-image">
+      <figure class="intro-figure">
         <img
-          src="/images/promotion.webp"
-          alt="Prowl app — vertical tabs, terminal, command palette, and split view"
-          class="hero-screenshot"
+          src="/images/shots/hero.webp"
+          alt="Prowl with a sidebar of repositories and worktrees, a Codex session in the terminal, the Active Agents panel showing Working, Blocked and Done agents, and custom command buttons in the toolbar"
+          width="2400"
+          height="1418"
+          data-lightbox
         />
+      </figure>
+    </section>
+
+    <!-- ═══ Chapter: Layout ═══ -->
+    <section class="chapter" id="layout" data-chapter>
+      <header class="chapter-head">
+        <div class="chapter-title-row">
+          <h2>Three ways to look at the same fleet.</h2>
+          <p class="chapter-lead">
+            Repositories hold worktrees, worktrees hold tabs, tabs hold panes. Prowl lays that
+            hierarchy out three ways, and switching never touches your running sessions.
+          </p>
+        </div>
+        <div class="chapter-tabs" role="tablist" aria-label="Layout features">
+          <button type="button" role="tab" aria-selected="true" data-tab="canvas">Canvas</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="shelf">Shelf</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="worktrees">Sidebar &amp; worktrees</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="workspaces">Workspaces</button>
+        </div>
+      </header>
+
+      <div class="track-wrap">
+        <div class="track" data-track tabindex="0">
+          <article class="panel" data-panel="canvas" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Canvas</h3>
+              <p class="pitch">
+                Every open tab becomes a card on a zoomable board. Each card is a live, fully
+                interactive terminal, so you watch several agents work at once and click into any of
+                them to type.
+              </p>
+              <ul class="facts">
+                <li><b>Broadcast.</b> ⌘-click cards or press <kbd>⌘⌥A</kbd> to select them, then type once. “Run the tests”, “commit”, <code>/clear</code>: delivered to every selected agent.</li>
+                <li><b>Tile, arrange, organize.</b> <kbd>⌘⌥T</kbd> resizes cards to fill the window like a tiling window manager; <kbd>⌘⌥R</kbd> packs them; <kbd>⌘⌥G</kbd> resets a uniform grid.</li>
+                <li><b>Finished cards light up.</b> A card whose task just completed turns its title bar orange until you look at it.</li>
+                <li><b>Spatial keys.</b> <kbd>⌘⌃←</kbd> <kbd>⌘⌃→</kbd> <kbd>⌘⌃↑</kbd> <kbd>⌘⌃↓</kbd> jump to the nearest card in that direction; <kbd>⌘⌥E</kbd> expands one to fill the viewport.</li>
+              </ul>
+              <p class="toggle">Toggle with <kbd>⌘⌥↩</kbd> · <a href="/manual/components/canvas/">Canvas in the manual</a></p>
+            </div>
+            <figure class="panel-visual">
+              <img src="/images/shots/canvas.webp" alt="Canvas view with agent terminals tiled as cards" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="shelf" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Shelf</h3>
+              <p class="pitch">
+                Worktrees stand on the sides as vertical spines, like books on a shelf. One book is
+                open in the middle; the rest wait, brighter when near and fading with distance, so you
+                always know where you are in the stack.
+              </p>
+              <ul class="facts">
+                <li><b>Flip books.</b> <kbd>⌘⌃←</kbd> / <kbd>⌘⌃→</kbd> move between worktrees, <kbd>⌥⌃1</kbd>…<kbd>⌥⌃9</kbd> jump straight to one.</li>
+                <li><b>Cycle tabs.</b> <kbd>⌘⌃↑</kbd> / <kbd>⌘⌃↓</kbd> walk the open book's tabs; hold <kbd>⌘</kbd> and two-finger swipe for the same on the trackpad.</li>
+                <li><b>Status on the spine.</b> Each tab slot carries the agent's state marker, so a blocked agent is visible from any book.</li>
+                <li><b>Colour follows the repository.</b> Spines and window chrome pick up the repo's colour.</li>
+              </ul>
+              <p class="toggle">Toggle with <kbd>⌘⇧↩</kbd> · <a href="/manual/components/shelf/">Shelf in the manual</a></p>
+            </div>
+            <figure class="panel-visual">
+              <img src="/images/shots/shelf.webp" alt="Shelf view with worktree spines on both sides and one open terminal" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="worktrees" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Sidebar, worktrees, splits</h3>
+              <p class="pitch">
+                The default view: repositories and their git worktrees down the left, the focused
+                worktree's tabs and splits on the right. One branch per agent, each in its own
+                directory, all live on disk at once.
+              </p>
+              <ul class="facts">
+                <li><b>New worktree in one keystroke.</b> <kbd>⌘N</kbd> asks for a branch name (or suggests one on-device with Apple Intelligence), picks the base ref, and can copy ignored or untracked files across.</li>
+                <li><b>Scripts on lifecycle.</b> A Setup Script runs after creation, an Archive Script before archiving. Both get <code>PROWL_WORKTREE_PATH</code> and <code>PROWL_ROOT_PATH</code>.</li>
+                <li><b>Rows tell the story.</b> Line-change badges, pull-request state, an unread bell, a spinner while an agent works, a red mark when one is blocked.</li>
+                <li><b>Splits and history.</b> <kbd>⌘⌥←→↑↓</kbd> move between panes, <kbd>⌘⌥⇧F</kbd> zooms one, <kbd>⌘⌥[</kbd> / <kbd>⌘⌥]</kbd> step back and forward through the worktrees you visited.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/repositories-and-worktrees/">Repositories &amp; worktrees</a> · <a href="/manual/components/terminal/">Terminal</a></p>
+            </div>
+            <figure class="panel-visual">
+              <img src="/images/shots/new-worktree.webp" alt="The New Worktree sheet with an on-device branch name suggestion, over a Claude Code session; the sidebar row shows a +26 line-change badge" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="workspaces" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Workspaces</h3>
+              <p class="pitch">
+                Some tasks span an app, its API, and a shared package. A workspace is one folder that
+                links several repositories, so a single agent starts at the root and can work across
+                all of them in one session.
+              </p>
+              <ul class="facts">
+                <li><b>Declared, not guessed.</b> <code>.prowl/workspace.json</code> lists each repository, its role, and the branch expected for the task. Agents read it as the contract.</li>
+                <li><b>Mix sources.</b> Link a repository you already opened, create a fresh branch as a new worktree, or clone a remote straight into the workspace.</li>
+                <li><b>Per-repository review.</b> Child rows show their own branch, line counts and PR badge; diff and outgoing changes open per child.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/workspaces/">Workspaces in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code"><span class="c">// checkout-flow/.prowl/workspace.json</span>
+&#123;
+  <span class="k">"schema_version"</span>: <span class="s">"prowl.workspace.v1"</span>,
+  <span class="k">"title"</span>: <span class="s">"Checkout Flow"</span>,
+  <span class="k">"description"</span>: <span class="s">"Update app UI, API contract, and shared package together."</span>,
+  <span class="k">"repositories"</span>: [
+    &#123; <span class="k">"name"</span>: <span class="s">"App"</span>,    <span class="k">"role"</span>: <span class="s">"macOS app"</span>, <span class="k">"path"</span>: <span class="s">"app"</span>,
+      <span class="k">"source_kind"</span>: <span class="s">"local_repository"</span>, <span class="k">"branch_name"</span>: <span class="s">"codex/checkout-flow"</span> &#125;,
+    &#123; <span class="k">"name"</span>: <span class="s">"API"</span>,    <span class="k">"role"</span>: <span class="s">"backend"</span>,   <span class="k">"path"</span>: <span class="s">"api"</span>,
+      <span class="k">"source_kind"</span>: <span class="s">"remote"</span>, <span class="k">"base_ref"</span>: <span class="s">"main"</span> &#125;,
+    &#123; <span class="k">"name"</span>: <span class="s">"Shared"</span>, <span class="k">"role"</span>: <span class="s">"library"</span>,   <span class="k">"path"</span>: <span class="s">"shared-package"</span>,
+      <span class="k">"source_kind"</span>: <span class="s">"existing_path"</span> &#125;
+  ]
+&#125;</pre>
+            </figure>
+          </article>
+        </div>
+        <button type="button" class="track-arrow prev" data-prev aria-label="Previous feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        <button type="button" class="track-arrow next" data-next aria-label="Next feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
       </div>
     </section>
 
-    <!-- ═══ Interstitial — Learn the agentic way ═══ -->
-    <section class="act act-agentic" id="act-agentic">
-      <div class="agentic-inner">
-        <p class="agentic-kicker">Reading docs is so pre-agent.</p>
-        <h2 class="agentic-title">Don't read it like a caveman.</h2>
-        <p class="agentic-lead">
-          Why scroll when your agent can read the whole manual for you? Paste this into Claude Code,
-          Codex, or any AI assistant — it learns Prowl from the docs and gives you a tour tailored to
-          how <em>you</em> work, in your language.
-        </p>
-        <div class="agentic-prompt-wrap">
-          <pre class="agentic-prompt" id="agentic-prompt">Read Prowl's documentation and introduce it to me.
-
-Prowl is a native macOS command center for running many AI coding agents in parallel. Its full manual lives here:
-https://raw.githubusercontent.com/onevcat/Prowl/refs/heads/main/docs/README.md
-
-Fetch that index and read it (it links to an overview and per-feature manuals in the same docs/ folder — read the relevant ones). Then:
-1. Briefly tell me what Prowl is and why it's worth my time.
-2. Based on what you know about how I work, suggest 3–4 Prowl features that would genuinely help me, each with a one-line "how".
-3. Then answer my follow-up questions, consulting the matching doc.
-
-Reply in my preferred language.</pre>
-          <button type="button" class="agentic-copy" id="agentic-copy" aria-label="Copy the prompt">Copy prompt</button>
+    <!-- ═══ Chapter: Agents ═══ -->
+    <section class="chapter" id="agents" data-chapter>
+      <header class="chapter-head">
+        <div class="chapter-title-row">
+          <h2>Know who needs you.</h2>
+          <p class="chapter-lead">
+            With several agents in flight the bottleneck is not running them, it is knowing where to
+            look next. Prowl watches every pane, names the state, and puts the one that needs you
+            within a glance or a single key.
+          </p>
         </div>
+        <div class="chapter-tabs" role="tablist" aria-label="Agent features">
+          <button type="button" role="tab" aria-selected="true" data-tab="active-agents">Active Agents</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="island">Agent Island</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="profiles">Agent Profiles</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="detection">Detection &amp; signals</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="reminders">Reminders</button>
+        </div>
+      </header>
+
+      <div class="track-wrap">
+        <div class="track" data-track tabindex="0">
+          <article class="panel" data-panel="active-agents" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Active Agents</h3>
+              <p class="pitch">
+                A live roster of every agent across every worktree, tab and split, each row colour-coded
+                by state. Click a row to land in that agent's pane.
+              </p>
+              <ul class="facts states">
+                <li><span class="dot working"></span><b>Working</b> is processing.</li>
+                <li><span class="dot blocked"></span><b>Blocked</b> is waiting on you: a permission or confirmation prompt. This is the one to surface first.</li>
+                <li><span class="dot done"></span><b>Done</b> finished and you have not looked yet. It becomes Idle once the pane is actually in front of you.</li>
+                <li><span class="dot idle"></span><b>Idle</b> nothing running.</li>
+              </ul>
+              <ul class="facts">
+                <li><kbd>⌥⌃↑</kbd> / <kbd>⌥⌃↓</kbd> cycle through agents from the keyboard; <kbd>⌘⌥P</kbd> shows or hides the panel.</li>
+                <li>Right-click a row to run a workflow with that agent, mark it read, or reveal its native session log in Finder.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/active-agents/">Active Agents in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-tight">
+              <img src="/images/shots/active-agents.webp" alt="Active Agents panel listing Claude Code, Codex and Gemini with Working, Blocked, Done and Idle states" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="island" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Agent Island</h3>
+              <p class="pitch">
+                The same roster, projected to the top of your display so it stays visible while another
+                app is in front. On a notched Mac it wraps the camera; elsewhere it floats over the menu
+                bar.
+              </p>
+              <ul class="facts">
+                <li><b>Counts by state,</b> in attention order: blocked, done, working, idle, with the runtime icons of the agents behind them.</li>
+                <li><b>Blocked and Done cells</b> drop below the bar the moment they happen. Click one and Prowl comes forward on exactly that pane.</li>
+                <li><b>Muscle-memory navigation.</b> Assign <em>Toggle Agent Island</em> and use it from any app: arrows or <kbd>j</kbd>/<kbd>k</kbd> to move, <kbd>1</kbd>…<kbd>9</kbd> to pick, <kbd>↩</kbd> to jump.</li>
+                <li><b>Quiet by default.</b> Off until you enable it in Settings → Agents → Display; a floating bar fades to a chosen opacity when idle.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/agent-island/">Agent Island in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-island">
+              <img src="/images/shots/agent-island.webp" alt="Agent Island bar showing agent state counts and runtime icons" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="profiles" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Agent Profiles</h3>
+              <p class="pitch">
+                Named launch presets: a runtime, a model, a reasoning effort, an execution mode, and
+                where the pane opens. One click in the toolbar's Agents menu starts a fresh agent in the
+                current worktree exactly the way you want it.
+              </p>
+              <ul class="facts">
+                <li><b>Launch anywhere.</b> The toolbar capsule, its quick-launch button for the recommended profile, <kbd>⌘P</kbd> “Launch Agent”, or <code>prowl create tab --profile</code> from a script.</li>
+                <li><b>Environment overrides per profile.</b> Point one profile at a different API endpoint and key. Values never appear in the typed command or shell history.</li>
+                <li><b>Dedicated home.</b> Give a profile its own runtime home for a second account, separate skills and separate session history.</li>
+                <li><b>Runtime-aware.</b> Only the fields that CLI actually supports are shown; a launch preview shows the exact invocation.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/agent-profiles/">Agent Profiles in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <div class="profile-card">
+                <div class="profile-head">
+                  <span class="profile-name">Reviewer</span>
+                  <span class="profile-runtime">Claude Code</span>
+                </div>
+                <dl class="profile-fields">
+                  <div><dt>Model</dt><dd>claude-opus-5</dd></div>
+                  <div><dt>Reasoning effort</dt><dd>High</dd></div>
+                  <div><dt>Execution mode</dt><dd>Standard</dd></div>
+                  <div><dt>Placement</dt><dd>New split · right</dd></div>
+                  <div><dt>Environment</dt><dd><code>ANTHROPIC_BASE_URL</code></dd></div>
+                  <div><dt>Dedicated home</dt><dd>On · separate account</dd></div>
+                </dl>
+                <div class="profile-preview">
+                  <span class="c">launch preview</span>
+                  <code>env ANTHROPIC_BASE_URL="$PROWL_ENV_ANTHROPIC_BASE_URL" claude --model claude-opus-5 --effort high</code>
+                </div>
+              </div>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="detection" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Detection &amp; completion signals</h3>
+              <p class="pitch">
+                Prowl recognises the agent in a pane from its process, then reads the live status region
+                of its screen to decide Working, Blocked or Idle. Agents launched from a Profile also
+                get native completion hooks, so “the turn ended” is a fact, not a guess.
+              </p>
+              <ul class="facts">
+                <li><b>Fifteen runtimes recognised,</b> through wrappers like <code>node</code> and <code>bun</code> too.</li>
+                <li><b>Runtime-specific heuristics:</b> Claude's status block, Codex's footer and session logs, Pi's braille loader, Copilot's pickers; a permission prompt reads as Blocked, a spinner as Working.</li>
+                <li><b>Native hooks on launch</b> for Claude Code, Codex, Copilot, Droid, Qoder, Pi, Oh My Pi and OpenCode, without writing to your runtime configuration.</li>
+                <li><b>Explainable.</b> <code>prowl agents --json</code> reports the rule behind every state.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/agent-detection/">Agent detection in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <ul class="runtime-grid" aria-label="Recognised agent runtimes">
+                {runtimes.map((r) => <li>{r}</li>)}
+              </ul>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="reminders" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Reminders</h3>
+              <p class="pitch">
+                Walk away. When an agent finishes, or stops to ask you something, Prowl posts a macOS
+                notification, badges the Dock, and floats that worktree to the top of its section.
+              </p>
+              <ul class="facts">
+                <li><b>Unread everywhere.</b> A bell on the worktree row, a badge on the toolbar bell, an orange spine slot in Shelf, an orange title bar in Canvas.</li>
+                <li><b>Jump to it.</b> <kbd>⌘⌥U</kbd> takes you to the latest unread pane.</li>
+                <li><b>Long commands too.</b> Anything that runs past ten seconds can notify when it exits, unless you were typing in that pane.</li>
+                <li><b>Never for the pane you are watching.</b> Notifications from the focused, visible pane stay quiet.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/notifications/">Notifications in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <div class="notif-stack" aria-hidden="true">
+                <div class="notif">
+                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <div>
+                    <span class="notif-title">Claude Code finished</span>
+                    <span class="notif-body">Kingfisher · feature/retry-downloader</span>
+                  </div>
+                  <span class="notif-time">now</span>
+                </div>
+                <div class="notif">
+                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <div>
+                    <span class="notif-title">Codex needs your input</span>
+                    <span class="notif-body">MeetCat · feature/auth</span>
+                  </div>
+                  <span class="notif-time">2m</span>
+                </div>
+                <div class="notif">
+                  <img src="/images/prowl-icon.png" alt="" width="36" height="36" />
+                  <div>
+                    <span class="notif-title">Command finished · exit 0</span>
+                    <span class="notif-body">swift test · 2m 41s</span>
+                  </div>
+                  <span class="notif-time">9m</span>
+                </div>
+              </div>
+            </figure>
+          </article>
+        </div>
+        <button type="button" class="track-arrow prev" data-prev aria-label="Previous feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        <button type="button" class="track-arrow next" data-next aria-label="Next feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
       </div>
     </section>
 
-    <!-- ═══ Act 1 — Canvas ═══ -->
-    <section class="act act-canvas" id="act-canvas">
-      <div class="act-pin-wrap">
-        <div class="act-layout">
-          <div class="act-text">
-            <span class="act-label">01</span>
-            <h2 class="act-title">Canvas</h2>
-            <p class="act-scene">
-              Three agents running. One just finished.
-              <br />Where?
-            </p>
-            <p class="act-resolve">
-              Canvas gives you the bird's-eye view — every card is a
-              real, live terminal you can read and interact with.
-            </p>
-            <ul class="act-details">
-              <li>Each card is a live terminal — not a thumbnail, not a preview</li>
-              <li>Finished tasks light up instantly so you never miss a completion</li>
-              <li>Broadcast one message to multiple agents at once</li>
-            </ul>
-          </div>
-          <div class="act-visual">
-            <div class="canvas-demo" id="canvas-demo">
-              <div class="canvas-card c-card" id="cc-1">
-                <div class="cc-title" id="cc-1-title">prowl <span class="cc-badge running" id="cc-1-badge"></span></div>
-                <div class="cc-body">
-                  <span class="cc-line ok">&#10003; 23 tests passed</span>
-                </div>
-                <div class="canvas-done-pulse" id="canvas-done-pulse"></div>
-              </div>
-              <div class="canvas-card c-card" id="cc-2">
-                <div class="cc-title">kingfisher <span class="cc-badge running"></span></div>
-                <div class="cc-body">
-                  <span class="cc-line">codex &#8230; 3 files</span>
-                </div>
-              </div>
-              <div class="canvas-card c-card" id="cc-3">
-                <div class="cc-title">MeetCat <span class="cc-badge running"></span></div>
-                <div class="cc-body">
-                  <span class="cc-line">vitest run &#8230;</span>
-                </div>
-              </div>
-              <div class="canvas-card c-card" id="cc-4">
-                <div class="cc-title">YiTong <span class="cc-badge idle"></span></div>
-                <div class="cc-body">
-                  <span class="cc-line muted">idle</span>
-                </div>
-              </div>
-              <!-- Broadcast bar -->
-              <div class="canvas-broadcast" id="canvas-broadcast">
-                <span class="broadcast-icon">&#9654;</span>
-                <span class="broadcast-text">Send to all: <span class="accent">npm run lint</span></span>
-              </div>
-            </div>
-          </div>
+    <!-- ═══ Chapter: Automation ═══ -->
+    <section class="chapter" id="automate" data-chapter>
+      <header class="chapter-head">
+        <div class="chapter-title-row">
+          <h2>Your routine, one keystroke.</h2>
+          <p class="chapter-lead">
+            The same build, the same tests, the same “review this and hand it off” loop, every day.
+            Prowl turns the small ones into buttons and the big ones into workflows it runs for you.
+          </p>
         </div>
+        <div class="chapter-tabs" role="tablist" aria-label="Automation features">
+          <button type="button" role="tab" aria-selected="true" data-tab="commands">Custom Commands</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="workflows">Agent Workflows</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="handoff">Handoff</button>
+        </div>
+      </header>
+
+      <div class="track-wrap">
+        <div class="track" data-track tabindex="0">
+          <article class="panel" data-panel="commands" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Custom Commands</h3>
+              <p class="pitch">
+                Pin <code>swift build</code>, <code>npm test</code> or <code>claude -p "review the diff"</code> to a
+                toolbar button with an icon and a hotkey. Define them once globally, or per repository.
+              </p>
+              <ul class="facts">
+                <li><b>Three ways to run.</b> As a shell script in a new tab, typed into the focused pane, or in a split next to it. Optionally close the tab when it exits cleanly.</li>
+                <li><b>Hotkeys win.</b> A command's shortcut takes precedence over app shortcuts; conflicts are caught while you record the key.</li>
+                <li><b>Also: Run Script.</b> One per repository on <kbd>⌘R</kbd>, stopped with <kbd>⌘.</kbd>, plus Setup and Archive scripts that fire on worktree lifecycle.</li>
+                <li><b>Everything appears in <kbd>⌘P</kbd></b> and the Worktrees menu too.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/custom-actions/">Custom actions in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-tight">
+              <img src="/images/shots/custom-commands.webp" alt="Toolbar with Run, Build, Test and Review command buttons" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="workflows" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Agent Workflows</h3>
+              <p class="pitch">
+                A workflow bundle declares roles and steps; Prowl runs it across live panes. The agent you
+                are working with writes a brief, Prowl launches a reviewer beside it from a Profile, and
+                the two loop until the verdict is clean.
+              </p>
+              <ul class="facts">
+                <li><b>Roles:</b> the pane you start from, an agent Prowl launches, or an existing agent you pick. <b>Steps:</b> message, launch, if/else, while, script actions, notify, close.</li>
+                <li><b>Start it from anywhere:</b> <kbd>⌘P</kbd>, the Agents capsule, an Active Agents row, or <code>prowl workflow run</code>. A start sheet shows roles, options and steps before anything happens.</li>
+                <li><b>Supervised, not fire-and-forget.</b> The toolbar shows the current step, flags when a run needs you, and offers the right recovery: nudge, retry, relaunch, accept, skip, cancel.</li>
+                <li><b>Workflow History</b> keeps every prompt, delivery and script output for three days, with export to ZIP.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/workflows/">Workflows in the manual</a> · <a href="/manual/skills/prowl-workflow/">authoring skill</a></p>
+            </div>
+            <figure class="panel-visual panel-code panel-stack">
+              <img class="strip" src="/images/shots/workflow-status.webp" alt="Toolbar with the workflow status item reading “Prepare handoff briefing” and an attention glyph" loading="lazy" data-lightbox />
+              <pre class="code"><span class="c"># review-loop.pwlworkflow/workflow.yaml</span>
+<span class="k">schema</span>: prowl.workflow/v1
+<span class="k">id</span>: review-loop
+<span class="k">name</span>: Adversarial review
+<span class="k">roles</span>:
+  <span class="k">author</span>:   &#123; <span class="k">source</span>: current &#125;
+  <span class="k">reviewer</span>: &#123; <span class="k">source</span>: launch, <span class="k">suggest</span>: Reviewer &#125;
+<span class="k">steps</span>:
+  - <span class="k">id</span>: brief
+    <span class="k">message</span>: author
+    <span class="k">prompt</span>: Summarise the change you just made.
+    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: brief &#125;
+  - <span class="k">id</span>: review
+    <span class="k">launch</span>: reviewer
+    <span class="k">prompt</span>: Review &#123;&#123; deliveries.brief.path &#125;&#125; against the diff.
+    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125;
+  - <span class="k">id</span>: fix
+    <span class="k">while</span>: deliveries.findings.verdict == 'issues'
+    <span class="k">max_iterations</span>: 3
+    <span class="k">steps</span>:
+      - &#123; <span class="k">id</span>: apply,   <span class="k">message</span>: author,   <span class="k">prompt</span>: Address the findings. &#125;
+      - &#123; <span class="k">id</span>: recheck, <span class="k">message</span>: reviewer, <span class="k">prompt</span>: Re-review.,
+          <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125; &#125;
+  - <span class="k">id</span>: done
+    <span class="k">notify</span>: Review finished with verdict &#123;&#123; deliveries.findings.verdict &#125;&#125;</pre>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="handoff" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Handoff</h3>
+              <p class="pitch">
+                Context is the expensive part. The built-in Handoff workflow asks the current agent to
+                write a briefing, saves it with repository and session context, and can launch a
+                receiving agent in a new tab to continue from there.
+              </p>
+              <ul class="facts">
+                <li><b>A packet, not a prompt.</b> Objective, current state and next steps land in <code>.prowl/handoff/</code>, with an immutable copy per run.</li>
+                <li><b>Any runtime to any runtime.</b> Claude to Codex, Codex to Pi: the receiver is just a Profile.</li>
+                <li><b>Save-only when you want.</b> Keep the briefing for later without launching anyone.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/handoff/">Handoff in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code term"><span class="p">$</span> prowl workflow run prowl.handoff --role receiver=Codex
+<span class="o">run 3A4E9506 · prowl.handoff (Handoff) · live</span>
+<span class="o">step briefing  waiting for 'author' → delivery 'briefing'</span>
+<span class="o">step launch    Codex started in a new tab (t21)</span>
+<span class="ok">completed · packet saved</span>
+
+<span class="p">$</span> tree .prowl/handoff
+<span class="o">.prowl/handoff/</span>
+<span class="o">├── current.md</span>
+<span class="o">├── context.md</span>
+<span class="o">├── archive/workflow-3A4E9506….md</span>
+<span class="o">└── sessions/</span></pre>
+            </figure>
+          </article>
+        </div>
+        <button type="button" class="track-arrow prev" data-prev aria-label="Previous feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        <button type="button" class="track-arrow next" data-next aria-label="Next feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
       </div>
     </section>
 
-    <!-- ═══ Act 2 — Shelf ═══ -->
-    <section class="act act-shelf" id="act-shelf">
-      <div class="act-pin-wrap">
-        <div class="act-layout act-layout-reverse">
-          <div class="act-text">
-            <span class="act-label">02</span>
-            <h2 class="act-title">Shelf</h2>
-            <p class="act-scene">
-              Five repos open. Each one a different agent, a different command.
-              <br />You need the next one — without losing this one.
-            </p>
-            <p class="act-resolve">
-              Shelf gives every worktree its own spine. One book open, the rest
-              standing by — click a spine, the shelf flows aside, your
-              terminal opens like a book.
-            </p>
-            <ul class="act-details">
-              <li>Spine icons follow the running command — codex, vitest, swift, git… one glance tells you what's alive</li>
-              <li><kbd>&#8984;&#8963;&larr;/&rarr;</kbd> cycles books · <kbd>&#8984;&#8963;&uarr;/&darr;</kbd> cycles tabs</li>
-              <li>Canvas zooms out to orchestrate. Shelf zooms in to focus — and switches without breaking it.</li>
-            </ul>
-          </div>
-          <div class="act-visual">
-            <div class="shelf-demo" id="shelf-demo">
-              <div class="shelf-titlebar">
-                <span class="shelf-dot r"></span>
-                <span class="shelf-dot y"></span>
-                <span class="shelf-dot g"></span>
-                <span class="shelf-title" id="shelf-title">Prowl</span>
-              </div>
-              <div class="shelf-body" id="dshelf-body">
-                <div class="dspine" data-book="ai-ship" id="dspine-ai-ship">
-                  <span class="dspine-label">ai-ship</span>
-                  <div class="dspine-icons">
-                    <span class="dsicon">▦</span>
-                    <span class="dsicon">◆</span>
-                  </div>
-                </div>
-                <div class="dspine" data-book="kingfisher" id="dspine-kingfisher">
-                  <span class="dspine-label">kingfisher</span>
-                  <div class="dspine-icons">
-                    <span class="dsicon" id="dspine-kf-i1">◆</span>
-                    <span class="dsicon" id="dspine-kf-i2">❯</span>
-                    <span class="dsicon" id="dspine-kf-i3">✓</span>
-                  </div>
-                </div>
-                <div class="dspine dspine-selected" data-book="prowl" id="dspine-prowl">
-                  <span class="dspine-label">prowl</span>
-                  <div class="dspine-icons">
-                    <span class="dsicon active">▲</span>
-                    <span class="dsicon">✦</span>
-                    <span class="dsicon">◆</span>
-                  </div>
-                </div>
-                <div class="dshelf-book" id="dshelf-book">
-                  <div class="dbook-toolbar">
-                    <span class="dbook-repo" id="dbook-repo">prowl</span>
-                    <span class="dbook-branch" id="dbook-branch">main</span>
-                    <span class="dbook-controls">
-                      <span class="dbook-ctrl">+</span>
-                      <span class="dbook-ctrl">⊟</span>
-                    </span>
-                  </div>
-                  <div class="dbook-terminal" id="dbook-terminal">
-                    <div class="dbl"><span class="dbp">&#10095;</span> swift test</div>
-                    <div class="dbl out">  Build complete! (1.2s)</div>
-                    <div class="dbl out ok">  Test Suite passed — 23 tests, 0 failures</div>
-                    <div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>
-                  </div>
-                </div>
-                <div class="dspine" data-book="yitong" id="dspine-yitong">
-                  <span class="dspine-label">YiTong</span>
-                  <div class="dspine-icons">
-                    <span class="dsicon">▦</span>
-                  </div>
-                </div>
-                <div class="dspine" data-book="meetcat" id="dspine-meetcat">
-                  <span class="dspine-label">MeetCat</span>
-                  <div class="dspine-icons">
-                    <span class="dsicon">▣</span>
-                    <span class="dsicon">✓</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- ═══ Chapter: CLI & Skills ═══ -->
+    <section class="chapter" id="cli" data-chapter>
+      <header class="chapter-head">
+        <div class="chapter-title-row">
+          <h2>Let your agents drive the terminal.</h2>
+          <p class="chapter-lead">
+            An agent that needs to run a test and read the result is flying blind in most terminals.
+            Prowl ships a <code>prowl</code> command that talks to the running app over a local socket, so
+            agents can see, address and coordinate panes as easily as you can.
+          </p>
         </div>
+        <div class="chapter-tabs" role="tablist" aria-label="CLI features">
+          <button type="button" role="tab" aria-selected="true" data-tab="cli-basics">The prowl CLI</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="cli-agents">Coordinate agents</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="skills">Bundled skills</button>
+        </div>
+      </header>
+
+      <div class="track-wrap">
+        <div class="track" data-track tabindex="0">
+          <article class="panel" data-panel="cli-basics" role="tabpanel">
+            <div class="panel-copy">
+              <h3>The <code>prowl</code> CLI</h3>
+              <p class="pitch">
+                List worktrees, tabs and panes. Read a screen once it settles. Type into a pane and
+                capture what the command printed. Send keys. Focus, open, split, close. Every command
+                has a <code>--json</code> form with a stable schema.
+              </p>
+              <ul class="facts">
+                <li><b>Short handles.</b> <code>p7</code> and <code>t6</code> work in any target position for the life of the app; JSON keeps canonical UUIDs.</li>
+                <li><b>Capture, not scrape.</b> <code>send --capture</code> uses shell integration to return exactly the command's output and exit code.</li>
+                <li><b>Know thyself.</b> Every pane exports <code>PROWL_PANE_ID</code>, so a script can address its own pane and never act on itself by accident.</li>
+              </ul>
+              <p class="toggle">Install from Settings → Agents → CLI &amp; Skills · <a href="/manual/components/cli/">CLI reference</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code term"><span class="p">$</span> prowl list
+<span class="o">Kingfisher:feature/retry-downloader (running)</span>
+<span class="o">  [*] Tab 1: ◐ ImageDownloader exponential-backoff retry   t3</span>
+<span class="o">      Pane 1: ◑ …   ⟦claude⟧   p4</span>
+<span class="o">MeetCat:feature/auth (idle)</span>
+<span class="o">  [*] Tab 1: Tour project authentication flow | auth   t5</span>
+<span class="o">      Pane 1: …   ⟦codex⟧   p6</span>
+
+<span class="p">$</span> prowl send p6 'pnpm test' --capture --timeout 120 --json
+<span class="o">&#123; "ok": true, "data": &#123; "wait": &#123; "exit_code": 0, "duration_ms": 8412 &#125;,</span>
+<span class="o">  "capture": &#123; "line_count": 42, "text": "… Tests  38 passed" &#125; &#125; &#125;</span>
+
+<span class="p">$</span> prowl read p4 --last 40 --wait-stable
+<span class="p">$</span> prowl key p4 enter</pre>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="cli-agents" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Coordinate agents</h3>
+              <p class="pitch">
+                The CLI knows about agents, not just shells. An agent can launch a reviewer beside itself
+                from a Profile, hand it a task, wait for a receipt that says the task finished, and read
+                the result.
+              </p>
+              <ul class="facts">
+                <li><b>Prompted launches return a dispatch receipt.</b> <code>agents wait --dispatch</code> blocks until the worker reports completion, not merely until the screen stops moving.</li>
+                <li><b>Dispatch to a running agent.</b> <code>agents dispatch</code> queues a follow-up into an idle agent without restarting it.</li>
+                <li><b>Read state, not pixels.</b> <code>agents read</code> gives a Claude or Codex pane's status, blocker text and final result; <code>agents signal</code> lets a runtime report its own events.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/cli/#dispatch-completion-and-waiting">Dispatch and waiting in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code term"><span class="c"># launch a reviewer in a split beside this pane</span>
+<span class="p">$</span> launch=$(prowl create pane "$PROWL_PANE_ID" --direction right \
+    --profile Reviewer --prompt - --json &lt;&lt;'EOF'
+  Review the current branch against its base.
+  Report only actionable findings with file and line.
+  EOF
+  )
+<span class="p">$</span> dispatch=$(jq -r .data.dispatch.id &lt;&lt;&lt; "$launch")
+
+<span class="c"># block until the reviewer says it is done</span>
+<span class="p">$</span> prowl agents wait --dispatch "$dispatch" --json \
+    | jq -r .data.receipt.summary
+<span class="ok">3 findings: retry loop never backs off; …</span>
+
+<span class="c"># read the trusted final result</span>
+<span class="p">$</span> prowl agents read p9 --result-only</pre>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="skills" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Bundled skills</h3>
+              <p class="pitch">
+                Prowl ships two agent skills inside the app: <code>prowl-cli</code>, which teaches an agent
+                when and how to drive panes safely, and <code>prowl-workflow</code>, which teaches it to
+                write and debug workflows. One command links them into your agents' skill folders.
+              </p>
+              <ul class="facts">
+                <li><b>Stays current.</b> Skills are symlinked, so an app update updates the skill.</li>
+                <li><b>Manual in the bundle.</b> The full documentation ships in <code>Prowl.app</code>, and <em>Help → Ask Agent About Prowl</em> copies a prompt that points your agent at it.</li>
+                <li><b>Same docs, on the web.</b> This site's <a href="/manual/">Manual</a> is built from those files.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/skills/prowl-cli/">prowl-cli skill</a> · <a href="/manual/skills/prowl-workflow/">prowl-workflow skill</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code term"><span class="p">$</span> prowl skills install
+<span class="ok">linked prowl-cli       → ~/.claude/skills/prowl-cli</span>
+<span class="ok">linked prowl-cli       → ~/.codex/skills/prowl-cli</span>
+<span class="ok">linked prowl-cli       → ~/.agents/skills/prowl-cli</span>
+<span class="ok">linked prowl-workflow  → ~/.claude/skills/prowl-workflow</span>
+<span class="ok">linked prowl-workflow  → ~/.codex/skills/prowl-workflow</span>
+<span class="ok">linked prowl-workflow  → ~/.agents/skills/prowl-workflow</span>
+
+<span class="p">$</span> prowl skills list
+<span class="o">prowl-cli        claude ✓  codex ✓  agents ✓</span>
+<span class="o">prowl-workflow   claude ✓  codex ✓  agents ✓</span></pre>
+            </figure>
+          </article>
+        </div>
+        <button type="button" class="track-arrow prev" data-prev aria-label="Previous feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        <button type="button" class="track-arrow next" data-next aria-label="Next feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
       </div>
     </section>
 
-    <!-- ═══ Act 3 — Active Agents ═══ -->
-    <section class="act act-agents" id="act-agents">
-      <div class="act-pin-wrap">
-        <div class="act-layout">
-          <div class="act-text">
-            <span class="act-label">03</span>
-            <h2 class="act-title">Active Agents</h2>
-            <p class="act-scene">
-              Three agents running across two projects.
-              <br />One blocked. One working. One waiting.
-            </p>
-            <p class="act-resolve">
-              Active Agents lifts every running agent out of the sidebar — a
-              single panel that always shows who's working, who's blocked,
-              and who just finished, regardless of which repo they live in.
-            </p>
-            <ul class="act-details">
-              <li>One panel, every agent, every repo — no hunting through tabs</li>
-              <li>Status flips live: <span class="warm">working</span> · <span class="warn">blocked</span> · <span class="info">done</span> · <span class="muted">idle</span></li>
-              <li>Click an entry to jump straight into that agent's tab</li>
-            </ul>
-          </div>
-          <div class="act-visual">
-            <div class="agents-demo" id="agents-demo">
-              <div class="agents-panel" id="agents-panel">
-                <div class="agents-head">
-                  <span class="agents-head-title">Active Agents</span>
-                  <span class="agents-head-count">3</span>
-                </div>
-                <div class="agents-row" id="agents-row-codex">
-                  <div class="agent-icon agent-icon-codex">&#10095;</div>
-                  <div class="agent-meta">
-                    <div class="agent-name"><span class="agent-tool">codex</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-prowl">Prowl</span></div>
-                    <div class="agent-branch">main</div>
-                  </div>
-                  <div class="agent-status agent-status-working" id="agents-status-codex">
-                    <span class="agent-status-dot"></span>
-                    <span class="agent-status-label">Working</span>
-                  </div>
-                </div>
-                <div class="agents-row" id="agents-row-claude">
-                  <div class="agent-icon agent-icon-claude">&#10022;</div>
-                  <div class="agent-meta">
-                    <div class="agent-name"><span class="agent-tool">claude</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-prowl">Prowl</span></div>
-                    <div class="agent-branch">main</div>
-                  </div>
-                  <div class="agent-status agent-status-blocked" id="agents-status-claude">
-                    <span class="agent-status-dot"></span>
-                    <span class="agent-status-label">Blocked</span>
-                  </div>
-                </div>
-                <div class="agents-row" id="agents-row-pi">
-                  <div class="agent-icon agent-icon-pi">&#960;</div>
-                  <div class="agent-meta">
-                    <div class="agent-name"><span class="agent-tool">pi</span> <span class="agent-sep">·</span> <span class="agent-project agent-project-kingfisher">Kingfisher</span></div>
-                    <div class="agent-branch">master</div>
-                  </div>
-                  <div class="agent-status agent-status-idle">
-                    <span class="agent-status-dot"></span>
-                    <span class="agent-status-label">Idle</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- ═══ Fundamentals ═══ -->
+    <section class="foundation" id="foundation">
+      <h2>And the fundamentals, done right.</h2>
+      <dl class="ledger">
+        <div>
+          <dt>Fully native</dt>
+          <dd>Rendered by libghostty, the Ghostty terminal engine. No Electron, no web views, CJK correct out of the box, your Ghostty config respected.</dd>
         </div>
+        <div>
+          <dt>Diff and outgoing changes</dt>
+          <dd><kbd>⌘⇧Y</kbd> shows what an agent changed against HEAD, including untracked files. <kbd>⌘⌥⇧Y</kbd> shows what the branch would contribute to a pull request. Built-in window, or Hunk, FileMerge, Kaleidoscope and custom tools.</dd>
+        </div>
+        <div>
+          <dt>Pull requests through <code>gh</code></dt>
+          <dd>PR state, review decision and CI rollup on the worktree row. Merge, mark ready, re-run failed jobs, or copy the failure logs to hand back to the agent, from <kbd>⌘P</kbd>.</dd>
+        </div>
+        <div>
+          <dt>Command Palette</dt>
+          <dd><kbd>⌘P</kbd> reaches every action by name and shows its live binding. Remap anything in Settings → Shortcuts.</dd>
+        </div>
+        <div>
+          <dt>Open in the right editor</dt>
+          <dd><kbd>⌘O</kbd> inspects the project and opens Xcode, Android Studio, a JetBrains IDE, or the VS Code family accordingly, with a per-repository override.</dd>
+        </div>
+        <div>
+          <dt>On-device intelligence</dt>
+          <dd>Apple Intelligence suggests branch names from your recent terminal activity and SF Symbol icons from a README. Repository icons are detected automatically from app assets and web manifests.</dd>
+        </div>
+        <div>
+          <dt>Repository identity</dt>
+          <dd>Each repository gets a colour and an icon that tint its rows, Shelf spine and window chrome, so you know where you are without reading.</dd>
+        </div>
+        <div>
+          <dt>Ships like a Mac app</dt>
+          <dd>Notarized builds, Sparkle updates you confirm before installing, and a Homebrew cask. Requires macOS 26.</dd>
+        </div>
+      </dl>
+      <div class="gallery">
+        <figure>
+          <img src="/images/shots/command-palette.webp" alt="The Command Palette open over Canvas, listing recent and suggested actions with their shortcuts" loading="lazy" data-lightbox />
+          <figcaption><kbd>⌘P</kbd> Command Palette</figcaption>
+        </figure>
+        <figure>
+          <img src="/images/shots/settings.webp" alt="Settings window with General, Notifications, Shortcuts, Worktree, Updates, GitHub, Commands, Advanced, and the Agents section: Display, Profiles, CLI & Skills, Workflows" loading="lazy" data-lightbox />
+          <figcaption>Settings, including Agents → Display, Profiles, CLI &amp; Skills, Workflows</figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- ═══ Act 4 — CLI ═══ -->
-    <section class="act act-cli" id="act-cli">
-      <div class="act-pin-wrap">
-        <div class="act-layout act-layout-reverse">
-          <div class="act-text">
-            <span class="act-label">04</span>
-            <h2 class="act-title">CLI</h2>
-            <p class="act-scene">
-              Your agent needs to run a test, read the result,
-              and decide what to do next.
-              <br />In most terminals, it's flying blind.
-            </p>
-            <p class="act-resolve">
-              Prowl exposes a full CLI that both you and your agents
-              can use to control the terminal programmatically — send
-              commands, capture output, orchestrate multiple panes.
-            </p>
-            <ul class="act-details">
-              <li><kbd>prowl list</kbd> — discover all panes &amp; their status</li>
-              <li><kbd>prowl send --capture</kbd> — execute &amp; capture output in one shot</li>
-              <li><kbd>prowl read</kbd> — read screen content on demand</li>
-              <li><kbd>prowl key</kbd> — send keystrokes programmatically</li>
-              <li>Multi-agent orchestration, CI scripting, automated workflows — the only limit is your imagination</li>
-            </ul>
-          </div>
-          <div class="act-visual">
-            <div class="cli-demo" id="cli-demo">
-              <div class="cli-titlebar">
-                <span class="cli-dot r"></span>
-                <span class="cli-dot y"></span>
-                <span class="cli-dot g"></span>
-                <span class="cli-title">Terminal</span>
-              </div>
-              <div class="cli-body">
-                <div class="cli-line" id="cli-l1"><span class="cli-prompt">$</span> prowl list --json</div>
-                <div class="cli-line cli-out" id="cli-l2">&#9656; prowl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3 tabs) <span class="ok">&#9679; running</span></div>
-                <div class="cli-line cli-out" id="cli-l3">&#9656; kingfisher &nbsp;(1 tab) &nbsp;<span class="muted">&#9675; idle</span></div>
-                <div class="cli-line cli-blank" id="cli-l4">&nbsp;</div>
-                <div class="cli-line" id="cli-l5"><span class="cli-prompt">$</span> prowl send "npm test" --capture</div>
-                <div class="cli-line cli-out" id="cli-l6"><span class="muted">&#9203; waiting for shell&#8230;</span></div>
-                <div class="cli-line cli-out" id="cli-l7"><span class="ok">&#10003; exit 0</span> <span class="muted">(3.2s)</span></div>
-                <div class="cli-line cli-blank" id="cli-l8">&nbsp;</div>
-                <div class="cli-line cli-out cli-captured" id="cli-l9">captured output:</div>
-                <div class="cli-line cli-out cli-captured" id="cli-l10">&nbsp;&nbsp;Tests &nbsp;12 passed</div>
-                <div class="cli-line cli-out cli-captured" id="cli-l11">&nbsp;&nbsp;Time &nbsp;&nbsp;3.18s</div>
-                <div class="cli-line" id="cli-l12"><span class="cli-prompt">$</span> <span class="cli-cursor">&#9646;</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ Act 5 — Custom Actions ═══ -->
-    <section class="act act-actions" id="act-actions">
-      <div class="act-pin-wrap">
-        <div class="act-layout">
-          <div class="act-text">
-            <span class="act-label">05</span>
-            <h2 class="act-title">Custom Actions</h2>
-            <p class="act-scene">
-              Build, test, deploy — the same commands, typed out the same way,
-              in every repo, every single day. Stop repeating yourself.
-            </p>
-            <p class="act-resolve">
-              Pin any workflow to a button. Trigger it with a keystroke.
-              Pair it with <kbd>claude&nbsp;-p</kbd> or <kbd>codex&nbsp;exec</kbd>
-              to turn your terminal into a daily AI-powered assistant.
-            </p>
-            <ul class="act-details">
-              <li>Unlimited action buttons per repo — add as many as you need</li>
-              <li>Shell script or direct terminal input, each with its own shortcut</li>
-              <li>One keystroke to kick off builds, tests, agents, or deploy pipelines</li>
-            </ul>
-          </div>
-          <div class="act-visual">
-            <div class="actions-demo" id="actions-demo">
-              <div class="actions-titlebar">
-                <span class="actions-repo">prowl</span>
-                <div class="actions-buttons">
-                  <div class="action-pill" id="pill-build">
-                    <span class="pill-icon">&#9654;</span> Build
-                    <kbd class="pill-kbd">&#8984;B</kbd>
-                  </div>
-                  <div class="action-pill" id="pill-test">
-                    <span class="pill-icon">&#9881;</span> Test
-                    <kbd class="pill-kbd">&#8984;T</kbd>
-                  </div>
-                  <div class="action-pill" id="pill-deploy">
-                    <span class="pill-icon">&#9650;</span> Deploy
-                    <kbd class="pill-kbd">&#8984;D</kbd>
-                  </div>
-                </div>
-              </div>
-              <div class="actions-terminal" id="actions-terminal">
-                <div class="actions-line" id="al-1"><span class="cli-prompt">&#10095;</span> swift build</div>
-                <div class="actions-line actions-out" id="al-2">&nbsp;&nbsp;Compiling Prowl (42 sources)&#8230;</div>
-                <div class="actions-line actions-out ok" id="al-3">&nbsp;&nbsp;Build complete! (4.8s)</div>
-                <div class="actions-line" id="al-4"><span class="cli-prompt">&#10095;</span> <span class="cli-cursor">&#9646;</span></div>
-              </div>
-              <!-- Keystroke overlay -->
-              <div class="keystroke-overlay" id="keystroke-overlay">
-                <kbd class="keystroke-big">&#8984; B</kbd>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ Interlude — Quick Features ═══ -->
-    <section class="act act-interlude" id="act-interlude">
-      <div class="interlude-inner">
-        <p class="interlude-lead">And everything you'd expect from a modern terminal — done right.</p>
-        <div class="interlude-grid">
-          <div class="interlude-card" id="ic-native">
-            <div class="ic-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
-                <rect x="2" y="3" width="20" height="14" rx="2" />
-                <path d="M8 21h8M12 17v4" />
-              </svg>
-            </div>
-            <h3 class="ic-title">Full Native</h3>
-            <p class="ic-desc">
-              Powered by libghostty. No Electron, no web views —
-              just raw native speed. No surprising edge cases,
-              no rendering glitches. CJK-friendly out of the box.
-            </p>
-          </div>
-          <div class="interlude-card" id="ic-tabs">
-            <div class="ic-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
-                <rect x="3" y="3" width="4" height="18" rx="1" />
-                <path d="M10 6h8M10 10h6M10 14h8M10 18h4" />
-              </svg>
-            </div>
-            <h3 class="ic-title">Vertical Tabs</h3>
-            <p class="ic-desc">
-              Repos, branches, and worktrees — organized in a sidebar.
-              Switch context without losing your place.
-            </p>
-          </div>
-          <div class="interlude-card" id="ic-reminder">
-            <div class="ic-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
-                <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-            </div>
-            <h3 class="ic-title">Agent Reminder</h3>
-            <p class="ic-desc">
-              Get notified the moment an agent finishes — never miss
-              a completion buried in background tabs.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ Finale — CTA ═══ -->
-    <section class="act act-finale" id="act-finale">
-      <div class="finale-inner">
-        <p class="finale-title">Start prowling.</p>
-        <p class="oss-note">Free &amp; Open Source</p>
-        <div class="finale-cta">
-          <a
-            href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg"
-            class="btn btn-primary"
-            target="_blank"
-            rel="noopener"
-          >
-            Download Prowl
-          </a>
-          <a
-            href="https://github.com/onevcat/Prowl"
-            class="btn btn-secondary"
-            target="_blank"
-            rel="noopener"
-          >
-            View on GitHub
-          </a>
-        </div>
-        <p class="brew-note">
-          Or install via Homebrew:
-          <br />
-          <span class="brew-command" id="brew-command">brew install --cask onevcat/tap/prowl</span>
-          <button type="button" class="brew-copy" id="brew-copy" aria-label="Copy Homebrew command">Copy</button>
-        </p>
-        <p class="fork-note">
-          A personal fork of <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>, built for daily use.
-        </p>
-      </div>
-      <footer class="footer">
+    <!-- ═══ Learn ═══ -->
+    <section class="learn" id="learn">
+      <div class="learn-copy">
+        <h2>Read the manual. Or don't.</h2>
         <p>
-          Built by <a href="https://github.com/onevcat" target="_blank" rel="noopener">@onevcat</a>
-          with <span class="heart">&hearts;</span>
+          Every feature above has a page in the <a href="/manual/">Manual</a>, built from the same Markdown
+          that ships inside the app. Prefer the agentic way? Hand this prompt to Claude Code, Codex, or any
+          assistant and it will read the manual for you and introduce Prowl in your language, tailored to
+          how you work.
         </p>
+        <a class="learn-link" href="/manual/">Open the manual →</a>
+      </div>
+      <AgentPrompt />
+    </section>
+
+    <!-- ═══ CTA ═══ -->
+    <section class="finale" id="download">
+      <p class="finale-title">Start prowling.</p>
+      <div class="finale-cta">
+        <a href="https://github.com/onevcat/Prowl/releases/latest/download/Prowl.dmg" class="btn btn-primary" target="_blank" rel="noopener">Download Prowl</a>
+        <a href="https://github.com/onevcat/Prowl" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <p class="brew-note">
+        Or install via Homebrew:
+        <span class="brew-command" id="brew-command">brew install --cask onevcat/tap/prowl</span>
+        <button type="button" class="brew-copy" id="brew-copy" aria-label="Copy Homebrew command">Copy</button>
+      </p>
+      <p class="fork-note">
+        Free &amp; open source. A personal fork of <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>, built for daily use.
+      </p>
+      <footer class="footer">
+        <p>Built by <a href="https://github.com/onevcat" target="_blank" rel="noopener">@onevcat</a> with <span class="heart">&hearts;</span></p>
       </footer>
     </section>
-
   </main>
+
+  <div class="lightbox" id="lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Screenshot">
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" /></svg>
+    </button>
+    <img id="lightbox-img" alt="" />
+  </div>
 </Layout>
 
-<!-- GSAP + ScrollTrigger -->
-<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-<script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script>
+  // ── Chapters: tabs ⇄ horizontal scroll-snap track ──
+  document.querySelectorAll<HTMLElement>("[data-chapter]").forEach((chapter) => {
+    const track = chapter.querySelector<HTMLElement>("[data-track]");
+    const tabs = Array.from(chapter.querySelectorAll<HTMLButtonElement>("[role=tab]"));
+    const panels = Array.from(chapter.querySelectorAll<HTMLElement>("[data-panel]"));
+    const prev = chapter.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = chapter.querySelector<HTMLButtonElement>("[data-next]");
+    if (!track || !tabs.length || !panels.length) return;
 
-<script is:inline>
-  gsap.registerPlugin(ScrollTrigger);
-
-  /* ── Helpers ── */
-  const mm = gsap.matchMedia();
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ── Prologue: fade out on scroll ── */
-  if (!prefersReduced) {
-    gsap.to("#prologue .act-inner", {
-      opacity: 0,
-      y: -60,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#prologue",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Prologue hero image: scale up gently ── */
-  if (!prefersReduced) {
-    gsap.from(".prologue-hero-image", {
-      opacity: 0, y: 40, scale: 0.96,
-      duration: 1, ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".prologue-hero-image",
-        start: "top 90%",
-        toggleActions: "play none none none",
-      },
-    });
-  }
-
-  /* ── Act 1: Canvas ── */
-  if (!prefersReduced) {
-    const canvasTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#act-canvas",
-        pin: "#act-canvas .act-pin-wrap",
-        start: "top top",
-        end: "+=200%",
-        scrub: 0.6,
-      },
-    });
-
-    // Phase 1: cards start offset and scattered, animate to grid
-    gsap.set("#cc-1", { x: -40, y: 30, rotation: -8, opacity: 0 });
-    gsap.set("#cc-2", { x: 60, y: -20, rotation: 6, opacity: 0 });
-    gsap.set("#cc-3", { x: -30, y: -40, rotation: 4, opacity: 0 });
-    gsap.set("#cc-4", { x: 50, y: 50, rotation: -5, opacity: 0 });
-    gsap.set("#canvas-broadcast", { opacity: 0, y: 20 });
-    gsap.set("#canvas-done-pulse", { opacity: 0, scale: 0.8 });
-
-    canvasTl
-      .to(["#cc-1", "#cc-2", "#cc-3", "#cc-4"], {
-        x: 0, y: 0, rotation: 0, opacity: 1,
-        duration: 0.4, stagger: 0.05, ease: "power2.out",
-      })
-      // Phase 2: done pulse on card 1 + title turns golden
-      .to("#cc-1-title", {
-        background: "rgba(245, 166, 35, 0.15)",
-        borderBottomColor: "rgba(245, 166, 35, 0.2)",
-        duration: 0.2,
-      }, "+=0.1")
-      .to("#cc-1-badge", {
-        background: "#f5a623",
-        boxShadow: "0 0 6px rgba(245, 166, 35, 0.5)",
-        duration: 0.2,
-      }, "<")
-      .to("#canvas-done-pulse", {
-        opacity: 1, scale: 1, duration: 0.2,
-      }, "<")
-      // Phase 3: broadcast bar
-      .to("#canvas-broadcast", {
-        opacity: 1, y: 0, duration: 0.2,
-      }, "+=0.1");
-
-    // Text fade in
-    gsap.from("#act-canvas .act-text", {
-      opacity: 0, x: -40,
-      scrollTrigger: {
-        trigger: "#act-canvas",
-        start: "top 80%",
-        end: "top 30%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Act 2: Shelf ──
-     Spine flow stays inside its stack; "open" = innermost spine of a stack,
-     visually merged with the terminal area. Terminal content + tint follows
-     the open book; tab icons on the open spine cycle to suggest live commands.
-  */
-  if (!prefersReduced) {
-    const shelfDemo = document.getElementById("shelf-demo");
-    const dbookRepo = document.getElementById("dbook-repo");
-    const dbookBranch = document.getElementById("dbook-branch");
-    const dbookTerm = document.getElementById("dbook-terminal");
-    const dshelfTitle = document.getElementById("shelf-title");
-
-    const shelfScenes = {
-      prowl: {
-        open: "prowl",
-        color: "rose",
-        title: "Prowl",
-        branch: "main",
-        term:
-          '<div class="dbl"><span class="dbp">&#10095;</span> swift test</div>' +
-          '<div class="dbl out">  Build complete! (1.2s)</div>' +
-          '<div class="dbl out ok">  Test Suite passed — 23 tests, 0 failures</div>' +
-          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
-      },
-      kingfisher: {
-        open: "kingfisher",
-        color: "amber",
-        title: "Kingfisher",
-        branch: "main",
-        term:
-          '<div class="dbl"><span class="dbp">&#10095;</span> codex "Add retry to ImageDownloader"</div>' +
-          '<div class="dbl out">  &#8987; Reading ImageDownloader.swift</div>' +
-          '<div class="dbl out">  &#8987; Applying changes to 2 files</div>' +
-          '<div class="dbl out ok">  &#10003; Done. 3 files changed.</div>' +
-          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
-      },
-      "kingfisher-test": {
-        open: "kingfisher",
-        color: "amber",
-        title: "Kingfisher",
-        branch: "main",
-        term:
-          '<div class="dbl"><span class="dbp">&#10095;</span> swift test</div>' +
-          '<div class="dbl out">  Test Suite started…</div>' +
-          '<div class="dbl out ok">  &#10003; 142 passed (4.6s)</div>' +
-          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
-      },
-      meetcat: {
-        open: "meetcat",
-        color: "teal",
-        title: "MeetCat",
-        branch: "feature/auth",
-        term:
-          '<div class="dbl"><span class="dbp">&#10095;</span> npx vitest run</div>' +
-          '<div class="dbl out">  &#10003; src/utils.test.ts (6 tests) 12ms</div>' +
-          '<div class="dbl out">  &#10003; src/hooks.test.ts (4 tests) 8ms</div>' +
-          '<div class="dbl out ok">  Tests  10 passed</div>' +
-          '<div class="dbl"><span class="dbp">&#10095;</span><span class="dblink">&#9646;</span></div>',
-      },
+    let active = 0;
+    const setActive = (index: number) => {
+      active = Math.max(0, Math.min(panels.length - 1, index));
+      tabs.forEach((t, i) => {
+        t.setAttribute("aria-selected", String(i === active));
+        t.tabIndex = i === active ? 0 : -1;
+      });
+      panels.forEach((p, i) => p.classList.toggle("is-active", i === active));
+      if (prev) prev.disabled = active === 0;
+      if (next) next.disabled = active === panels.length - 1;
     };
 
-    /* Spines are arranged in a fixed order, like books on a shelf. The
-       terminal slots in just to the right of the selected spine — selecting
-       a different spine moves the terminal, never the spine order. */
-    const dshelfBookOrder = ["ai-ship", "kingfisher", "prowl", "yitong", "meetcat"];
-    let dshelfSelectedIdx = 2; // markup default: prowl is selected
+    const scrollTo = (index: number) => {
+      const panel = panels[Math.max(0, Math.min(panels.length - 1, index))];
+      const left = panel.offsetLeft - track.offsetLeft;
+      track.scrollTo({ left, behavior: "smooth" });
+    };
 
-    function dshelfElementOf(book) {
-      return document.getElementById("dspine-" + book);
-    }
+    tabs.forEach((tab, i) => tab.addEventListener("click", () => scrollTo(i)));
+    prev?.addEventListener("click", () => scrollTo(active - 1));
+    next?.addEventListener("click", () => scrollTo(active + 1));
 
-    function dshelfApplyOrder() {
-      const bookEl = document.getElementById("dshelf-book");
-      dshelfBookOrder.forEach(function (book, idx) {
-        const el = dshelfElementOf(book);
-        if (!el) return;
-        el.style.order = String(idx <= dshelfSelectedIdx ? idx : idx + 1);
-        el.classList.toggle("dspine-selected", idx === dshelfSelectedIdx);
-      });
-      if (bookEl) bookEl.style.order = String(dshelfSelectedIdx + 1);
-    }
+    chapter.querySelector("[role=tablist]")?.addEventListener("keydown", (event) => {
+      const e = event as KeyboardEvent;
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        const target = e.key === "ArrowRight" ? active + 1 : active - 1;
+        scrollTo(target);
+        tabs[Math.max(0, Math.min(tabs.length - 1, target))]?.focus();
+      }
+    });
+    track.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") scrollTo(active + 1);
+      if (event.key === "ArrowLeft") scrollTo(active - 1);
+    });
 
-    function dshelfSelect(book) {
-      const idx = dshelfBookOrder.indexOf(book);
-      if (idx === -1 || idx === dshelfSelectedIdx) return;
-
-      // FIRST: snapshot every spine + the terminal book
-      const allTargets = dshelfBookOrder.map(dshelfElementOf).filter(Boolean);
-      const bookEl = document.getElementById("dshelf-book");
-      if (bookEl) allTargets.push(bookEl);
-      const firstRects = new Map();
-      allTargets.forEach(function (el) { firstRects.set(el, el.getBoundingClientRect()); });
-
-      // LAST: spine order is fixed; only the selected pointer moves, which
-      // shifts the terminal's slot.
-      dshelfSelectedIdx = idx;
-      dshelfApplyOrder();
-
-      // INVERT: each target jumps back to its FIRST position with no transition
-      allTargets.forEach(function (el) {
-        const first = firstRects.get(el);
-        const dx = first.left - el.getBoundingClientRect().left;
-        if (Math.abs(dx) < 0.5) {
-          el.style.transition = "";
-          el.style.transform = "";
-          return;
-        }
-        el.style.transition = "none";
-        el.style.transform = "translateX(" + dx + "px)";
-      });
-
-      // PLAY: commit the invert, then animate to identity in the next frame
-      const body = document.getElementById("dshelf-body");
-      if (body) void body.offsetWidth;
-      requestAnimationFrame(function () {
-        allTargets.forEach(function (el) {
-          el.style.transition = "transform 380ms cubic-bezier(0.4, 0, 0.2, 1)";
-          el.style.transform = "";
+    // Which panel is closest to the track's left edge?
+    let raf = 0;
+    track.addEventListener(
+      "scroll",
+      () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const origin = track.scrollLeft + track.clientWidth * 0.25;
+          let best = 0;
+          let bestDist = Infinity;
+          panels.forEach((p, i) => {
+            const dist = Math.abs(p.offsetLeft - track.offsetLeft - track.scrollLeft);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = i;
+            }
+          });
+          void origin;
+          if (best !== active) setActive(best);
         });
-      });
+      },
+      { passive: true },
+    );
+    setActive(0);
+  });
+
+  // ── Deep links like /details/#agents keep working; tabs inside a chapter
+  //    can be targeted with #agents/island.
+  const hash = window.location.hash.slice(1);
+  if (hash.includes("/")) {
+    const [chapterId, panelId] = hash.split("/");
+    const chapter = document.getElementById(chapterId);
+    const panel = chapter?.querySelector<HTMLElement>(`[data-panel="${panelId}"]`);
+    const track = chapter?.querySelector<HTMLElement>("[data-track]");
+    if (chapter && panel && track) {
+      chapter.scrollIntoView();
+      track.scrollLeft = panel.offsetLeft - track.offsetLeft;
     }
+  }
 
-    function applyShelfScene(key) {
-      const scene = shelfScenes[key];
-      if (!scene || !shelfDemo || !dbookRepo || !dbookBranch || !dbookTerm || !dshelfTitle) return;
+  // ── Lightbox ──
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement | null;
+  const lightboxClose = document.getElementById("lightbox-close");
+  let lightboxOrigin: Element | null = null;
+  const closeLightbox = () => {
+    if (!lightbox) return;
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    window.setTimeout(() => {
+      if (!lightbox.classList.contains("open")) lightbox.hidden = true;
+    }, 180);
+    if (lightboxOrigin instanceof HTMLElement) lightboxOrigin.focus();
+  };
+  document.querySelectorAll<HTMLImageElement>("img[data-lightbox]").forEach((img) => {
+    img.tabIndex = 0;
+    img.setAttribute("role", "button");
+    const open = () => {
+      if (!lightbox || !lightboxImg) return;
+      lightboxOrigin = img;
+      lightboxImg.src = img.currentSrc || img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.hidden = false;
+      lightbox.setAttribute("aria-hidden", "false");
+      requestAnimationFrame(() => lightbox.classList.add("open"));
+      document.body.style.overflow = "hidden";
+      lightboxClose?.focus();
+    };
+    img.addEventListener("click", open);
+    img.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox || e.target === lightboxImg) closeLightbox();
+  });
+  lightboxClose?.addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox && !lightbox.hidden) closeLightbox();
+  });
 
-      // Visual cues update immediately (no FLIP needed — they're tints/text)
-      shelfDemo.dataset.color = scene.color;
-      shelfDemo.dataset.open = scene.open;
-      dbookRepo.textContent = scene.open === "meetcat" ? "MeetCat" : scene.open;
-      dbookBranch.textContent = scene.branch;
-      dbookTerm.innerHTML = scene.term;
-      dshelfTitle.textContent = scene.title;
-
-      // Spine selection — animates if scene.open differs from current selected
-      dshelfSelect(scene.open);
+  // ── Brew copy ──
+  const brewBtn = document.getElementById("brew-copy") as HTMLButtonElement | null;
+  const brewCmd = document.getElementById("brew-command")?.textContent?.trim();
+  brewBtn?.addEventListener("click", async () => {
+    if (!brewCmd) return;
+    try {
+      await navigator.clipboard.writeText(brewCmd);
+      brewBtn.textContent = "Copied";
+      brewBtn.classList.add("copied");
+    } catch {
+      brewBtn.textContent = "Copy failed";
     }
-
-    // Sync the initial flex order to match the markup default
-    dshelfApplyOrder();
-
-    // Initialise to prowl scene
-    applyShelfScene("prowl");
-
-    const shelfTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#act-shelf",
-        pin: "#act-shelf .act-pin-wrap",
-        start: "top top",
-        end: "+=260%",
-        scrub: 0.6,
-      },
-    });
-
-    // Phase 1 (entry): spines + book fade in. We avoid x/y transforms here
-    // because dshelfSelect() owns the transform property via FLIP — having
-    // GSAP and FLIP both write to it would clobber.
-    gsap.set(".dspine", { opacity: 0 });
-    gsap.set("#dshelf-book", { opacity: 0 });
-
-    shelfTl
-      .to(".dspine", {
-        opacity: 1, duration: 0.25, stagger: 0.04, ease: "power2.out",
-      })
-      .to("#dshelf-book", { opacity: 1, duration: 0.25 }, "<+0.1")
-      // Phase 2: switch to kingfisher (left-stack flow).
-      .add(() => applyShelfScene("kingfisher"), "+=0.25")
-      // Phase 3: morph kingfisher's tab icon focus + change terminal to test run.
-      .add(() => {
-        const i1 = document.getElementById("dspine-kf-i1");
-        const i2 = document.getElementById("dspine-kf-i2");
-        const i3 = document.getElementById("dspine-kf-i3");
-        i1?.classList.remove("active");
-        i2?.classList.add("active");
-        i3?.classList.remove("active");
-      }, "+=0.3")
-      .add(() => {
-        applyShelfScene("kingfisher-test");
-        const i1 = document.getElementById("dspine-kf-i1");
-        const i2 = document.getElementById("dspine-kf-i2");
-        const i3 = document.getElementById("dspine-kf-i3");
-        i1?.classList.remove("active");
-        i2?.classList.remove("active");
-        i3?.classList.add("active");
-      }, "+=0.3")
-      // Phase 4: switch to meetcat (right-stack flow).
-      .add(() => applyShelfScene("meetcat"), "+=0.3")
-      // Tail dwell so the final scene reads.
-      .to({}, { duration: 0.4 });
-
-    gsap.from("#act-shelf .act-text", {
-      opacity: 0, x: 40,
-      scrollTrigger: {
-        trigger: "#act-shelf",
-        start: "top 80%",
-        end: "top 30%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Act 3: Active Agents ──
-     Panel slides in from the lower-left. Then as scroll progresses, status
-     pills flip — codex working → done, claude blocked → working — driven by
-     timeline progress so scrubbing backwards rewinds the states too. */
-  if (!prefersReduced) {
-    function setAgentStatus(statusId, newStatus, newLabel) {
-      const statusEl = document.getElementById(statusId);
-      if (!statusEl) return;
-      ["working", "blocked", "done", "idle"].forEach(function (s) {
-        statusEl.classList.remove("agent-status-" + s);
-      });
-      statusEl.classList.add("agent-status-" + newStatus);
-      const labelEl = statusEl.querySelector(".agent-status-label");
-      if (labelEl) labelEl.textContent = newLabel;
-    }
-
-    let codexStatus = "working";
-    let claudeStatus = "blocked";
-
-    gsap.set("#agents-panel", { opacity: 0, x: -60, y: 50 });
-
-    const agentsTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#act-agents",
-        pin: "#act-agents .act-pin-wrap",
-        start: "top top",
-        end: "+=220%",
-        scrub: 0.6,
-        onUpdate: function (self) {
-          const p = self.progress;
-          const wantCodex = p > 0.55 ? "done" : "working";
-          if (wantCodex !== codexStatus) {
-            codexStatus = wantCodex;
-            setAgentStatus(
-              "agents-status-codex",
-              wantCodex,
-              wantCodex === "done" ? "Done" : "Working"
-            );
-          }
-          const wantClaude = p > 0.8 ? "working" : "blocked";
-          if (wantClaude !== claudeStatus) {
-            claudeStatus = wantClaude;
-            setAgentStatus(
-              "agents-status-claude",
-              wantClaude,
-              wantClaude === "working" ? "Working" : "Blocked"
-            );
-          }
-        },
-      },
-    });
-
-    agentsTl
-      .to("#agents-panel", {
-        opacity: 1, x: 0, y: 0, duration: 0.4, ease: "power2.out",
-      })
-      .to({}, { duration: 1.2 });
-
-    gsap.from("#act-agents .act-text", {
-      opacity: 0, x: -40,
-      scrollTrigger: {
-        trigger: "#act-agents",
-        start: "top 80%",
-        end: "top 30%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Act 4: CLI ── */
-  if (!prefersReduced) {
-    const cliLines = Array.from({ length: 12 }, (_, i) => `#cli-l${i + 1}`);
-    cliLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
-
-    const cliTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#act-cli",
-        pin: "#act-cli .act-pin-wrap",
-        start: "top top",
-        end: "+=250%",
-        scrub: 0.6,
-      },
-    });
-
-    // Reveal lines one by one
-    cliLines.forEach((sel) => {
-      cliTl.to(sel, { opacity: 1, y: 0, duration: 0.08 });
-    });
-
-    gsap.from("#act-cli .act-text", {
-      opacity: 0, x: 40,
-      scrollTrigger: {
-        trigger: "#act-cli",
-        start: "top 80%",
-        end: "top 30%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Act 5: Custom Actions ── */
-  if (!prefersReduced) {
-    gsap.set("#pill-build", { opacity: 0, y: 12 });
-    gsap.set("#pill-test", { opacity: 0, y: 12 });
-    gsap.set("#pill-deploy", { opacity: 0, y: 12 });
-    gsap.set("#keystroke-overlay", { opacity: 0, scale: 1.3 });
-    const actionLines = ["#al-1", "#al-2", "#al-3", "#al-4"];
-    actionLines.forEach((sel) => gsap.set(sel, { opacity: 0, y: 8 }));
-
-    const actionsTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#act-actions",
-        pin: "#act-actions .act-pin-wrap",
-        start: "top top",
-        end: "+=180%",
-        scrub: 0.6,
-      },
-    });
-
-    actionsTl
-      // Phase 1: buttons appear
-      .to("#pill-build", { opacity: 1, y: 0, duration: 0.1 })
-      .to("#pill-test", { opacity: 1, y: 0, duration: 0.1 })
-      .to("#pill-deploy", { opacity: 1, y: 0, duration: 0.1 })
-      // Phase 2: keystroke flash
-      .to("#keystroke-overlay", { opacity: 1, scale: 1, duration: 0.1 }, "+=0.05")
-      .to("#keystroke-overlay", { opacity: 0, duration: 0.15 }, "+=0.1")
-      .to("#pill-build", { background: "rgba(90,228,192,0.25)", duration: 0.1 }, "<")
-      // Phase 3: terminal output
-      .to("#al-1", { opacity: 1, y: 0, duration: 0.08 })
-      .to("#al-2", { opacity: 1, y: 0, duration: 0.08 })
-      .to("#al-3", { opacity: 1, y: 0, duration: 0.08 })
-      .to("#al-4", { opacity: 1, y: 0, duration: 0.08 });
-
-    gsap.from("#act-actions .act-text", {
-      opacity: 0, x: -40,
-      scrollTrigger: {
-        trigger: "#act-actions",
-        start: "top 80%",
-        end: "top 30%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Interlude: stagger fade-in ── */
-  if (!prefersReduced) {
-    gsap.from(".interlude-card", {
-      opacity: 0, y: 40,
-      stagger: 0.15,
-      scrollTrigger: {
-        trigger: "#act-interlude",
-        start: "top 75%",
-        end: "top 35%",
-        scrub: true,
-      },
-    });
-  }
-
-  /* ── Agentic prompt copy ── */
-  (function () {
-    var btn = document.getElementById("agentic-copy");
-    var pre = document.getElementById("agentic-prompt");
-    if (!btn || !pre) return;
-    btn.addEventListener("click", function () {
-      navigator.clipboard.writeText(pre.textContent.trim()).then(function () {
-        btn.textContent = "Copied!";
-        btn.classList.add("copied");
-        setTimeout(function () {
-          btn.textContent = "Copy prompt";
-          btn.classList.remove("copied");
-        }, 1400);
-      });
-    });
-  })();
-
-  /* ── Brew copy ── */
-  (function () {
-    var btn = document.getElementById("brew-copy");
-    var cmd = document.getElementById("brew-command");
-    if (!btn || !cmd) return;
-    btn.addEventListener("click", function () {
-      navigator.clipboard.writeText(cmd.textContent.trim()).then(function () {
-        btn.textContent = "Copied!";
-        btn.classList.add("copied");
-        setTimeout(function () {
-          btn.textContent = "Copy";
-          btn.classList.remove("copied");
-        }, 1200);
-      });
-    });
-  })();
+    window.setTimeout(() => {
+      brewBtn.textContent = "Copy";
+      brewBtn.classList.remove("copied");
+    }, 1200);
+  });
 </script>
 
 <style>
-  /* ═══════════════════════════════════════
-     Base
-     ═══════════════════════════════════════ */
-  .details-page {
+  .details {
     position: relative;
     z-index: 1;
+    padding-top: var(--nav-height);
   }
 
-  .accent { color: var(--accent); }
-  .ok { color: var(--accent-dim); }
-  .muted { color: var(--text-muted); }
-  .warn { color: #f87171; }
-  .warm { color: #fcd34d; }
-  .info { color: #7dd3fc; }
-
-  /* ═══════════════════════════════════════
-     Act — shared
-     ═══════════════════════════════════════ */
-  .act {
-    position: relative;
-  }
-
-  .act-pin-wrap {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6rem 3rem;
-  }
-
-  .act-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    max-width: 1100px;
-    width: 100%;
-  }
-
-  .act-layout-reverse .act-text { order: 2; }
-  .act-layout-reverse .act-visual { order: 1; }
-
-  .act-label {
+  .details kbd {
+    display: inline-block;
+    padding: 0 0.4em;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--accent-dim);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .act-title {
-    font-family: var(--font-mono);
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 0.82em;
+    line-height: 1.6;
     color: var(--text-primary);
-    margin: 0.25rem 0 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    white-space: nowrap;
   }
 
-  .act-scene {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 1rem;
+  .details code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: #8ff0d5;
+    background: rgba(90, 228, 192, 0.08);
+    padding: 0.05em 0.35em;
+    border-radius: 4px;
   }
 
-  .act-resolve {
-    font-size: 1rem;
-    color: var(--accent);
-    font-weight: 500;
-    line-height: 1.7;
+  .details h2 {
+    font-family: var(--font-mono);
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text-primary);
+    text-wrap: balance;
+  }
+
+  /* ── Intro ── */
+  .intro {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 3rem;
+  }
+
+  .intro-copy {
+    max-width: 760px;
+  }
+
+  .intro h1 {
+    font-family: var(--font-mono);
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text-primary);
     margin-bottom: 1.25rem;
+    text-wrap: balance;
   }
 
-  .act-details {
+  .intro-lead {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 66ch;
+    text-wrap: pretty;
+  }
+
+  .intro-jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .intro-jump a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .intro-jump a:hover {
+    opacity: 1;
+    color: var(--text-primary);
+    border-color: rgba(90, 228, 192, 0.4);
+  }
+
+  .intro-figure {
+    margin: 3rem 0 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+  }
+
+  .intro-figure img {
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+  }
+
+  /* ── Chapter ── */
+  .chapter {
+    padding: 5rem 0 3rem;
+    scroll-margin-top: var(--nav-height);
+  }
+
+  .chapter + .chapter {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .chapter-head {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .chapter-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 2rem 4rem;
+    align-items: end;
+    margin-bottom: 1.75rem;
+  }
+
+  .chapter-lead {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  .chapter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .chapter-tabs [role="tab"] {
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+  }
+
+  .chapter-tabs [role="tab"]:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .chapter-tabs [role="tab"][aria-selected="true"] {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.1);
+    border-color: rgba(90, 228, 192, 0.25);
+  }
+
+  .track-wrap {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 0;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+    outline: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+    border-radius: 12px;
+  }
+
+  .panel {
+    flex: 0 0 calc(100% - 3.5rem);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 2.5rem;
+    align-items: start;
+    padding: 2rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
+    opacity: 0.55;
+    transition: opacity 0.35s ease, border-color 0.35s ease;
+  }
+
+  .panel.is-active {
+    opacity: 1;
+    border-color: var(--line);
+  }
+
+  .panel h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-bottom: 0.7rem;
+  }
+
+  .panel h3 code {
+    font-size: 0.9em;
+  }
+
+  .pitch {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    text-wrap: pretty;
+  }
+
+  .facts {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
   }
 
-  .act-details li {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    padding-left: 1.25rem;
+  .facts li {
     position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
   }
 
-  .act-details li::before {
-    content: "›";
+  .facts li::before {
+    content: "";
     position: absolute;
     left: 0;
-    color: var(--accent-dim);
-    font-weight: 700;
-  }
-
-  .act-details kbd {
-    display: inline-block;
-    padding: 1px 6px;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-  }
-
-  /* ═══════════════════════════════════════
-     Prologue
-     ═══════════════════════════════════════ */
-  .act-prologue {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 6rem 2rem;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% 40%, rgba(90, 228, 192, 0.05) 0%, transparent 70%),
-      var(--bg-primary);
-  }
-
-  .act-inner {
-    max-width: 700px;
-  }
-
-  .prologue-title {
-    font-family: var(--font-mono);
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.25;
-    margin-bottom: 1.5rem;
-  }
-
-  .prologue-sub {
-    font-size: 1.15rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    max-width: 540px;
-    margin: 0 auto 1rem;
-  }
-
-  .prologue-sub-alt {
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 1.3rem;
-    margin-top: 1.5rem;
-  }
-
-  .prologue-hero-image {
-    margin-top: 3rem;
-    max-width: 1350px;
-    width: 100%;
-  }
-
-  .hero-screenshot {
-    width: 100%;
-    border-radius: 12px;
-  }
-
-  .oss-note {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    margin-bottom: 1.5rem;
-  }
-
-  .scroll-hint {
-    margin-top: 2rem;
-    color: var(--text-muted);
-    animation: bounce 2s ease-in-out infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(8px); }
-  }
-
-  /* ═══════════════════════════════════════
-     Canvas demo
-     ═══════════════════════════════════════ */
-  .canvas-demo {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr auto;
-    gap: 10px;
-    padding: 16px;
-    background: #0a1018;
-    border: 1px solid rgba(136, 153, 180, 0.12);
-    border-radius: 12px;
-    min-height: 320px;
-    box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.45),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
-  }
-
-  .c-card {
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.025);
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: border-color 0.2s;
-  }
-
-  .cc-title {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: -10px -12px 0;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 8px 8px 0 0;
-    padding-bottom: 5px;
-  }
-
-  .cc-badge {
+    top: 0.65em;
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    flex-shrink: 0;
+    background: var(--accent-dim);
   }
 
-  .cc-badge.running { background: var(--accent); }
-  .cc-badge.idle { background: var(--text-muted); }
-
-  .cc-body {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .cc-line {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  .cc-line.ok { color: var(--accent-dim); }
-
-  .canvas-broadcast {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(90, 228, 192, 0.06);
-    border: 1px solid rgba(90, 228, 192, 0.15);
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--text-secondary);
-  }
-
-  .broadcast-icon {
-    color: var(--accent);
-    font-size: 0.55rem;
-  }
-
-  .c-card {
-    position: relative;
-  }
-
-  .canvas-done-pulse {
-    position: absolute;
-    inset: -2px;
-    border-radius: 10px;
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 16px rgba(90, 228, 192, 0.3);
-    pointer-events: none;
-  }
-
-  /* ═══════════════════════════════════════
-     Shelf demo
-     ═══════════════════════════════════════ */
-  .shelf-demo {
-    --book-tint: rgba(244, 114, 182, 0.16);   /* default: rose / prowl */
-    --book-edge: rgba(244, 114, 182, 0.32);
-    --book-text: #f9a8d4;
-    background: #0a1018;
-    border: 1px solid rgba(136, 153, 180, 0.12);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.45),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
-    transition: background 0.45s ease;
-  }
-
-  .shelf-demo[data-color="amber"] {
-    --book-tint: rgba(245, 158, 11, 0.18);
-    --book-edge: rgba(245, 158, 11, 0.36);
-    --book-text: #fcd34d;
-  }
-  .shelf-demo[data-color="teal"] {
-    --book-tint: rgba(45, 212, 191, 0.16);
-    --book-edge: rgba(45, 212, 191, 0.34);
-    --book-text: #5eead4;
-  }
-  .shelf-demo[data-color="violet"] {
-    --book-tint: rgba(167, 139, 250, 0.16);
-    --book-edge: rgba(167, 139, 250, 0.34);
-    --book-text: #c4b5fd;
-  }
-  .shelf-demo[data-color="sky"] {
-    --book-tint: rgba(56, 189, 248, 0.16);
-    --book-edge: rgba(56, 189, 248, 0.34);
-    --book-text: #7dd3fc;
-  }
-
-  .shelf-titlebar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  }
-
-  .shelf-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-  .shelf-dot.r { background: #ff5f57; }
-  .shelf-dot.y { background: #febc2e; }
-  .shelf-dot.g { background: #28c840; }
-
-  .shelf-title {
-    flex: 1;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-right: 28px;
-  }
-
-  /* Single flex container holds all spines + the terminal book; flex order
-     decides who sits on which side. The selected spine always lands on the
-     terminal's left edge and visually merges with it. */
-  .shelf-body {
-    display: flex;
-    align-items: stretch;
-    min-height: 320px;
-    padding: 10px;
-    gap: 4px;
-  }
-
-  .dspine {
-    width: 34px;
-    min-height: 200px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 0 8px;
-    gap: 10px;
-    flex-shrink: 0;
-    /* transform managed by JS for FLIP; CSS handles colours only */
-    transition:
-      background 0.4s ease,
-      border-color 0.4s ease;
-  }
-
-  /* Each spine carries its own colour identity (book-cover style). The selected
-     spine and the terminal share the same colour by definition — we keep the
-     scene-level --book-* on .shelf-demo so the terminal can read it, and mirror
-     the same palette per book on the spines themselves. */
-  .dspine[data-book="ai-ship"] {
-    --spine-tint: rgba(167, 139, 250, 0.16);
-    --spine-edge: rgba(167, 139, 250, 0.34);
-    --spine-text: #c4b5fd;
-  }
-  .dspine[data-book="kingfisher"] {
-    --spine-tint: rgba(245, 158, 11, 0.18);
-    --spine-edge: rgba(245, 158, 11, 0.36);
-    --spine-text: #fcd34d;
-  }
-  .dspine[data-book="prowl"] {
-    --spine-tint: rgba(244, 114, 182, 0.16);
-    --spine-edge: rgba(244, 114, 182, 0.32);
-    --spine-text: #f9a8d4;
-  }
-  .dspine[data-book="yitong"] {
-    --spine-tint: rgba(56, 189, 248, 0.16);
-    --spine-edge: rgba(56, 189, 248, 0.34);
-    --spine-text: #7dd3fc;
-  }
-  .dspine[data-book="meetcat"] {
-    --spine-tint: rgba(45, 212, 191, 0.16);
-    --spine-edge: rgba(45, 212, 191, 0.34);
-    --spine-text: #5eead4;
-  }
-
-  .dspine-label {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--text-secondary);
-    letter-spacing: 0.06em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 120px;
-    white-space: nowrap;
-  }
-
-  .dspine-icons {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .dsicon {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-muted);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    line-height: 1;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
-  }
-
-  .dsicon.active {
-    background: var(--spine-tint);
-    color: var(--spine-text);
-    transform: scale(1.08);
-  }
-
-  /* Selected spine: tinted with its OWN colour, sits at terminal's left edge */
-  .dspine-selected {
-    background: var(--spine-tint);
-    border-color: var(--spine-edge);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right-color: transparent;
-    margin-right: -5px; /* cancel the 4px container gap + 1px border overlap */
-    z-index: 1;
-  }
-
-  .dspine-selected .dspine-label {
-    color: var(--spine-text);
-  }
-
-  .dshelf-book {
-    flex: 1;
-    min-width: 0;
-    background: var(--book-tint);
-    border: 1px solid var(--book-edge);
-    border-radius: 0 6px 6px 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: background 0.45s ease, border-color 0.45s ease;
-  }
-
-  .dbook-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-  }
-
-  .dbook-repo {
+  .facts b {
     color: var(--text-primary);
     font-weight: 600;
   }
 
-  .dbook-branch {
-    color: var(--book-text);
-    font-size: 0.62rem;
-    opacity: 0.85;
+  .facts.states li::before {
+    display: none;
   }
 
-  .dbook-controls {
-    margin-left: auto;
-    display: inline-flex;
-    gap: 6px;
+  .facts.states li {
+    padding-left: 1.35rem;
   }
 
-  .dbook-ctrl {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.05);
+  .dot {
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .dot.working { background: var(--status-working); box-shadow: 0 0 8px rgba(245, 166, 35, 0.6); }
+  .dot.blocked { background: var(--status-blocked); box-shadow: 0 0 8px rgba(248, 113, 113, 0.6); }
+  .dot.done { background: var(--status-done); box-shadow: 0 0 8px rgba(125, 211, 252, 0.6); }
+  .dot.idle { background: var(--text-muted); }
+
+  .toggle {
+    font-size: 0.82rem;
     color: var(--text-muted);
-    font-size: 0.65rem;
+    margin-top: 0.5rem;
   }
 
-  .dbook-terminal {
-    flex: 1;
-    padding: 12px 16px;
+  .toggle a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-decoration-color: rgba(136, 153, 180, 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .toggle a:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  .panel-visual {
+    margin: 0;
+    min-width: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--bg-deep);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    align-self: start;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .panel-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: zoom-in;
+  }
+
+  .panel-visual-tight {
+    max-width: 560px;
+  }
+
+  .panel-visual-island {
+    padding: 2.5rem 1.5rem;
+    background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
+  }
+
+  .panel-visual-island img {
+    max-width: 520px;
+  }
+
+  .panel-code {
+    padding: 1.4rem 1.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+  }
+
+  .code {
+    margin: 0;
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    line-height: 1.95;
-  }
-
-  .dbl {
-    white-space: nowrap;
+    line-height: 1.7;
     color: var(--text-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: pre;
+    tab-size: 2;
   }
 
-  .dbl.out { color: var(--text-muted); }
-  .dbl.ok { color: var(--accent-dim); }
+  .code .c { color: var(--text-muted); }
+  .code .k { color: #7dd3fc; }
+  .code .s { color: #8ff0d5; }
+  .code .p { color: var(--accent); margin-right: 0.35em; }
+  .code .o { color: var(--text-secondary); }
+  .code .ok { color: var(--accent-dim); }
 
-  .dbp {
-    color: var(--book-text);
-    margin-right: 8px;
+  .panel-stack {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 
-  .dblink {
-    color: var(--book-text);
-    animation: blink 1s step-end infinite;
+  .panel-stack .strip {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--line-soft);
   }
 
-  /* ═══════════════════════════════════════
-     Active Agents demo
-     ═══════════════════════════════════════ */
-  .agents-demo {
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .gallery figure {
+    margin: 0;
+  }
+
+  .gallery img {
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    cursor: zoom-in;
+  }
+
+  .gallery figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .runtime-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .runtime-grid li {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .profile-card {
+    width: 100%;
+    max-width: 460px;
+    font-size: 0.85rem;
+  }
+
+  .profile-head {
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    min-height: 320px;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line-soft);
   }
 
-  .agents-panel {
+  .profile-name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  .profile-runtime {
+    color: var(--text-muted);
+  }
+
+  .profile-fields {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .profile-fields > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.75rem;
+  }
+
+  .profile-fields dt {
+    color: var(--text-muted);
+  }
+
+  .profile-fields dd {
+    color: var(--text-primary);
+  }
+
+  .profile-preview {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .profile-preview .c {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .profile-preview code {
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: transparent;
+    padding: 0;
+    color: var(--text-secondary);
+  }
+
+  .notif-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
     width: 100%;
     max-width: 380px;
-    background: #0a1018;
-    border: 1px solid rgba(136, 153, 180, 0.12);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.45),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
   }
 
-  .agents-head {
-    display: flex;
+  .notif {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .agents-head-title {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .agents-head-count {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1px 8px;
-    border-radius: 999px;
-  }
-
-  .agents-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    transition: background 0.25s;
-  }
-
-  .agents-row:last-child {
-    border-bottom: 0;
-  }
-
-  .agent-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    line-height: 1;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    flex-shrink: 0;
-  }
-
-  .agent-icon-codex {
-    color: #fcd34d;
-    background: rgba(245, 158, 11, 0.1);
-    border-color: rgba(245, 158, 11, 0.25);
-  }
-
-  .agent-icon-claude {
-    color: #f9a8d4;
-    background: rgba(244, 114, 182, 0.1);
-    border-color: rgba(244, 114, 182, 0.25);
-  }
-
-  .agent-icon-pi {
-    color: #7dd3fc;
-    background: rgba(56, 189, 248, 0.1);
-    border-color: rgba(56, 189, 248, 0.25);
-  }
-
-  .agent-meta {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .agent-name {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .agent-tool {
-    font-weight: 600;
-  }
-
-  .agent-sep {
-    color: var(--text-muted);
-    margin: 0 2px;
-  }
-
-  .agent-project-prowl {
-    color: #f9a8d4;
-  }
-
-  .agent-project-kingfisher {
-    color: #fcd34d;
-  }
-
-  .agent-branch {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .agent-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    flex-shrink: 0;
-    color: var(--text-muted);
-    transition: color 0.3s;
-  }
-
-  .agent-status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--text-muted);
-    transition: background 0.3s, box-shadow 0.3s;
-  }
-
-  .agent-status-working {
-    color: #fcd34d;
-  }
-
-  .agent-status-working .agent-status-dot {
-    background: #fcd34d;
-    box-shadow: 0 0 8px rgba(252, 211, 77, 0.55);
-    animation: agent-blink 1.4s ease-in-out infinite;
-  }
-
-  @keyframes agent-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.45; }
-  }
-
-  .agent-status-blocked {
-    color: #f87171;
-  }
-
-  .agent-status-blocked .agent-status-dot {
-    background: #f87171;
-    box-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
-  }
-
-  .agent-status-done {
-    color: #7dd3fc;
-  }
-
-  .agent-status-done .agent-status-dot {
-    background: #7dd3fc;
-    box-shadow: 0 0 8px rgba(125, 211, 252, 0.45);
-  }
-
-  .agent-status-idle {
-    color: var(--text-muted);
-  }
-
-  .agent-status-idle .agent-status-dot {
-    background: var(--text-muted);
-  }
-
-  /* ═══════════════════════════════════════
-     CLI demo
-     ═══════════════════════════════════════ */
-  .cli-demo {
-    background: #0a1018;
-    border: 1px solid rgba(136, 153, 180, 0.12);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.45),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
-  }
-
-  .cli-titlebar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  }
-
-  .cli-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-
-  .cli-dot.r { background: #ff5f57; }
-  .cli-dot.y { background: #febc2e; }
-  .cli-dot.g { background: #28c840; }
-
-  .cli-title {
-    flex: 1;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-right: 28px;
-  }
-
-  .cli-body {
-    padding: 14px 18px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 2;
-  }
-
-  .cli-line {
-    color: var(--text-primary);
-    white-space: nowrap;
-  }
-
-  .cli-out {
-    color: var(--text-muted);
-  }
-
-  .cli-captured {
-    color: var(--accent-dim);
-  }
-
-  .cli-prompt {
-    color: var(--accent);
-    margin-right: 8px;
-    user-select: none;
-  }
-
-  .cli-cursor {
-    color: var(--accent);
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  /* ═══════════════════════════════════════
-     Custom Actions demo
-     ═══════════════════════════════════════ */
-  .actions-demo {
-    position: relative;
-    background: #0a1018;
-    border: 1px solid rgba(136, 153, 180, 0.12);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow:
-      0 24px 80px rgba(0, 0, 0, 0.45),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
-  }
-
-  .actions-titlebar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .actions-repo {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-
-  .actions-buttons {
-    display: flex;
-    gap: 6px;
-  }
-
-  .action-pill {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 5px;
-    background: rgba(90, 228, 192, 0.08);
-    border: 1px solid rgba(90, 228, 192, 0.12);
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--accent-dim);
-    transition: background 0.15s;
-  }
-
-  .pill-icon {
-    font-size: 0.6rem;
-  }
-
-  .pill-kbd {
-    display: inline-block;
-    padding: 0 4px;
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.04);
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 3px;
-    margin-left: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(20px);
   }
 
-  .actions-terminal {
-    padding: 14px 18px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 2;
-    min-height: 160px;
+  .notif img {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
   }
 
-  .actions-line {
+  .notif-title {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-primary);
-    white-space: nowrap;
   }
 
-  .actions-out {
+  .notif-body {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+
+  .notif-time {
+    font-size: 0.72rem;
     color: var(--text-muted);
+    align-self: start;
   }
 
-  .actions-out.ok {
-    color: var(--accent-dim);
-  }
-
-  .keystroke-overlay {
+  .track-arrow {
     position: absolute;
-    inset: 0;
-    display: flex;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(11, 18, 33, 0.9);
+    color: var(--text-primary);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-  }
-
-  .keystroke-big {
-    display: inline-block;
-    padding: 12px 28px;
-    font-family: var(--font-mono);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent);
-    background: rgba(90, 228, 192, 0.1);
-    border: 2px solid rgba(90, 228, 192, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 0 40px rgba(90, 228, 192, 0.2);
-  }
-
-  /* ═══════════════════════════════════════
-     Interlude
-     ═══════════════════════════════════════ */
-  .act-interlude {
-    padding: 6rem 3rem;
-  }
-
-  /* ── Interstitial: learn the agentic way ── */
-  .act-agentic {
-    padding: 5rem 3rem;
-  }
-
-  .agentic-inner {
-    max-width: 760px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .agentic-kicker {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
-
-  .agentic-title {
-    font-family: var(--font-mono);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-  }
-
-  .agentic-lead {
-    font-size: 1.05rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 2rem;
-  }
-
-  .agentic-prompt-wrap {
-    text-align: left;
-  }
-
-  .agentic-prompt {
-    margin: 0;
-    padding: 1.1rem 1.25rem;
-    background: rgba(90, 228, 192, 0.06);
-    border: 1px solid rgba(90, 228, 192, 0.18);
-    border-radius: 12px;
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    overflow-x: auto;
-  }
-
-  .agentic-copy {
-    margin-top: 0.85rem;
-    padding: 0.4rem 0.9rem;
-    border-radius: 6px;
-    border: 1px solid rgba(90, 228, 192, 0.3);
-    background: rgba(90, 228, 192, 0.1);
-    color: var(--accent);
-    font-size: 0.8rem;
-    font-family: var(--font-mono);
     cursor: pointer;
-    transition: all 0.15s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.15s, transform 0.15s, opacity 0.15s;
   }
 
-  .agentic-copy:hover {
-    background: rgba(90, 228, 192, 0.16);
+  .track-arrow:hover {
     border-color: rgba(90, 228, 192, 0.5);
   }
 
-  .agentic-copy.copied {
-    border-color: rgba(90, 228, 192, 0.6);
-    background: rgba(90, 228, 192, 0.2);
+  .track-arrow:disabled {
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .interlude-inner {
-    max-width: 1100px;
+  .track-arrow.prev { left: 0.25rem; }
+  .track-arrow.next { right: 0.25rem; }
+
+  /* ── Fundamentals ── */
+  .foundation {
+    max-width: 1180px;
     margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    border-top: 1px solid var(--line-soft);
   }
 
-  .interlude-lead {
-    text-align: center;
-    font-size: 1.15rem;
-    color: var(--text-secondary);
-    margin-bottom: 3rem;
-    font-style: italic;
+  .foundation h2 {
+    margin-bottom: 2rem;
   }
 
-  .interlude-grid {
+  .ledger {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 3rem;
   }
 
-  .interlude-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    transition: border-color 0.2s, transform 0.2s;
+  .ledger > div {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line-soft);
   }
 
-  .interlude-card:hover {
-    border-color: rgba(90, 228, 192, 0.2);
-    transform: translateY(-2px);
+  .ledger dt {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    line-height: 1.5;
   }
 
-  .ic-icon {
-    color: var(--accent-dim);
+  .ledger dd {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  /* ── Learn ── */
+  .learn {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .learn h2 {
     margin-bottom: 1rem;
   }
 
-  .ic-title {
-    font-family: var(--font-mono);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.75rem;
-  }
-
-  .ic-desc {
-    font-size: 0.88rem;
+  .learn p {
+    font-size: 1rem;
+    line-height: 1.7;
     color: var(--text-secondary);
-    line-height: 1.65;
+    margin-bottom: 1.25rem;
   }
 
-  /* ═══════════════════════════════════════
-     Finale
-     ═══════════════════════════════════════ */
-  .act-finale {
+  .learn-link {
+    font-weight: 600;
+  }
+
+  /* ── Finale ── */
+  .finale {
     text-align: center;
-    padding: 6rem 2rem 2rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .finale-inner {
-    max-width: 600px;
-    margin: 0 auto;
+    padding: 5rem 2rem 2rem;
+    border-top: 1px solid var(--line-soft);
   }
 
   .finale-title {
     font-family: var(--font-mono);
-    font-size: 2rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .finale-cta {
     display: flex;
-    gap: 1rem;
     justify-content: center;
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
 
@@ -2062,14 +1521,13 @@ Reply in my preferred language.</pre>
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.4rem;
-    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
     font-size: 0.9rem;
     font-weight: 600;
     font-family: var(--font-mono);
-    transition: all 0.15s;
-    cursor: pointer;
     border: 1px solid transparent;
+    border-radius: 6px;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
   }
 
   .btn-primary {
@@ -2081,13 +1539,11 @@ Reply in my preferred language.</pre>
   .btn-primary:hover {
     opacity: 1;
     background: #6ef0cc;
-    border-color: #6ef0cc;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(90, 228, 192, 0.25);
+    box-shadow: 0 6px 18px rgba(90, 228, 192, 0.28);
   }
 
   .btn-secondary {
-    background: transparent;
     color: var(--text-secondary);
     border-color: rgba(136, 153, 180, 0.25);
   }
@@ -2100,41 +1556,35 @@ Reply in my preferred language.</pre>
   }
 
   .brew-note {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    margin: 0.5rem 0 1.5rem;
-    line-height: 1.6;
+    margin-bottom: 0.75rem;
   }
 
   .brew-command {
-    color: var(--text-secondary);
     font-family: var(--font-mono);
+    color: var(--text-secondary);
     background: rgba(90, 228, 192, 0.08);
     border-radius: 4px;
-    padding: 0.08rem 0.35rem;
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.3rem;
   }
 
   .brew-copy {
     margin-left: 0.45rem;
-    padding: 0.08rem 0.35rem;
+    padding: 0.1rem 0.4rem;
     border-radius: 4px;
     border: 1px solid rgba(136, 153, 180, 0.28);
     background: transparent;
     color: var(--text-secondary);
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-family: var(--font-mono);
     cursor: pointer;
-  }
-
-  .brew-copy:hover {
-    opacity: 1;
-    border-color: rgba(136, 153, 180, 0.45);
   }
 
   .brew-copy.copied {
     color: var(--accent);
     border-color: rgba(90, 228, 192, 0.45);
-    background: rgba(90, 228, 192, 0.12);
   }
 
   .fork-note {
@@ -2149,123 +1599,162 @@ Reply in my preferred language.</pre>
     text-underline-offset: 2px;
   }
 
-  .fork-note a:hover {
-    color: var(--accent);
-    opacity: 1;
-  }
-
   .footer {
-    text-align: center;
-    padding: 2rem;
+    margin-top: 3rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    font-size: 0.8rem;
-    border-top: 1px solid var(--border);
-    margin-top: 4rem;
   }
 
   .footer a {
     color: var(--text-secondary);
+    text-decoration: underline;
+    text-decoration-color: rgba(136, 153, 180, 0.3);
+    text-underline-offset: 2px;
   }
 
-  .heart {
-    color: #f87171;
+  /* ── Lightbox ── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: rgba(6, 10, 20, 0.92);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    cursor: zoom-out;
   }
 
-  /* ═══════════════════════════════════════
-     Responsive
-     ═══════════════════════════════════════ */
-  @media (max-width: 840px) {
-    .act-layout {
+  .lightbox[hidden] {
+    display: none;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1000px) {
+    .chapter-title-row {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
-      text-align: center;
+      gap: 0.75rem;
     }
 
-    .act-layout-reverse .act-text,
-    .act-layout-reverse .act-visual {
-      order: unset;
-    }
-
-    .act-pin-wrap {
-      padding: 4rem 1.5rem;
-    }
-
-    .act-details {
-      align-items: center;
-    }
-
-    .prologue-title {
-      font-size: 2.2rem;
-    }
-
-    .act-title {
-      font-size: 2rem;
-    }
-
-    .interlude-grid {
+    .panel {
       grid-template-columns: 1fr;
-      max-width: 400px;
-      margin: 0 auto;
+      gap: 1.5rem;
+      flex-basis: calc(100% - 2rem);
+      padding: 1.5rem;
     }
 
-    .canvas-demo {
-      max-width: 400px;
-      margin: 0 auto;
+    .panel-visual {
+      order: -1;
     }
 
-    .cli-demo,
-    .actions-demo {
-      max-width: 420px;
-      margin: 0 auto;
+    .ledger,
+    .gallery {
+      grid-template-columns: 1fr;
     }
 
-    .shelf-demo {
-      max-width: 460px;
-      margin: 0 auto;
-    }
-
-    .agents-demo {
-      max-width: 380px;
-      margin: 0 auto;
-      justify-content: center;
-    }
-
-    .shelf-body {
-      min-height: 240px;
-      padding: 8px;
-    }
-
-    .dspine {
-      width: 26px;
-      min-height: 160px;
-      padding: 8px 0 6px;
-      gap: 8px;
-    }
-
-    .dspine-label {
-      font-size: 0.55rem;
-      max-height: 90px;
-    }
-
-    .dsicon {
-      width: 16px;
-      height: 16px;
-      font-size: 9px;
-    }
-
-    .dbook-terminal {
-      font-size: 0.7rem;
-      padding: 10px 12px;
+    .learn {
+      grid-template-columns: 1fr;
     }
   }
 
-  @media (max-width: 480px) {
-    .prologue-title {
-      font-size: 1.75rem;
+  @media (max-width: 640px) {
+    .intro,
+    .chapter-head,
+    .track-wrap,
+    .foundation,
+    .learn {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
     }
 
-    .act-title {
-      font-size: 1.6rem;
+    .intro {
+      padding-top: 3rem;
+    }
+
+    .panel {
+      flex-basis: calc(100% - 1rem);
+      padding: 1.1rem;
+    }
+
+    .ledger > div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+
+    .panel-stack {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .panel-stack .strip {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--line-soft);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .gallery figure {
+    margin: 0;
+  }
+
+  .gallery img {
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    cursor: zoom-in;
+  }
+
+  .gallery figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .runtime-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .track-arrow {
+      display: none;
     }
 
     .finale-cta {
@@ -2273,16 +1762,18 @@ Reply in my preferred language.</pre>
       align-items: center;
     }
 
-    .actions-buttons {
-      flex-wrap: wrap;
-      justify-content: flex-end;
+    .lightbox {
+      padding: 1rem;
     }
   }
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .scroll-hint {
-      animation: none;
+    .track {
+      scroll-behavior: auto;
+    }
+
+    .panel {
+      transition: none;
     }
   }
 </style>
