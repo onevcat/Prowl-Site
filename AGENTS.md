@@ -35,11 +35,12 @@
 - No dedicated formatter/lint configuration exists in the repo; keep style consistent with surrounding files.
 
 ## Testing Guidelines
-- No dedicated test command is currently configured.
+- `npm test` runs the unit tests under `src/lib/*.test.ts` with `node --test`. Run `npm run build` first: one test reads `dist/manual/` to check that directory links point at real headings.
 - Before opening PRs, run:
   - `npm run build` for compile and type-check validation.
+  - `npm test`.
   - Manual smoke checks via `npm run dev` on primary pages (`/`, `/details/`, `/manual/`, `/releases/`).
-- If adding tests later, use `*.test.ts` naming and colocate test files with related code.
+- New tests use `*.test.ts` naming, colocated with the code they cover.
 
 ## Commit & Pull Request Guidelines
 - The repository currently has no explicit commit convention file; use Conventional Commits:
