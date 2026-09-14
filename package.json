@@ -12,7 +12,8 @@
     "prebuild": "node scripts/sync-docs.mjs",
     "build": "astro build --force",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --experimental-strip-types --test src/lib/*.test.ts"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

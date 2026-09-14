@@ -50,6 +50,10 @@ npm run dev        # sync docs, then serve at http://localhost:4321
 npm run build      # sync docs, then build to ./dist (uses --force to bypass the content cache)
 npm run preview    # serve ./dist
 npm run sync-docs  # only refresh src/content/manual
+npm test           # unit tests for the manual link rewriting and search highlighting
 ```
+
+Run the build before `npm test`: one test reads the generated `dist/manual/` pages to make sure
+directory links still point at headings that exist in the synced README.
 
 Node 22.12 or newer.
