@@ -395,13 +395,12 @@ const runtimes = [
               <p class="pitch">
                 A workflow scripts several live agents: who takes part and what happens in order. Prowl
                 types the instructions into the right panes, waits for each delivery, and shows the run
-                in the toolbar. Every participant is a real terminal you can watch.
+                in the toolbar.
               </p>
               <ul class="facts">
-                <li><b>Start it from anywhere:</b> <kbd>⌘P</kbd>, the Agents capsule, an Active Agents row, or <code>prowl workflow run</code>. A start sheet shows roles, options and steps before anything happens.</li>
-                <li><b>Supervised, not fire-and-forget.</b> The toolbar shows the current step and flags when a run needs you, with the right recovery: nudge, retry, relaunch, accept, skip, cancel.</li>
-                <li><b>Workflow History</b> keeps every prompt, delivery, script output and error for three days, with export to ZIP.</li>
-                <li><b>Built-ins to start from:</b> Handoff, plus single-agent and multi-agent templates, or <em>Create with Agent</em> to have your agent write one.</li>
+                <li><b>Start from anywhere:</b> <kbd>⌘P</kbd>, the Agents menu, an Active Agents row, or <code>prowl workflow run</code>.</li>
+                <li><b>Supervised.</b> The toolbar shows the current step and flags when a run needs you: nudge, retry, relaunch, accept, skip or cancel.</li>
+                <li><b>Workflow History</b> keeps every prompt, delivery and script output for three days.</li>
               </ul>
               <p class="toggle"><a href="/manual/components/workflows/">Workflows in the manual</a></p>
             </div>
@@ -414,17 +413,16 @@ const runtimes = [
             <div class="panel-copy">
               <h3>Writing a workflow</h3>
               <p class="pitch">
-                A <code>.pwlworkflow</code> bundle holds a <code>workflow.yaml</code>: roles, steps, typed
-                state, and optional local script actions. Keep it in <code>~/.prowl/workflows</code> for
-                yourself, or in the repository's <code>.prowl/workflows</code> so it travels with the code.
+                A <code>.pwlworkflow</code> bundle holds a <code>workflow.yaml</code>: roles, steps and typed
+                state. Keep it in <code>~/.prowl/workflows</code>, or in the repository's
+                <code>.prowl/workflows</code> so it travels with the code.
               </p>
               <ul class="facts">
-                <li><b>Roles</b> come from three sources: <code>current</code> (the pane you start from), <code>launch</code> (an agent Prowl starts from a Profile), <code>pick</code> (an existing agent you choose).</li>
-                <li><b>Steps</b> are <code>message</code>, <code>launch</code>, <code>if</code>/<code>else</code>, <code>while</code>, <code>set</code>, <code>action</code>, <code>notify</code> and <code>close</code>. A step can <code>expect</code> a delivery with required sections and a verdict.</li>
-                <li><b>Any runtime can play any role,</b> because agents take part only through the <code>prowl</code> CLI.</li>
-                <li><b>Validated before it runs.</b> <code>prowl workflow validate</code> and Settings show the same diagnostics; the bundled <code>prowl-workflow</code> skill teaches an agent the full DSL.</li>
+                <li><b>Roles:</b> <code>current</code> (the pane you start from), <code>launch</code> (a Profile Prowl starts), <code>pick</code> (an agent you choose).</li>
+                <li><b>Steps:</b> <code>message</code>, <code>launch</code>, <code>if</code>, <code>while</code>, <code>action</code>, <code>notify</code>, <code>close</code>; a step can <code>expect</code> a delivery with a verdict.</li>
+                <li><b>Validated first.</b> <code>prowl workflow validate</code>; the bundled <code>prowl-workflow</code> skill teaches an agent the DSL.</li>
               </ul>
-              <p class="toggle"><a href="/manual/skills/prowl-workflow/">prowl-workflow skill</a> · <a href="/manual/skills/prowl-workflow/references/authoring/">authoring reference</a></p>
+              <p class="toggle"><a href="/manual/skills/prowl-workflow/references/authoring/">Authoring reference</a></p>
             </div>
             <figure class="panel-visual panel-code">
               <pre class="code"><span class="c"># review-loop.pwlworkflow/workflow.yaml</span>
@@ -443,13 +441,7 @@ const runtimes = [
     <span class="k">launch</span>: reviewer
     <span class="k">prompt</span>: Review &#123;&#123; deliveries.brief.path &#125;&#125; against the diff.
     <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125;
-  - <span class="k">id</span>: fix
-    <span class="k">while</span>: deliveries.findings.verdict == 'issues'
-    <span class="k">max_iterations</span>: 3
-    <span class="k">steps</span>:
-      - &#123; <span class="k">id</span>: apply,   <span class="k">message</span>: author,   <span class="k">prompt</span>: Address the findings. &#125;
-      - &#123; <span class="k">id</span>: recheck, <span class="k">message</span>: reviewer, <span class="k">prompt</span>: Re-review.,
-          <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125; &#125;
+  <span class="c"># … a while loop re-messages both roles until the verdict is clean</span>
   - <span class="k">id</span>: done
     <span class="k">notify</span>: Review finished with verdict &#123;&#123; deliveries.findings.verdict &#125;&#125;</pre>
             </figure>
