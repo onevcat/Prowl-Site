@@ -246,7 +246,8 @@ const runtimes = [
               <p class="toggle"><a href="/manual/components/agent-island/">Agent Island in the manual</a></p>
             </div>
             <figure class="panel-visual panel-visual-island">
-              <img src="/images/shots/agent-island.webp" alt="Agent Island bar showing agent state counts and runtime icons" loading="lazy" data-lightbox />
+              <img class="island-bar" src="/images/shots/agent-island.webp" alt="Agent Island bar showing one blocked, one done and two idle agents, with Blocked and Done cells below it" loading="lazy" data-lightbox />
+              <img class="island-roster" src="/images/shots/agent-island-roster.webp" alt="Agent Island expanded roster listing four agents with their state and 1–4 shortcuts" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -266,25 +267,8 @@ const runtimes = [
               </ul>
               <p class="toggle"><a href="/manual/components/agent-profiles/">Agent Profiles in the manual</a></p>
             </div>
-            <figure class="panel-visual panel-code">
-              <div class="profile-card">
-                <div class="profile-head">
-                  <span class="profile-name">Reviewer</span>
-                  <span class="profile-runtime">Claude Code</span>
-                </div>
-                <dl class="profile-fields">
-                  <div><dt>Model</dt><dd>claude-opus-5</dd></div>
-                  <div><dt>Reasoning effort</dt><dd>High</dd></div>
-                  <div><dt>Execution mode</dt><dd>Standard</dd></div>
-                  <div><dt>Placement</dt><dd>New split · right</dd></div>
-                  <div><dt>Environment</dt><dd><code>ANTHROPIC_BASE_URL</code></dd></div>
-                  <div><dt>Dedicated home</dt><dd>On · separate account</dd></div>
-                </dl>
-                <div class="profile-preview">
-                  <span class="c">launch preview</span>
-                  <code>env ANTHROPIC_BASE_URL="$PROWL_ENV_ANTHROPIC_BASE_URL" claude --model claude-opus-5 --effort high</code>
-                </div>
-              </div>
+            <figure class="panel-visual">
+              <img src="/images/shots/agents-popover.webp" alt="The toolbar Agents menu open: a Run a workflow section with Hello World and Handoff, then one launch row per Agent Profile for fifteen runtimes" loading="lazy" data-lightbox />
             </figure>
           </article>
 
@@ -399,7 +383,7 @@ const runtimes = [
               </ul>
               <p class="toggle"><a href="/manual/components/custom-actions/">Custom actions in the manual</a></p>
             </div>
-            <figure class="panel-visual panel-visual-tight">
+            <figure class="panel-visual panel-visual-strip">
               <img src="/images/shots/custom-commands.webp" alt="Toolbar with Run, Build, Test and Review command buttons" loading="lazy" data-lightbox />
             </figure>
           </article>
@@ -420,8 +404,10 @@ const runtimes = [
               </ul>
               <p class="toggle"><a href="/manual/components/workflows/">Workflows in the manual</a> · <a href="/manual/skills/prowl-workflow/">authoring skill</a></p>
             </div>
-            <figure class="panel-visual panel-code panel-stack">
-              <img class="strip" src="/images/shots/workflow-status.webp" alt="Toolbar with the workflow status item reading “Prepare handoff briefing” and an attention glyph" loading="lazy" data-lightbox />
+            <figure class="panel-visual">
+              <img src="/images/shots/workflow-history.webp" alt="Workflow History panel over a Handoff run that needs attention, with the Prepare handoff briefing step expanded and Focus Pane / Cancel Run actions; the toolbar shows the run's status item" loading="lazy" data-lightbox />
+            </figure>
+            <figure class="panel-visual panel-code">
               <pre class="code"><span class="c"># review-loop.pwlworkflow/workflow.yaml</span>
 <span class="k">schema</span>: prowl.workflow/v1
 <span class="k">id</span>: review-loop
@@ -658,6 +644,10 @@ const runtimes = [
         <figure>
           <img src="/images/shots/command-palette.webp" alt="The Command Palette open over Canvas, listing recent and suggested actions with their shortcuts" loading="lazy" data-lightbox />
           <figcaption><kbd>⌘P</kbd> Command Palette</figcaption>
+        </figure>
+        <figure>
+          <img src="/images/shots/diff.webp" alt="The Diff window for feature/retry-downloader: a file list with two modified files and a side-by-side diff of RetryStrategy.swift" loading="lazy" data-lightbox />
+          <figcaption><kbd>⌘⇧Y</kbd> Show Diff, working tree against HEAD</figcaption>
         </figure>
         <figure>
           <img src="/images/shots/settings.webp" alt="Settings window with General, Notifications, Shortcuts, Worktree, Updates, GitHub, Commands, Advanced, and the Agents section: Display, Profiles, CLI & Skills, Workflows" loading="lazy" data-lightbox />
@@ -1031,6 +1021,7 @@ const runtimes = [
   }
 
   .track-wrap {
+    --panel-w: 1040px;
     position: relative;
     max-width: 1180px;
     margin: 0 auto;
@@ -1039,6 +1030,7 @@ const runtimes = [
 
   .track {
     display: flex;
+    align-items: flex-start;
     gap: 1.5rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -1062,17 +1054,36 @@ const runtimes = [
     flex: 0 0 calc(100% - 3.5rem);
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: 2.5rem;
-    align-items: start;
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 2rem 2rem 2.25rem;
     border: 1px solid var(--line-soft);
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
     opacity: 0.55;
     transition: opacity 0.35s ease, border-color 0.35s ease;
   }
+
+  .panel-copy {
+    width: 100%;
+    max-width: var(--panel-w);
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
+    grid-template-areas:
+      "title title"
+      "pitch facts"
+      "toggle facts";
+    gap: 0.25rem 3rem;
+    align-items: start;
+  }
+
+  .panel-copy h3 { grid-area: title; }
+  .panel-copy .pitch { grid-area: pitch; }
+  .panel-copy .facts { grid-area: facts; }
+  .panel-copy .facts + .facts { grid-area: auto; grid-column: 2; }
+  .panel-copy .toggle { grid-area: toggle; }
 
   .panel.is-active {
     opacity: 1;
@@ -1172,17 +1183,23 @@ const runtimes = [
   }
 
   .panel-visual {
+    order: -1;
     margin: 0;
+    width: 100%;
+    max-width: var(--panel-w);
     min-width: 0;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--line);
     background: var(--bg-deep);
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-    align-self: start;
     display: flex;
     align-items: flex-start;
     justify-content: center;
+  }
+
+  .panel-visual + .panel-visual {
+    order: 0;
   }
 
   .panel-visual img {
@@ -1196,13 +1213,25 @@ const runtimes = [
     max-width: 560px;
   }
 
+  .panel-visual-strip {
+    max-width: 720px;
+  }
+
   .panel-visual-island {
-    padding: 2.5rem 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 2rem 1.5rem;
     background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
   }
 
-  .panel-visual-island img {
-    max-width: 520px;
+  .panel-visual-island .island-bar {
+    max-width: 560px;
+  }
+
+  .panel-visual-island .island-roster {
+    max-width: 480px;
+    border-radius: 12px;
   }
 
   .panel-code {
@@ -1210,6 +1239,10 @@ const runtimes = [
     align-items: flex-start;
     justify-content: flex-start;
     overflow: auto;
+  }
+
+  .panel-code .code {
+    width: 100%;
   }
 
   .code {
@@ -1229,21 +1262,9 @@ const runtimes = [
   .code .o { color: var(--text-secondary); }
   .code .ok { color: var(--accent-dim); }
 
-  .panel-stack {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .panel-stack .strip {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid var(--line-soft);
-  }
-
   .gallery {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.5rem;
     margin-top: 2.5rem;
   }
@@ -1283,74 +1304,6 @@ const runtimes = [
     border: 1px solid var(--line-soft);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.025);
-  }
-
-  .profile-card {
-    width: 100%;
-    max-width: 460px;
-    font-size: 0.85rem;
-  }
-
-  .profile-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    padding-bottom: 0.75rem;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid var(--line-soft);
-  }
-
-  .profile-name {
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--text-primary);
-  }
-
-  .profile-runtime {
-    color: var(--text-muted);
-  }
-
-  .profile-fields {
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .profile-fields > div {
-    display: grid;
-    grid-template-columns: 9rem 1fr;
-    gap: 0.75rem;
-  }
-
-  .profile-fields dt {
-    color: var(--text-muted);
-  }
-
-  .profile-fields dd {
-    color: var(--text-primary);
-  }
-
-  .profile-preview {
-    margin-top: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--line-soft);
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .profile-preview .c {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-  }
-
-  .profile-preview code {
-    font-size: 0.75rem;
-    white-space: pre-wrap;
-    word-break: break-word;
-    background: transparent;
-    padding: 0;
-    color: var(--text-secondary);
   }
 
   .notif-stack {
@@ -1667,14 +1620,22 @@ const runtimes = [
     }
 
     .panel {
-      grid-template-columns: 1fr;
       gap: 1.5rem;
       flex-basis: calc(100% - 2rem);
       padding: 1.5rem;
     }
 
-    .panel-visual {
-      order: -1;
+    .panel-copy {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "title"
+        "pitch"
+        "facts"
+        "toggle";
+    }
+
+    .panel-copy .facts + .facts {
+      grid-column: 1;
     }
 
     .ledger,
@@ -1711,45 +1672,7 @@ const runtimes = [
       gap: 0.25rem;
     }
 
-    .panel-stack {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .panel-stack .strip {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid var(--line-soft);
-  }
-
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-
-  .gallery figure {
-    margin: 0;
-  }
-
-  .gallery img {
-    display: block;
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-    cursor: zoom-in;
-  }
-
-  .gallery figcaption {
-    margin-top: 0.6rem;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-  }
-
-  .runtime-grid {
+    .runtime-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
