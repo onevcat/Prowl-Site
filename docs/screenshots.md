@@ -40,19 +40,8 @@ Assets live in `public/images/shots/`. They are referenced from `src/pages/detai
 | `diff.webp` | Show Diff window, split view, RetryStrategy.swift | Fundamentals |
 | `settings.webp` | Settings window, General page (older neutral scene) | Fundamentals |
 
-## Still worth capturing by hand
+## Optional
 
-The Debug scene is left running with this configuration; use it for these. Drop the file into
-`public/images/shots/` and reference it from the matching panel in `src/pages/details.astro`.
-
-| Suggested file | What to capture | Where it would go |
-| --- | --- | --- |
-| `hero.webp` (retake) | Same Shelf composition as now, but with the window active (coloured traffic lights); the scripted run could not activate the window while another app was in use | Details intro (replace) |
-| `workflow-start-sheet.webp` | Agents menu → Handoff → the start sheet with Roles / Options / Steps (a Handoff run was already live, so the sheet did not open) | Automation → Agent Workflows (add beside history) |
-| `settings-profiles.webp` | Settings → Agents → Profiles list, and one profile editor with the Launch Preview | Agents → Agent Profiles (add) |
-| `settings-cli-skills.webp` | Settings → Agents → CLI & Skills with the connection status and skill targets | CLI & skills → Bundled skills |
-| `settings-workflows.webp` | Settings → Agents → Workflows detail page (Roles, Run Setup, Validation) | Automation → Agent Workflows |
-| `canvas-broadcast.webp` | Canvas with three cards ⌘-selected and "Broadcasting to 3 cards" in the toolbar | Layout → Canvas (second image) |
-| `workspace.webp` | A workspace expanded in the sidebar with child rows and their badges (add `demo/checkout-flow` back to the scene) | Layout → Workspaces (beside the JSON) |
-| `agent-island-notch.webp` | Agent Island on the built-in notched display, wings on both sides of the camera | Agents → Agent Island |
-| `settings.webp` (retake) | Settings → General with the colourful scene, or drop it | Fundamentals |
+The set above is complete for the page. One nicety remains: the intro hero was captured while the
+Debug window was inactive (grey traffic lights) because another app had focus during the scripted
+run. Re-shooting the same Shelf composition with the window active would replace `hero.webp`.
