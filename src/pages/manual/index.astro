@@ -1,0 +1,226 @@
+---
+import { render } from "astro:content";
+import ManualLayout from "../../layouts/ManualLayout.astro";
+import AgentPrompt from "../../components/AgentPrompt.astro";
+import { loadManual, manualSequence, displayTitle } from "../../lib/manual";
+
+const { docs, groups } = await loadManual();
+const index = docs.find((d) => d.slug === "");
+if (!index) throw new Error("docs/README.md was not synced; run `npm run sync-docs`.");
+const { Content, headings } = await render(index.entry);
+const sequence = await manualSequence();
+const next = sequence[1] ?? null;
+const featured = groups.filter((g) => ["layout", "agents", "automation", "review"].includes(g.id));
+---
+
+<ManualLayout
+  title="Prowl Manual"
+  description="The operator's manual for Prowl: every view, panel, workflow, shortcut and CLI command — the same docs that ship inside the app."
+  current={index}
+  headings={headings}
+  prev={null}
+  next={next}
+>
+  <span id="top"></span>
+  <header class="manual-hero">
+    <h1>Prowl Manual</h1>
+    <p class="manual-hero-lead">
+      Every view, panel, workflow, shortcut and CLI command, straight from the Prowl repository.
+      These are the same Markdown files that ship inside the app, so what you read here is what your agent reads.
+    </p>
+    <div class="manual-hero-actions">
+      <button type="button" class="hero-search" data-msearch-open>
+        Search the manual <kbd>⌘K</kbd>
+      </button>
+      <a class="hero-link" href="/manual/overview/">Start with the overview →</a>
+    </div>
+  </header>
+
+  <section class="manual-featured" aria-label="Browse by area">
+    {featured.map((group) => (
+      <div class="featured-group">
+        <h2 class="featured-label">{group.label}</h2>
+        <ul>
+          {group.docs.map((doc) => (
+            <li>
+              <a href={doc.href}>
+                <span class="featured-title">{displayTitle(doc)}</span>
+                <span class="featured-lead">{doc.lead}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <section class="manual-agentic">
+    <h2>Or let your agent read it for you</h2>
+    <p>
+      Hand this prompt to Claude Code, Codex, or any assistant. It fetches this manual from the
+      repository and introduces Prowl in your language, tailored to how you work. Inside the app,
+      <strong>Help → Ask Agent About Prowl</strong> copies the same prompt pointed at the bundled docs.
+    </p>
+    <AgentPrompt compact />
+  </section>
+
+  <div class="manual-readme doc-body">
+    <Content />
+  </div>
+</ManualLayout>
+
+<style>
+  .manual-hero h1 {
+    font-family: var(--font-mono);
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.9rem;
+  }
+
+  .manual-hero-lead {
+    font-size: 1.12rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+
+  .manual-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 2.5rem;
+  }
+
+  .hero-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.6rem 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .hero-search:hover {
+    border-color: rgba(90, 228, 192, 0.4);
+  }
+
+  .hero-search kbd {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.08rem 0.35rem;
+  }
+
+  .hero-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .manual-featured {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .featured-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .featured-group ul {
+    list-style: none;
+  }
+
+  .featured-group li a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    padding: 0.45rem 0.6rem;
+    margin-left: -0.6rem;
+    border-radius: 8px;
+    color: var(--text-primary);
+    transition: background 0.12s;
+  }
+
+  .featured-group li a:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .featured-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .featured-lead {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .manual-agentic {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: radial-gradient(ellipse 80% 80% at 100% 0%, rgba(90, 228, 192, 0.07), transparent 60%), var(--bg-secondary);
+  }
+
+  .manual-agentic h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .manual-agentic p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .manual-agentic strong {
+    color: var(--text-primary);
+  }
+
+  /* The README's own H1 duplicates the page title; hide it and keep the rest. */
+  .manual-readme :global(h1) {
+    display: none;
+  }
+
+  .manual-readme :global(h1 + blockquote) {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .manual-hero h1 {
+      font-size: 1.85rem;
+    }
+
+    .manual-featured {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

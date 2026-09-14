@@ -1,0 +1,97 @@
+---
+// The "learn Prowl through your agent" prompt. Shared by the Details page and
+// the Manual index so the wording stays identical to the app's Help menu.
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const prompt = `Read Prowl's documentation and introduce it to me.
+
+Prowl is a native macOS command center for running many AI coding agents in parallel. Its full manual lives here:
+https://raw.githubusercontent.com/onevcat/Prowl/refs/heads/main/docs/README.md
+
+Fetch that index and read it (it links to an overview and per-feature manuals in the same docs/ folder — read the relevant ones). Then:
+1. Briefly tell me what Prowl is and why it's worth my time.
+2. Based on what you know about how I work, suggest 3–4 Prowl features that would genuinely help me, each with a one-line "how".
+3. Then answer my follow-up questions, consulting the matching doc.
+
+Reply in my preferred language.`;
+---
+
+<div class:list={["agent-prompt", { compact }]}>
+  <pre class="agent-prompt-text" data-agent-prompt>{prompt}</pre>
+  <button type="button" class="agent-prompt-copy" data-agent-prompt-copy aria-label="Copy the prompt">Copy prompt</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".agent-prompt").forEach((box) => {
+    const pre = box.querySelector<HTMLElement>("[data-agent-prompt]");
+    const btn = box.querySelector<HTMLButtonElement>("[data-agent-prompt-copy]");
+    if (!pre || !btn) return;
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(pre.textContent?.trim() ?? "");
+        btn.textContent = "Copied";
+        btn.classList.add("copied");
+      } catch {
+        btn.textContent = "Copy failed";
+      }
+      window.setTimeout(() => {
+        btn.textContent = "Copy prompt";
+        btn.classList.remove("copied");
+      }, 1400);
+    });
+  });
+</script>
+
+<style>
+  .agent-prompt {
+    position: relative;
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.25rem 1.4rem 1.4rem;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .agent-prompt-text {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .agent-prompt.compact .agent-prompt-text {
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .agent-prompt-copy {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font: inherit;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--bg-primary);
+    background: var(--accent);
+    border: 0;
+    border-radius: 6px;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+
+  .agent-prompt-copy:hover {
+    background: #6ef0cc;
+    transform: translateY(-1px);
+  }
+
+  .agent-prompt-copy.copied {
+    background: var(--text-primary);
+  }
+</style>

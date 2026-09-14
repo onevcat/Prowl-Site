@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Synced from onevcat/Prowl at build time (scripts/sync-docs.mjs)
+src/content/manual/

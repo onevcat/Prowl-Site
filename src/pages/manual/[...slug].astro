@@ -1,0 +1,32 @@
+---
+import { render } from "astro:content";
+import ManualLayout from "../../layouts/ManualLayout.astro";
+import { loadManual, manualSequence, displayTitle, type ManualDoc } from "../../lib/manual";
+
+export async function getStaticPaths() {
+  const { docs } = await loadManual();
+  return docs
+    .filter((doc) => doc.slug !== "")
+    .map((doc) => ({ params: { slug: doc.slug }, props: { doc } }));
+}
+
+interface Props {
+  doc: ManualDoc;
+}
+
+const { doc } = Astro.props;
+const { Content, headings } = await render(doc.entry);
+const sequence = await manualSequence();
+const index = sequence.findIndex((d) => d.slug === doc.slug);
+const prev = index > 0 ? sequence[index - 1] : null;
+const next = index >= 0 && index < sequence.length - 1 ? sequence[index + 1] : null;
+const title = `${displayTitle(doc)} — Prowl Manual`;
+const description = doc.lead || `Prowl manual: ${displayTitle(doc)}.`;
+---
+
+<ManualLayout title={title} description={description} current={doc} headings={headings} prev={prev} next={next}>
+  <span id="top"></span>
+  <div class="doc-body">
+    <Content />
+  </div>
+</ManualLayout>

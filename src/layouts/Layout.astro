@@ -1,10 +1,15 @@
 ---
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Prowl — a native macOS command center for running AI coding agents in parallel.",
+} = Astro.props;
 const ogImage = new URL("/og.png", Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -12,21 +17,23 @@ const ogImage = new URL("/og.png", Astro.site).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Prowl — An integrated terminal environment, sharpened for coding agents."
-    />
-    <link rel="icon" type="image/png" href="/images/prowl-icon.png" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b1221" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/images/prowl-icon-64.png" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="A native macOS terminal environment, sharpened for coding agents." />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <slot />
@@ -39,6 +46,7 @@ const ogImage = new URL("/og.png", Astro.site).href;
     --bg-primary: #0b1221;
     --bg-secondary: #0f1a2e;
     --bg-card: #131f35;
+    --bg-deep: #0a1018;
     --text-primary: #e8edf5;
     --text-secondary: #8899b4;
     --text-muted: #5a6d8a;
@@ -46,8 +54,15 @@ const ogImage = new URL("/og.png", Astro.site).href;
     --accent-dim: #3bb89a;
     --accent-glow: rgba(90, 228, 192, 0.15);
     --border: rgba(90, 228, 192, 0.1);
+    --line: rgba(136, 153, 180, 0.14);
+    --line-soft: rgba(136, 153, 180, 0.08);
+    --status-working: #f5a623;
+    --status-blocked: #f87171;
+    --status-done: #7dd3fc;
     --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --nav-height: 60px;
+    color-scheme: dark;
   }
 
   *,
@@ -61,6 +76,7 @@ const ogImage = new URL("/og.png", Astro.site).href;
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nav-height) + 1.5rem);
   }
 
   body {
@@ -70,6 +86,11 @@ const ogImage = new URL("/og.png", Astro.site).href;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgba(90, 228, 192, 0.28);
+    color: var(--text-primary);
   }
 
   a {
@@ -82,9 +103,19 @@ const ogImage = new URL("/og.png", Astro.site).href;
     opacity: 0.8;
   }
 
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
   img {
     max-width: 100%;
     height: auto;
+  }
+
+  kbd {
+    font-family: var(--font-mono);
   }
 
   .heart {
@@ -101,4 +132,9 @@ const ogImage = new URL("/og.png", Astro.site).href;
     pointer-events: none;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 </style>

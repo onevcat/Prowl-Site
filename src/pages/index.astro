@@ -101,9 +101,30 @@ import Nav from "../components/Nav.astro";
           <div class="frame-content">
             <!-- Vertical tab sidebar -->
             <div class="frame-sidebar">
-              <div class="sidebar-action view-toggles">
-                <span class="view-link" id="canvas-toggle" title="Toggle Canvas view">Canvas</span>
-                <span class="view-link" id="shelf-toggle" title="Toggle Shelf view">Shelf</span>
+              <div class="sidebar-action view-toggles" role="group" aria-label="View mode">
+                <span class="view-link active" id="normal-toggle" title="Normal view" role="button" tabindex="0" aria-label="Normal view">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="3" cy="4.5" r="0.9" fill="currentColor" stroke="none" />
+                    <circle cx="3" cy="8" r="0.9" fill="currentColor" stroke="none" />
+                    <circle cx="3" cy="11.5" r="0.9" fill="currentColor" stroke="none" />
+                    <path d="M6 4.5h7M6 8h7M6 11.5h7" />
+                  </svg>
+                </span>
+                <span class="view-link" id="canvas-toggle" title="Canvas view" role="button" tabindex="0" aria-label="Canvas view">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                    <rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" />
+                    <rect x="9" y="2.5" width="4.5" height="4.5" rx="1" />
+                    <rect x="2.5" y="9" width="4.5" height="4.5" rx="1" />
+                    <rect x="9" y="9" width="4.5" height="4.5" rx="1" />
+                  </svg>
+                </span>
+                <span class="view-link" id="shelf-toggle" title="Shelf view" role="button" tabindex="0" aria-label="Shelf view">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                    <rect x="2.5" y="2.5" width="2.6" height="11" rx="0.8" />
+                    <rect x="6.7" y="2.5" width="2.6" height="11" rx="0.8" fill="currentColor" stroke="none" />
+                    <rect x="10.9" y="2.5" width="2.6" height="11" rx="0.8" />
+                  </svg>
+                </span>
               </div>
               <div class="tab active" data-tab="prowl">
                 <span class="tab-icon">&#9733;</span>
@@ -273,7 +294,7 @@ import Nav from "../components/Nav.astro";
         <!-- Floating icon -->
         <div class="icon-float">
           <img
-            src="/images/prowl-icon.png"
+            src="/images/prowl-icon-352.webp"
             alt="Prowl App Icon"
             class="app-icon"
           />
@@ -365,6 +386,7 @@ import Nav from "../components/Nav.astro";
   const tabs = document.querySelectorAll<HTMLElement>(".tab[data-tab]");
   const panels = document.querySelectorAll<HTMLElement>(".tab-panel[data-panel]");
   const canvasPanel = document.getElementById("canvas-panel")!;
+  const normalToggle = document.getElementById("normal-toggle")!;
   const canvasToggle = document.getElementById("canvas-toggle")!;
   const shelfPanel = document.getElementById("shelf-panel")!;
   const shelfToggle = document.getElementById("shelf-toggle")!;
@@ -415,6 +437,7 @@ import Nav from "../components/Nav.astro";
   };
 
   function clearViewToggles() {
+    normalToggle.classList.remove("active");
     canvasToggle.classList.remove("active");
     shelfToggle.classList.remove("active");
     canvasPanel.classList.remove("active");
@@ -423,6 +446,7 @@ import Nav from "../components/Nav.astro";
 
   function showTab(name: string) {
     clearViewToggles();
+    normalToggle.classList.add("active");
     tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
     panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
   }
@@ -543,7 +567,11 @@ import Nav from "../components/Nav.astro";
     tab.addEventListener("click", () => switchTo(tab.dataset.tab!));
   });
 
-  // Canvas toggle
+  // View mode toggles. Normal returns to the last selected tab.
+  normalToggle.addEventListener("click", () => {
+    const current = Array.from(tabs).find((t) => t.classList.contains("active"))?.dataset.tab;
+    switchTo(current ?? tabNames[0]);
+  });
   canvasToggle.addEventListener("click", () => switchTo("canvas"));
 
   // Shelf toggle
@@ -905,6 +933,7 @@ import Nav from "../components/Nav.astro";
   .app-frame {
     width: 100%;
     max-width: 540px;
+    text-align: left;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid rgba(136, 153, 180, 0.12);
@@ -1022,23 +1051,37 @@ import Nav from "../components/Nav.astro";
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
 
+  /* Segmented view-mode control, like the app's sidebar header */
   .view-toggles {
-    gap: 4px;
+    gap: 2px;
+    padding: 6px 8px;
   }
 
   .view-link {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 20px;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 1px 6px;
-    border-radius: 3px;
+    border-radius: 5px;
     transition: color 0.15s, background 0.15s;
+  }
+
+  .view-link svg {
+    width: 14px;
+    height: 14px;
   }
 
   .view-link:hover {
     color: var(--accent);
     background: rgba(90, 228, 192, 0.06);
+  }
+
+  .view-link:focus-visible {
+    outline: 1px solid rgba(90, 228, 192, 0.55);
+    outline-offset: 1px;
   }
 
   /* Main area */
@@ -1803,8 +1846,13 @@ import Nav from "../components/Nav.astro";
     }
 
     .view-link {
-      font-size: 0.5rem;
-      padding: 1px 4px;
+      width: 24px;
+      height: 18px;
+    }
+
+    .view-link svg {
+      width: 12px;
+      height: 12px;
     }
 
     .spine {

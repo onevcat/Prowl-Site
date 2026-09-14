@@ -1,0 +1,874 @@
+---
+import Layout from "./Layout.astro";
+import Nav from "../components/Nav.astro";
+import ManualSearch from "../components/ManualSearch.astro";
+import { loadManual, loadManifest, displayTitle, type ManualDoc } from "../lib/manual";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  current?: ManualDoc | null;
+  headings?: Heading[];
+  prev?: ManualDoc | null;
+  next?: ManualDoc | null;
+}
+
+const { title, description, current = null, headings = [], prev = null, next = null } = Astro.props;
+const { groups } = await loadManual();
+const manifest = await loadManifest();
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const commitShort = manifest?.commit?.slice(0, 7) ?? "main";
+const sourceUrl = current
+  ? `https://github.com/onevcat/Prowl/blob/${manifest?.commit ?? "main"}/${current.sourcePath}`
+  : `https://github.com/onevcat/Prowl/tree/${manifest?.commit ?? "main"}/docs`;
+const rawUrl = current ? `https://raw.githubusercontent.com/onevcat/Prowl/${manifest?.commit ?? "main"}/${current.sourcePath}` : null;
+---
+
+<Layout title={title} description={description}>
+  <Nav active="manual" />
+  <div class="manual">
+    <div class="manual-mobilebar">
+      <button type="button" class="mobile-toggle" id="manual-nav-toggle" aria-controls="manual-sidebar" aria-expanded="false">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" aria-hidden="true">
+          <path d="M2 4h12M2 8h12M2 12h12" stroke-linecap="round" />
+        </svg>
+        Contents
+      </button>
+      <span class="mobilebar-title">{current ? displayTitle(current) : "Manual"}</span>
+      <button type="button" class="mobile-search" data-msearch-open aria-label="Search the manual">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" />
+          <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <aside class="manual-sidebar" id="manual-sidebar">
+      <button type="button" class="search-trigger" data-msearch-open>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" />
+          <path d="M13.5 13.5L17 17" stroke-linecap="round" />
+        </svg>
+        <span>Search manual</span>
+        <kbd>⌘K</kbd>
+      </button>
+      <nav class="manual-nav" aria-label="Manual contents">
+        {groups.map((group) => (
+          <section class="nav-group">
+            <h2 class="nav-group-label">{group.label}</h2>
+            <ul>
+              {group.docs.map((doc) => (
+                <li>
+                  <a
+                    href={doc.href}
+                    class:list={["nav-item", { active: current?.slug === doc.slug, nested: doc.slug.split("/").length > 2 && doc.slug.startsWith("skills/") }]}
+                    aria-current={current?.slug === doc.slug ? "page" : undefined}
+                  >
+                    {displayTitle(doc)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </nav>
+      <p class="sidebar-meta">
+        Synced from <a href={sourceUrl} target="_blank" rel="noopener"><code>onevcat/Prowl@{commitShort}</code></a>. The same files ship inside the app and feed your agent.
+      </p>
+    </aside>
+    <div class="sidebar-scrim" id="manual-sidebar-scrim" hidden></div>
+
+    <main class="manual-main">
+      <article class="doc">
+        <slot />
+      </article>
+
+      {(prev || next) && (
+        <nav class="doc-pager" aria-label="Previous and next page">
+          {prev ? (
+            <a href={prev.href} class="pager prev">
+              <span class="pager-label">Previous</span>
+              <span class="pager-title">{displayTitle(prev)}</span>
+            </a>
+          ) : <span />}
+          {next ? (
+            <a href={next.href} class="pager next">
+              <span class="pager-label">Next</span>
+              <span class="pager-title">{displayTitle(next)}</span>
+            </a>
+          ) : <span />}
+        </nav>
+      )}
+
+      <footer class="doc-footer">
+        {current && (
+          <p>
+            <a href={sourceUrl} target="_blank" rel="noopener">View source on GitHub</a>
+            <span class="dot">·</span>
+            <a href={rawUrl} target="_blank" rel="noopener">Raw Markdown</a>
+            <span class="dot">·</span>
+            <a href={`https://github.com/onevcat/Prowl/edit/main/${current.sourcePath}`} target="_blank" rel="noopener">Suggest an edit</a>
+          </p>
+        )}
+        <p class="doc-footer-meta">
+          {manifest?.docsVerifiedAt ? `Manual verified against the implementation on ${manifest.docsVerifiedAt}. ` : ""}
+          Built from commit <code>{commitShort}</code>.
+        </p>
+      </footer>
+    </main>
+
+    <aside class="manual-toc" aria-label="On this page">
+      {toc.length > 0 && (
+        <>
+          <p class="toc-label">On this page</p>
+          <ol class="toc-list" id="manual-toc">
+            {toc.map((h) => (
+              <li class:list={["toc-item", `depth-${h.depth}`]}>
+                <a href={`#${h.slug}`} data-slug={h.slug}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
+      {current && (
+        <a class="toc-top" href="#top">Back to top ↑</a>
+      )}
+    </aside>
+  </div>
+  <ManualSearch />
+</Layout>
+
+<script>
+  // Mobile drawer.
+  const toggle = document.getElementById("manual-nav-toggle");
+  const sidebar = document.getElementById("manual-sidebar");
+  const scrim = document.getElementById("manual-sidebar-scrim");
+  function setOpen(open: boolean) {
+    sidebar?.classList.toggle("open", open);
+    toggle?.setAttribute("aria-expanded", String(open));
+    if (scrim) scrim.hidden = !open;
+  }
+  toggle?.addEventListener("click", () => setOpen(!sidebar?.classList.contains("open")));
+  scrim?.addEventListener("click", () => setOpen(false));
+  sidebar?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("manual-search-navigate", () => setOpen(false));
+
+  // Keep the active sidebar entry in view.
+  sidebar?.querySelector(".nav-item.active")?.scrollIntoView({ block: "center" });
+
+  // Scroll spy for the table of contents.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("#manual-toc a[data-slug]"));
+  if (links.length) {
+    const targets = links
+      .map((a) => document.getElementById(a.dataset.slug!))
+      .filter((el): el is HTMLElement => Boolean(el));
+    let activeId = "";
+    const setActive = (id: string) => {
+      if (id === activeId) return;
+      activeId = id;
+      links.forEach((a) => a.classList.toggle("active", a.dataset.slug === id));
+    };
+    const onScroll = () => {
+      const line = window.innerHeight * 0.25;
+      let candidate = targets[0];
+      for (const el of targets) {
+        if (el.getBoundingClientRect().top <= line) candidate = el;
+        else break;
+      }
+      if (candidate) setActive(candidate.id);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+</script>
+
+<style>
+  /* Either overlay can own the scroll lock, including search over the drawer. */
+  :global(body:has(.msearch[aria-hidden="false"])),
+  :global(body:has(.manual-sidebar.open)) {
+    overflow: hidden;
+  }
+
+  .manual {
+    --sidebar-w: 268px;
+    --toc-w: 220px;
+    display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--toc-w);
+    gap: 0 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: calc(var(--nav-height) + 1rem) 2rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .manual-mobilebar {
+    display: none;
+  }
+
+  /* ── Sidebar ── */
+  .manual-sidebar {
+    position: sticky;
+    top: calc(var(--nav-height) + 1rem);
+    align-self: start;
+    max-height: calc(100vh - var(--nav-height) - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.75rem;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 153, 180, 0.25) transparent;
+  }
+
+  .search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 1.25rem;
+    font: inherit;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .search-trigger:hover {
+    border-color: rgba(90, 228, 192, 0.35);
+    color: var(--text-primary);
+  }
+
+  .search-trigger span {
+    flex: 1;
+    text-align: left;
+  }
+
+  .search-trigger kbd {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.05rem 0.3rem;
+  }
+
+  .nav-group + .nav-group {
+    margin-top: 1.25rem;
+  }
+
+  .nav-group-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 0.35rem 0.7rem;
+  }
+
+  .nav-group ul {
+    list-style: none;
+  }
+
+  .nav-item {
+    display: block;
+    padding: 0.33rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .nav-item.nested {
+    padding-left: 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .nav-item:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.035);
+    opacity: 1;
+  }
+
+  .nav-item.active {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.08);
+    font-weight: 500;
+  }
+
+  .sidebar-meta {
+    margin: 1.75rem 0.7rem 0;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .sidebar-meta code {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+  }
+
+  .sidebar-scrim {
+    display: none;
+  }
+
+  /* ── Main ── */
+  .manual-main {
+    min-width: 0;
+    max-width: 76ch;
+    padding-top: 0.5rem;
+  }
+
+  .doc-pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3.5rem;
+  }
+
+  .pager {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--text-primary);
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .pager:hover {
+    opacity: 1;
+    border-color: rgba(90, 228, 192, 0.35);
+    background: rgba(90, 228, 192, 0.04);
+  }
+
+  .pager.next {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .pager-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .pager-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .doc-footer {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .doc-footer a {
+    color: var(--text-secondary);
+  }
+
+  .doc-footer a:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  .doc-footer .dot {
+    margin: 0 0.5rem;
+  }
+
+  .doc-footer code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  /* ── TOC ── */
+  .manual-toc {
+    position: sticky;
+    top: calc(var(--nav-height) + 1.5rem);
+    align-self: start;
+    max-height: calc(100vh - var(--nav-height) - 3rem);
+    overflow-y: auto;
+    font-size: 0.8rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 153, 180, 0.25) transparent;
+  }
+
+  .toc-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .toc-list {
+    list-style: none;
+    border-left: 1px solid var(--line-soft);
+  }
+
+  .toc-item a {
+    display: block;
+    padding: 0.25rem 0 0.25rem 0.85rem;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    transition: color 0.12s, border-color 0.12s;
+  }
+
+  .toc-item.depth-3 a {
+    padding-left: 1.6rem;
+    font-size: 0.75rem;
+  }
+
+  .toc-item a:hover {
+    color: var(--text-primary);
+    opacity: 1;
+  }
+
+  .toc-item a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+
+  .toc-top {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 1180px) {
+    .manual {
+      grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    }
+
+    .manual-toc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .manual {
+      grid-template-columns: minmax(0, 1fr);
+      padding: calc(var(--nav-height) + 3.25rem) 1.25rem 3rem;
+      gap: 0;
+    }
+
+    .manual-mobilebar {
+      position: fixed;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .mobile-toggle,
+    .mobile-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font: inherit;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .mobilebar-title {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .manual-sidebar {
+      position: fixed;
+      top: var(--nav-height);
+      bottom: 0;
+      left: 0;
+      z-index: 120;
+      width: min(320px, 85vw);
+      max-height: none;
+      padding: 1.25rem 1rem 2rem;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--line);
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .manual-sidebar.open {
+      transform: none;
+    }
+
+    .sidebar-scrim {
+      display: block;
+      position: fixed;
+      inset: var(--nav-height) 0 0;
+      z-index: 110;
+      background: rgba(6, 10, 20, 0.6);
+    }
+
+    .sidebar-scrim[hidden] {
+      display: none;
+    }
+
+    .doc-pager {
+      grid-template-columns: 1fr;
+    }
+
+    .pager.next {
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .manual-sidebar {
+      transition: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* ── Rendered Markdown ── */
+  .doc-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+
+  .doc-body > :first-child {
+    margin-top: 0;
+  }
+
+  .doc-body h1 {
+    font-family: var(--font-mono);
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin: 0 0 1.25rem;
+    text-wrap: balance;
+  }
+
+  .doc-body h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin: 2.75rem 0 0.9rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-soft);
+    text-wrap: balance;
+  }
+
+  .doc-body h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 2rem 0 0.6rem;
+  }
+
+  .doc-body h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .doc-body h2,
+  .doc-body h3,
+  .doc-body h4 {
+    position: relative;
+  }
+
+  .doc-body .heading-anchor {
+    position: absolute;
+    left: -1.4em;
+    top: 0;
+    bottom: 0;
+    padding-top: inherit;
+    width: 1.2em;
+    text-align: center;
+    color: var(--text-muted);
+    opacity: 0;
+    font-weight: 400;
+    transition: opacity 0.12s;
+  }
+
+  .doc-body h2 .heading-anchor {
+    top: 1.25rem;
+  }
+
+  .doc-body h2:hover .heading-anchor,
+  .doc-body h3:hover .heading-anchor,
+  .doc-body h4:hover .heading-anchor,
+  .doc-body .heading-anchor:focus-visible {
+    opacity: 1;
+  }
+
+  .doc-body p {
+    margin: 0 0 1.1rem;
+  }
+
+  .doc-body a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: rgba(90, 228, 192, 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s;
+  }
+
+  .doc-body a:hover {
+    opacity: 1;
+    text-decoration-color: var(--accent);
+  }
+
+  .doc-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .doc-body em {
+    color: var(--text-primary);
+  }
+
+  .doc-body ul,
+  .doc-body ol {
+    margin: 0 0 1.1rem;
+    padding-left: 1.4rem;
+  }
+
+  .doc-body li {
+    margin-bottom: 0.35rem;
+  }
+
+  .doc-body li::marker {
+    color: var(--text-muted);
+  }
+
+  .doc-body li > ul,
+  .doc-body li > ol {
+    margin: 0.35rem 0 0;
+  }
+
+  .doc-body code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: rgba(90, 228, 192, 0.08);
+    color: #8ff0d5;
+    padding: 0.1em 0.38em;
+    border-radius: 4px;
+    word-break: break-word;
+  }
+
+  .doc-body pre {
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg-deep) !important;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 153, 180, 0.25) transparent;
+  }
+
+  .doc-body h1 code {
+    font-size: 0.85em;
+    padding: 0 0.25em;
+    background: rgba(90, 228, 192, 0.1);
+  }
+
+  .doc-body pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+    border-radius: 0;
+    word-break: normal;
+  }
+
+  .doc-body blockquote {
+    margin: 0 0 1.25rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--text-secondary);
+  }
+
+  .doc-body blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  .doc-body blockquote.doc-lead {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-weight: 400;
+    margin-bottom: 1.25rem;
+    text-wrap: pretty;
+  }
+
+  .doc-body blockquote.doc-lead p {
+    margin-bottom: 0.75rem;
+  }
+
+  .doc-body blockquote.doc-lead + .doc-lead {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .doc-body .doc-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    margin-bottom: 0.9rem;
+  }
+
+  .doc-body .doc-keywords strong,
+  .doc-body .doc-related strong {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-right: 0.35rem;
+  }
+
+  .doc-body .chip {
+    font-size: 0.72rem;
+    line-height: 1.3;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft);
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .doc-body .doc-related {
+    font-size: 0.82rem;
+    margin-bottom: 2.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .doc-body .doc-related a {
+    text-decoration: none;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(90, 228, 192, 0.08);
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .doc-body .table-wrap {
+    margin: 0 0 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 153, 180, 0.25) transparent;
+  }
+
+  .doc-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  .doc-body th,
+  .doc-body td {
+    padding: 0.6rem 0.85rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .doc-body th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.025);
+    white-space: nowrap;
+  }
+
+  .doc-body tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .doc-body td:first-child {
+    color: var(--text-primary);
+  }
+
+  .doc-body td code,
+  .doc-body th code {
+    white-space: nowrap;
+  }
+
+  .doc-body hr {
+    border: 0;
+    border-top: 1px solid var(--line-soft);
+    margin: 2.5rem 0;
+  }
+
+  .doc-body img {
+    border-radius: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .doc-body h1 {
+      font-size: 1.7rem;
+    }
+
+    .doc-body h2 {
+      font-size: 1.25rem;
+    }
+
+    .doc-body .heading-anchor {
+      display: none;
+    }
+  }
+</style>
