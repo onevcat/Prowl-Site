@@ -16,7 +16,8 @@ Assets live in `public/images/shots/`. They are referenced from `src/pages/detai
 - Agents: Claude Code, Codex and Pi launched from the seeded Agent Profiles through
   `prowl create tab --profile … --prompt -`, so Working / Blocked / Done / Idle all appear.
 - Capture: `screencapture -l <windowID>` (window id from `CGWindowListCopyWindowInfo`), cropped to
-  the opaque window bounds and encoded with `magick … -quality 84 out.webp`. Menus were driven with
+  the opaque window bounds. Large shots are encoded twice with `cwebp -q 80`, at 2000px and 1200px
+  wide (`name.webp` / `name-1200.webp`), and served through `srcset`; small crops are single files. Menus were driven with
   AppleScript (`click menu item "Canvas" of menu "View"`), toolbar buttons with the AX API
   (`AXPress` on the button's identifier, e.g. `agents-toolbar-menu`, `Tile`).
 
@@ -28,17 +29,15 @@ Assets live in `public/images/shots/`. They are referenced from `src/pages/detai
 | `canvas.webp` | Canvas, five tiled cards with repository-coloured headers: Claude explaining code, a permission prompt, Codex done, Pi done, a git log | Layout → Canvas |
 | `shelf.webp` | Shelf with the Prowl feature book open and a Working / Blocked roster | Layout → Shelf |
 | `new-worktree.webp` | New Worktree sheet with an Apple Intelligence branch suggestion over a Claude session; `+26 -0` badge in the sidebar | Layout → Sidebar & worktrees |
-| `normal.webp` | Normal view, Prowl feature worktree, full Claude answer | (spare) |
 | `active-agents.webp` | Active Agents panel crop: Blocked, Done, Idle, Idle with repository colours | Agents → Active Agents |
 | `agent-island.webp` | Floating Agent Island bar with state counts and Blocked / Done cells | Agents → Agent Island |
 | `agent-island-roster.webp` | Expanded Island roster with 1–4 shortcuts and the keyboard legend | Agents → Agent Island |
 | `agents-popover.webp` | Toolbar Agents menu: Run a workflow (Hello World, Handoff) and one launch row per profile | Agents → Agent Profiles |
 | `custom-commands.webp` | Toolbar crop: Xcode open button, Run, Build, Check, Test | Automation → Custom Commands |
 | `workflow-history.webp` | Workflow History panel over a Handoff run that needs attention | Automation → Agent Workflows |
-| `workflow-status.webp` | Toolbar crop with the workflow status item "Prepare handoff briefing" | (spare) |
 | `command-palette.webp` | Command Palette filtered by "launch": Launch Agent rows | Fundamentals |
 | `diff.webp` | Show Diff window, split view, RetryStrategy.swift | Fundamentals |
-| `settings.webp` | Settings window, General page (older neutral scene) | Fundamentals |
+| `settings.webp` | Settings window, General page (older neutral scene), cropped to the gallery ratio | Fundamentals |
 
 ## Optional
 
