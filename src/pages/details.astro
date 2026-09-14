@@ -559,10 +559,10 @@ const runtimes = [
               <pre class="code term"><span class="c"># launch a reviewer in a split beside this pane</span>
 <span class="p">$</span> launch=$(prowl create pane "$PROWL_PANE_ID" --direction right \
     --profile Reviewer --prompt - --json &lt;&lt;'EOF'
-  Review the current branch against its base.
-  Report only actionable findings with file and line.
-  EOF
-  )
+Review the current branch against its base.
+Report only actionable findings with file and line.
+EOF
+)
 <span class="p">$</span> dispatch=$(jq -r .data.dispatch.id &lt;&lt;&lt; "$launch")
 
 <span class="c"># block until the reviewer says it is done</span>
