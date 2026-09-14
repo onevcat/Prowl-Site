@@ -10,10 +10,14 @@ const markdown = await response.text();
 
 const body = markdown.replace(/^# Changelog\s*\n/, "");
 
-// Split into version sections to isolate the latest release
+// Split into version sections to isolate the latest release. Only the most
+// recent releases are rendered here; the full history stays on GitHub.
+const SHOWN_RELEASES = 20;
 const sections = body.split(/\n(?=## )/);
 const latestHtml = await marked.parse(sections[0] || "");
-const olderHtml = await marked.parse(sections.slice(1).join("\n"));
+const olderHtml = await marked.parse(sections.slice(1, SHOWN_RELEASES).join("\n"));
+const hiddenCount = Math.max(0, sections.length - SHOWN_RELEASES);
+const changelogUrlPublic = "https://github.com/onevcat/Prowl/blob/main/CHANGELOG.md";
 ---
 
 <Layout title="Prowl — Releases">
@@ -33,6 +37,20 @@ const olderHtml = await marked.parse(sections.slice(1).join("\n"));
     </section>
 
     <article class="releases-content" set:html={olderHtml} />
+
+    <footer class="releases-more">
+      <p>
+        {hiddenCount > 0
+          ? `Showing the ${SHOWN_RELEASES} most recent releases. ${hiddenCount} older ${hiddenCount === 1 ? "release is" : "releases are"} in the full changelog.`
+          : "That is every release so far."}
+      </p>
+      <a class="releases-more-link" href={changelogUrlPublic} target="_blank" rel="noopener">
+        All releases on GitHub
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" aria-hidden="true">
+          <path d="M6 3l5 5-5 5" />
+        </svg>
+      </a>
+    </footer>
   </main>
 </Layout>
 
@@ -240,6 +258,40 @@ const olderHtml = await marked.parse(sections.slice(1).join("\n"));
     color: var(--accent-dim);
     padding: 0.15em 0.4em;
     border-radius: 4px;
+  }
+
+  .releases-more {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .releases-more p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .releases-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: 1px solid rgba(136, 153, 180, 0.25);
+    border-radius: 6px;
+    transition: color 0.15s, border-color 0.15s, transform 0.15s;
+  }
+
+  .releases-more-link:hover {
+    opacity: 1;
+    color: var(--text-primary);
+    border-color: rgba(136, 153, 180, 0.5);
+    transform: translateY(-1px);
   }
 
   @media (max-width: 640px) {
