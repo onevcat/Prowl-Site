@@ -1,14 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
-
-const features = [
-  { name: "Canvas", blurb: "Every agent live on one board. Broadcast to all of them.", href: "/details/#layout" },
-  { name: "Shelf", blurb: "Worktrees as book spines. Flip through them from the keyboard.", href: "/details/#layout" },
-  { name: "Agent Island", blurb: "Who is working, blocked, or done, from any app.", href: "/details/#agents" },
-  { name: "Workflows", blurb: "Multi-agent runs Prowl executes and supervises.", href: "/details/#automate" },
-  { name: "prowl CLI", blurb: "Let agents read, drive, and coordinate panes.", href: "/details/#cli" },
-];
 ---
 
 <Layout title="Prowl — Quiet paws. Sharp claws.">
@@ -16,11 +8,12 @@ const features = [
 
   <main class="hero">
     <div class="hero-layout">
+      <!-- Left: text content -->
       <div class="hero-text">
         <h1 class="title">Prowl</h1>
         <p class="slogan">Quiet paws.<br />Sharp claws.</p>
         <p class="subtitle">
-          A native macOS command center for running AI coding agents in parallel.
+          A native macOS terminal environment, sharpened for coding agents.
         </p>
 
         <div class="cta-group">
@@ -30,14 +23,26 @@ const features = [
             target="_blank"
             rel="noopener"
           >
-            <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="btn-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
               <path d="M8 2v8m0 0l-3-3m3 3l3-3M3 12v1.5h10V12" />
             </svg>
             Download
           </a>
-          <a href="/details/" class="btn btn-secondary">
+          <a href="/details" class="btn btn-secondary">
             Details
-            <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg
+              class="btn-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
               <path d="M6 3l5 5-5 5" />
             </svg>
           </a>
@@ -46,31 +51,28 @@ const features = [
           Or install through Homebrew:
           <br />
           <span class="brew-command" id="brew-command">brew install --cask onevcat/tap/prowl</span>
-          <button type="button" class="brew-copy" id="brew-copy" aria-label="Copy Homebrew install command">Copy</button>
+          <button
+            type="button"
+            class="brew-copy"
+            id="brew-copy"
+            aria-label="Copy Homebrew install command"
+          >
+            Copy
+          </button>
         </p>
 
         <p class="fork-note">
-          Free &amp; open source · macOS 26+ · A personal fork of
-          <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>, built for daily use.
+          Free &amp; Open Source. A personal fork of <a
+            href="https://supacode.sh/"
+            target="_blank"
+            rel="noopener">Supacode</a
+          >, built for daily use.
         </p>
       </div>
 
+      <!-- Right: interactive mini app wireframe + icon -->
       <div class="hero-visual">
-        <div class="visual-stage">
-          <a class="icon-wrap" href="/details/" aria-label="See what Prowl does">
-            <img src="/images/prowl-icon.png" alt="" class="app-icon" width="220" height="220" />
-          </a>
-          <ul class="feature-index">
-            {features.map((f) => (
-              <li>
-                <a href={f.href} class="feature-row">
-                  <span class="feature-name">{f.name}</span>
-                  <span class="feature-blurb">{f.blurb}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <div class="app-frame-wrap">
         <button
           type="button"
           class="video-trigger"
@@ -86,35 +88,271 @@ const features = [
           </span>
           <span class="video-trigger-label">Watch demo</span>
         </button>
+        <div class="app-frame" id="app-frame">
+          <!-- Title bar -->
+          <div class="frame-titlebar">
+            <div class="frame-dots">
+              <span class="fdot fdot-r"></span>
+              <span class="fdot fdot-y"></span>
+              <span class="fdot fdot-g"></span>
+            </div>
+            <span class="frame-title">Prowl</span>
+          </div>
+          <div class="frame-content">
+            <!-- Vertical tab sidebar -->
+            <div class="frame-sidebar">
+              <div class="sidebar-action view-toggles">
+                <span class="view-link" id="canvas-toggle" title="Toggle Canvas view">Canvas</span>
+                <span class="view-link" id="shelf-toggle" title="Toggle Shelf view">Shelf</span>
+              </div>
+              <div class="tab active" data-tab="prowl">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">prowl</span>
+                <span class="tab-badge running"></span>
+              </div>
+              <div class="tab" data-tab="kingfisher">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">kingfisher</span>
+                <span class="tab-badge running"></span>
+              </div>
+              <div class="tab" data-tab="meetcat">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">MeetCat</span>
+                <span class="tab-badge running"></span>
+              </div>
+              <div class="tab" data-tab="yitong">
+                <span class="tab-icon">&#9733;</span>
+                <span class="tab-label">YiTong</span>
+                <span class="tab-badge idle"></span>
+              </div>
+            </div>
+            <!-- Main area -->
+            <div class="frame-main">
+              <!-- Shelf view: [unselected spines] [selected spine] [book/terminal] [unselected spines] -->
+              <div class="shelf-panel" id="shelf-panel">
+                <div class="spine" data-book="prowl" id="shelf-spine-prowl">
+                  <span class="spine-label">prowl</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="swift">▲</i>
+                    <i class="sicon" data-glyph="claude">✦</i>
+                  </span>
+                </div>
+                <div class="spine spine-selected" data-book="kingfisher" id="shelf-spine-kingfisher">
+                  <span class="spine-label">kingfisher</span>
+                  <span class="spine-icons">
+                    <i class="sicon active" data-glyph="codex">❯</i>
+                    <i class="sicon" data-glyph="git">◆</i>
+                  </span>
+                </div>
+                <div class="shelf-book" id="shelf-book">
+                  <div class="book-toolbar">
+                    <span class="book-repo" id="shelf-book-repo">kingfisher</span>
+                    <span class="book-branch">main</span>
+                  </div>
+                  <div class="book-terminal" id="shelf-book-term">
+                    <div class="bl"><span class="bp">&#10095;</span> codex "Add retry to ImageDownloader"</div>
+                    <div class="bl out">  &#8987; Reading ImageDownloader.swift</div>
+                    <div class="bl out ok">  &#10003; Done. 3 files changed.</div>
+                    <div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>
+                  </div>
+                </div>
+                <div class="spine" data-book="yitong" id="shelf-spine-yitong">
+                  <span class="spine-label">YiTong</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="vim">▦</i>
+                  </span>
+                </div>
+                <div class="spine" data-book="meetcat" id="shelf-spine-meetcat">
+                  <span class="spine-label">MeetCat</span>
+                  <span class="spine-icons">
+                    <i class="sicon" data-glyph="vitest">✓</i>
+                    <i class="sicon" data-glyph="npm">▣</i>
+                  </span>
+                </div>
+              </div>
+              <!-- Canvas 2x2 grid view -->
+              <div class="canvas-panel" id="canvas-panel">
+                <div class="canvas-grid">
+                  <div class="canvas-card" data-card="prowl">
+                    <div class="card-title">prowl</div>
+                    <div class="card-body">
+                      <span class="card-line ok">&#10003; 23 tests passed</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="kingfisher">
+                    <div class="card-title">kingfisher</div>
+                    <div class="card-body">
+                      <span class="card-line">codex &#8230; 3 files</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="meetcat">
+                    <div class="card-title">MeetCat</div>
+                    <div class="card-body">
+                      <span class="card-line ok">&#10003; 10 tests passed</span>
+                    </div>
+                  </div>
+                  <div class="canvas-card" data-card="yitong">
+                    <div class="card-title">YiTong</div>
+                    <div class="card-body">
+                      <span class="card-line diff-r">- The next idea</span>
+                      <span class="card-line diff-a">+ &#24322;&#21516;</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- prowl -->
+              <div class="tab-panel active" data-panel="prowl">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">prowl</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="prowl-run">&#9654; Run</span>
+                    <span class="action-btn" data-run="prowl-test">&#9881; Test</span>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-prowl">
+                  <div class="tl"><span class="tp">&#10095;</span> swift test</div>
+                  <div class="tl out">  Build complete! (1.2s)</div>
+                  <div class="tl out ok">  Test Suite passed — 23 tests, 0 failures</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- kingfisher -->
+              <div class="tab-panel" data-panel="kingfisher">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">kingfisher</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="kf-build">&#9654; Build</span>
+                    <span class="action-btn" data-run="kf-release">&#9881; Release</span>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-kingfisher">
+                  <div class="tl agent"><span class="tp">&#10095;</span> codex "Add retry to ImageDownloader"</div>
+                  <div class="tl out">  &#8987; Reading ImageDownloader.swift</div>
+                  <div class="tl out">  &#8987; Applying changes to 2 files</div>
+                  <div class="tl out ok">  &#10003; Done. 3 files changed.</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- meetcat -->
+              <div class="tab-panel" data-panel="meetcat">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">MeetCat</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="mc-app">&#9654; Open App</span>
+                    <a class="action-btn action-link" href="https://meet.onev.cat" target="_blank" rel="noopener">&#9741; WebSite</a>
+                  </div>
+                </div>
+                <div class="frame-terminal" id="term-meetcat">
+                  <div class="tl"><span class="tp">&#10095;</span> npx vitest run</div>
+                  <div class="tl out">  &#10003; src/utils.test.ts (6 tests) 12ms</div>
+                  <div class="tl out">  &#10003; src/hooks.test.ts (4 tests) 8ms</div>
+                  <div class="tl out ok">  Tests  10 passed</div>
+                  <div class="tl"><span class="tp">&#10095;</span><span class="blink">&#9646;</span></div>
+                </div>
+              </div>
+              <!-- yitong -->
+              <div class="tab-panel" data-panel="yitong">
+                <div class="frame-toolbar">
+                  <span class="toolbar-repo">YiTong</span>
+                  <div class="toolbar-actions">
+                    <span class="action-btn" data-run="yt-build">&#9654; Build</span>
+                    <span class="action-btn" data-run="yt-diff">&#8800; Diff</span>
+                  </div>
+                </div>
+                <div class="frame-terminal frame-diff" id="term-yitong">
+                  <div class="tl diff-remove">- The next idea</div>
+                  <div class="tl diff-add">+ YiTong</div>
+                  <div class="tl diff-add">+ &#24322;&#21516;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <!-- Floating icon -->
+        <div class="icon-float">
+          <img
+            src="/images/prowl-icon.png"
+            alt="Prowl App Icon"
+            class="app-icon"
+          />
+        </div>
+
       </div>
 
-      <!-- Paw prints between title and visual -->
+      <!-- Paw prints between title and terminal -->
       <div class="paw-bridge">
-        {["p1", "p2", "p3"].map((cls) => (
-          <svg class:list={["paw", cls]} data-paw viewBox="0 0 20 20" fill="currentColor" role="button" tabindex="0" aria-label="Toggle bright paw">
-            <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
-            <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
-            <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
-            <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
-            <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
-          </svg>
-        ))}
+        <svg
+          class="paw p1"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
+          <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
+          <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
+          <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
+        </svg>
+        <svg
+          class="paw p2"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
+          <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
+          <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
+          <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
+        </svg>
+        <svg
+          class="paw p3"
+          data-paw
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          role="button"
+          tabindex="0"
+          aria-label="Toggle bright paw"
+        >
+          <ellipse cx="6.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="13.5" cy="3.5" rx="2" ry="2.4" />
+          <ellipse cx="3.2" cy="8.8" rx="1.7" ry="2.1" />
+          <ellipse cx="16.8" cy="8.8" rx="1.7" ry="2.1" />
+          <path d="M10 18.5c-3.2 0-5.8-2.2-5.8-4.5 0-2 1.6-3.5 3.2-3.5.9 0 1.4.6 2.6.6s1.7-.6 2.6-.6c1.6 0 3.2 1.5 3.2 3.5 0 2.3-2.6 4.5-5.8 4.5z" />
+        </svg>
       </div>
     </div>
 
     <footer class="footer">
       <p>
-        Built by <a href="https://github.com/onevcat" target="_blank" rel="noopener">@onevcat</a>
-        with <span class="heart">&hearts;</span>
+        Built by <a
+          href="https://github.com/onevcat"
+          target="_blank"
+          rel="noopener">@onevcat</a
+        > with <span class="heart">&hearts;</span>
       </p>
     </footer>
+
   </main>
 
   <div class="video-modal" id="video-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Prowl demo video">
     <div class="video-modal-backdrop" data-close></div>
     <div class="video-modal-content">
-      <button type="button" class="video-modal-close" id="video-modal-close" aria-label="Close video">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true">
+      <button
+        type="button"
+        class="video-modal-close"
+        id="video-modal-close"
+        aria-label="Close video"
+      >
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
           <path d="M3 3l10 10M13 3L3 13" />
         </svg>
       </button>
@@ -124,36 +362,257 @@ const features = [
 </Layout>
 
 <script>
+  const tabs = document.querySelectorAll<HTMLElement>(".tab[data-tab]");
+  const panels = document.querySelectorAll<HTMLElement>(".tab-panel[data-panel]");
+  const canvasPanel = document.getElementById("canvas-panel")!;
+  const canvasToggle = document.getElementById("canvas-toggle")!;
+  const shelfPanel = document.getElementById("shelf-panel")!;
+  const shelfToggle = document.getElementById("shelf-toggle")!;
+  const shelfBook = document.getElementById("shelf-book")!;
+  const shelfBookRepo = document.getElementById("shelf-book-repo")!;
+  const shelfBookTerm = document.getElementById("shelf-book-term")!;
+  const tabNames = ["prowl", "kingfisher", "meetcat", "yitong"];
+  // Rotation: canvas → shelf → prowl → kingfisher → meetcat → yitong → canvas ...
+  const sequence = ["canvas", "shelf", ...tabNames];
+  let seqIndex = sequence.indexOf("prowl");
+  let timer: ReturnType<typeof setInterval>;
+  const INTERVAL = 5000;
+
+  type BookContent = { repo: string; lines: string };
+  const shelfBooks: Record<string, BookContent> = {
+    prowl: {
+      repo: "prowl",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> swift test</div>' +
+        '<div class="bl out">  Build complete! (1.2s)</div>' +
+        '<div class="bl out ok">  Test Suite passed — 23 tests</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    kingfisher: {
+      repo: "kingfisher",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> codex "Add retry to ImageDownloader"</div>' +
+        '<div class="bl out">  &#8987; Reading ImageDownloader.swift</div>' +
+        '<div class="bl out ok">  &#10003; Done. 3 files changed.</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    meetcat: {
+      repo: "MeetCat",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> npx vitest run</div>' +
+        '<div class="bl out">  &#10003; src/utils.test.ts (6) 12ms</div>' +
+        '<div class="bl out ok">  Tests  10 passed</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+    yitong: {
+      repo: "YiTong",
+      lines:
+        '<div class="bl"><span class="bp">&#10095;</span> vim README.md</div>' +
+        '<div class="bl out">  -- INSERT --</div>' +
+        '<div class="bl out">  saved · 1 file</div>' +
+        '<div class="bl"><span class="bp">&#10095;</span><span class="blink">&#9646;</span></div>',
+    },
+  };
+
+  function clearViewToggles() {
+    canvasToggle.classList.remove("active");
+    shelfToggle.classList.remove("active");
+    canvasPanel.classList.remove("active");
+    shelfPanel.classList.remove("active");
+  }
+
+  function showTab(name: string) {
+    clearViewToggles();
+    tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+    panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
+  }
+
+  function showCanvas() {
+    panels.forEach((p) => p.classList.remove("active"));
+    tabs.forEach((t) => t.classList.remove("active"));
+    clearViewToggles();
+    canvasPanel.classList.add("active");
+    canvasToggle.classList.add("active");
+  }
+
+  // Spine order is fixed (like books on a shelf). Only the selected pointer
+  // moves; the terminal slots in just to the right of the selected spine.
+  const shelfBookOrder = ["prowl", "kingfisher", "yitong", "meetcat"];
+  let shelfSelectedIdx = 1; // markup default: kingfisher is selected
+
+  function shelfElementOf(book: string): HTMLElement | null {
+    return document.getElementById("shelf-spine-" + book);
+  }
+
+  function shelfApplyOrder() {
+    shelfBookOrder.forEach((book, idx) => {
+      const el = shelfElementOf(book);
+      if (!el) return;
+      el.style.order = String(idx <= shelfSelectedIdx ? idx : idx + 1);
+      el.classList.toggle("spine-selected", idx === shelfSelectedIdx);
+    });
+    shelfBook.style.order = String(shelfSelectedIdx + 1);
+  }
+
+  function openShelfBook(name: string) {
+    const book = shelfBooks[name];
+    if (!book) return;
+
+    // Always update visual cues (terminal content + repo label)
+    shelfBookRepo.textContent = book.repo;
+    shelfBookTerm.innerHTML = book.lines;
+
+    const idx = shelfBookOrder.indexOf(name);
+    if (idx === -1 || idx === shelfSelectedIdx) return;
+
+    // FIRST: snapshot every spine + the terminal book
+    const allTargets: HTMLElement[] = shelfBookOrder
+      .map(shelfElementOf)
+      .filter((el): el is HTMLElement => el !== null);
+    allTargets.push(shelfBook);
+    const firstRects = new Map<HTMLElement, DOMRect>();
+    allTargets.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
+
+    // LAST: spine order stays put; only the selected pointer (and thus the
+    // terminal's slot) moves.
+    shelfSelectedIdx = idx;
+    shelfApplyOrder();
+
+    // INVERT: each target jumps back to its FIRST position with no transition
+    allTargets.forEach((el) => {
+      const dx = firstRects.get(el)!.left - el.getBoundingClientRect().left;
+      if (Math.abs(dx) < 0.5) {
+        el.style.transition = "";
+        el.style.transform = "";
+        return;
+      }
+      el.style.transition = "none";
+      el.style.transform = `translateX(${dx}px)`;
+    });
+
+    // PLAY: commit the invert, then animate to identity in the next frame
+    void shelfPanel.offsetWidth;
+    requestAnimationFrame(() => {
+      allTargets.forEach((el) => {
+        el.style.transition = "transform 380ms cubic-bezier(0.4, 0, 0.2, 1)";
+        el.style.transform = "";
+      });
+    });
+  }
+
+  // Initialise flex order to match the markup default
+  shelfApplyOrder();
+
+  function showShelf() {
+    panels.forEach((p) => p.classList.remove("active"));
+    tabs.forEach((t) => t.classList.remove("active"));
+    clearViewToggles();
+    shelfPanel.classList.add("active");
+    shelfToggle.classList.add("active");
+  }
+
+  function showByIndex(i: number) {
+    const name = sequence[i];
+    if (name === "canvas") {
+      showCanvas();
+    } else if (name === "shelf") {
+      showShelf();
+    } else {
+      showTab(name);
+    }
+  }
+
+  function advance() {
+    seqIndex = (seqIndex + 1) % sequence.length;
+    showByIndex(seqIndex);
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(advance, INTERVAL);
+  }
+
+  function switchTo(name: string) {
+    seqIndex = sequence.indexOf(name);
+    showByIndex(seqIndex);
+    resetTimer();
+  }
+
+  // Tab clicks
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => switchTo(tab.dataset.tab!));
+  });
+
+  // Canvas toggle
+  canvasToggle.addEventListener("click", () => switchTo("canvas"));
+
+  // Shelf toggle
+  shelfToggle.addEventListener("click", () => switchTo("shelf"));
+
+  // Canvas card clicks → switch to that tab
+  document.querySelectorAll<HTMLElement>(".canvas-card[data-card]").forEach((card) => {
+    card.addEventListener("click", () => switchTo(card.dataset.card!));
+  });
+
+  // Shelf spine clicks → open that book inside the shelf
+  shelfPanel.querySelectorAll<HTMLElement>(".spine[data-book]").forEach((spine) => {
+    spine.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openShelfBook(spine.dataset.book!);
+      // Stay in shelf view; reset rotation timer for breathing room
+      switchTo("shelf");
+    });
+  });
+
+  // Action button flash
+  document.querySelectorAll<HTMLElement>(".action-btn[data-run]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btn.classList.add("flash");
+      setTimeout(() => btn.classList.remove("flash"), 400);
+    });
+  });
+
   const brewCopyButton = document.getElementById("brew-copy") as HTMLButtonElement | null;
   const brewCommand = document.getElementById("brew-command")?.textContent?.trim();
   brewCopyButton?.addEventListener("click", async () => {
     if (!brewCommand || !brewCopyButton) return;
+
     try {
       await navigator.clipboard.writeText(brewCommand);
-      brewCopyButton.textContent = "Copied";
+      brewCopyButton.textContent = "Copied!";
       brewCopyButton.classList.add("copied");
-    } catch {
+      window.setTimeout(() => {
+        brewCopyButton.textContent = "Copy";
+        brewCopyButton.classList.remove("copied");
+      }, 1200);
+    } catch (_error) {
       brewCopyButton.textContent = "Copy failed";
+      window.setTimeout(() => {
+        brewCopyButton.textContent = "Copy";
+      }, 1200);
     }
-    window.setTimeout(() => {
-      brewCopyButton.textContent = "Copy";
-      brewCopyButton.classList.remove("copied");
-    }, 1200);
   });
 
-  // Paw prints: light up in sequence; light all three yourself before the
-  // sequence finishes and the demo button turns into a certain cat.
   const pawPrints = document.querySelectorAll<HTMLElement>(".paw[data-paw]");
+  pawPrints.forEach((paw) => {
+    paw.setAttribute("aria-pressed", "false");
+  });
+
   const videoTrigger = document.getElementById("video-trigger");
   let autoPawComplete = false;
   let easterTriggered = false;
-  pawPrints.forEach((paw) => paw.setAttribute("aria-pressed", "false"));
+
+  function activateTriggerPulse() {
+    videoTrigger?.classList.add("pulse");
+  }
 
   function maybeTriggerEaster() {
     if (autoPawComplete || easterTriggered) return;
-    if (!Array.from(pawPrints).every((p) => p.classList.contains("lit"))) return;
+    const allLit = Array.from(pawPrints).every((p) => p.classList.contains("lit"));
+    if (!allLit) return;
     easterTriggered = true;
     videoTrigger?.classList.add("rainbow");
+    // No pulse — the Nyan Cat carries the attention on its own.
   }
 
   function togglePaw(paw: HTMLElement) {
@@ -163,14 +622,17 @@ const features = [
   }
 
   document.addEventListener("click", (event) => {
+    const x = event.clientX;
+    const y = event.clientY;
     for (const paw of pawPrints) {
       const rect = paw.getBoundingClientRect();
-      if (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
         togglePaw(paw);
         break;
       }
     }
   });
+
   pawPrints.forEach((paw) => {
     paw.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -180,13 +642,20 @@ const features = [
     });
   });
 
-  (function startAutoPawSequence() {
+  // Auto paw-light sequence: kicks in after all three appear animations finish
+  // (max delay 2.0s + 0.8s duration ≈ 2.8s). Each paw not yet lit by the user
+  // lights up on a 600ms cadence; already-lit paws are preserved as-is.
+  // Once the sequence completes, the Watch demo trigger starts its pulse ring.
+  function startAutoPawSequence() {
+    const APPEAR_END_MS = 3000;
+    const STEP_MS = 600;
+    // Right-to-left, matching the appear order (p3 first, then p2, then p1).
     const sequence = Array.from(pawPrints).reverse();
     let idx = 0;
     function step() {
       if (idx >= sequence.length) {
         autoPawComplete = true;
-        if (!easterTriggered) videoTrigger?.classList.add("pulse");
+        if (!easterTriggered) activateTriggerPulse();
         return;
       }
       const paw = sequence[idx++];
@@ -194,23 +663,34 @@ const features = [
         paw.classList.add("lit");
         paw.setAttribute("aria-pressed", "true");
       }
-      window.setTimeout(step, 600);
+      window.setTimeout(step, STEP_MS);
     }
-    window.setTimeout(step, 2600);
-  })();
+    window.setTimeout(step, APPEAR_END_MS);
+  }
+  startAutoPawSequence();
 
-  // Demo video modal
+  // Start auto-rotation
+  resetTimer();
+
+  // Video modal
   const videoModal = document.getElementById("video-modal");
   const videoModalFrame = document.getElementById("video-modal-frame");
   const videoModalClose = document.getElementById("video-modal-close");
-  const VIDEO_EMBED_SRC = "https://www.youtube-nocookie.com/embed/4GYlXPttwi0?autoplay=1&rel=0&modestbranding=1";
+  const VIDEO_EMBED_SRC =
+    "https://www.youtube-nocookie.com/embed/4GYlXPttwi0?autoplay=1&rel=0&modestbranding=1";
 
   function openVideoModal() {
     if (!videoModal || !videoModalFrame) return;
-    // The iframe is injected at runtime and carries no Astro scope hash.
-    const IFRAME_STYLE = "position:absolute;inset:0;width:100%;height:100%;border:0;display:block";
+    // Astro scopes <style> selectors, but the iframe is injected at runtime
+    // and won't carry the scope hash — so size it via inline style instead.
+    const IFRAME_STYLE =
+      "position:absolute;inset:0;width:100%;height:100%;border:0;display:block";
     videoModalFrame.innerHTML =
-      '<iframe src="' + VIDEO_EMBED_SRC + '" title="Prowl demo" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen style="' + IFRAME_STYLE + '"></iframe>';
+      '<iframe src="' +
+      VIDEO_EMBED_SRC +
+      '" title="Prowl demo" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen style="' +
+      IFRAME_STYLE +
+      '"></iframe>';
     videoModal.hidden = false;
     videoModal.setAttribute("aria-hidden", "false");
     requestAnimationFrame(() => videoModal.classList.add("open"));
@@ -223,6 +703,7 @@ const features = [
     videoModal.classList.remove("open");
     videoModal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    // Wait for fade-out, then unmount iframe to stop playback
     window.setTimeout(() => {
       if (!videoModal.classList.contains("open")) {
         videoModalFrame.innerHTML = "";
@@ -236,7 +717,9 @@ const features = [
   videoModalClose?.addEventListener("click", closeVideoModal);
   videoModal?.querySelector("[data-close]")?.addEventListener("click", closeVideoModal);
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && videoModal && !videoModal.hidden) closeVideoModal();
+    if (event.key === "Escape" && videoModal && !videoModal.hidden) {
+      closeVideoModal();
+    }
   });
 </script>
 
@@ -249,23 +732,24 @@ const features = [
     min-height: 100vh;
     overflow: hidden;
     background:
-      radial-gradient(ellipse 70% 60% at 72% 45%, rgba(90, 228, 192, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(90, 228, 192, 0.04) 0%, transparent 60%),
       var(--bg-primary);
   }
 
+  /* Layout: left text, right visual */
   .hero-layout {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-    gap: 2.5rem;
+    grid-template-columns: 2fr 3fr;
+    gap: 3rem;
     align-items: center;
-    max-width: 1120px;
+    max-width: 1080px;
     width: 100%;
-    padding: 6rem 3rem 4rem;
+    padding: 6rem 3rem 3rem;
   }
 
-  /* ── Text ── */
+  /* ---- Left: text ---- */
   .hero-text {
     display: flex;
     flex-direction: column;
@@ -283,13 +767,13 @@ const features = [
   }
 
   .slogan {
-    font-family: var(--font-mono);
     font-size: 1.5rem;
     font-weight: 500;
     color: var(--accent);
     letter-spacing: 0.02em;
-    line-height: 1.4;
     margin-bottom: 1.25rem;
+    font-family: var(--font-mono);
+    line-height: 1.4;
   }
 
   .subtitle {
@@ -297,8 +781,7 @@ const features = [
     color: var(--text-secondary);
     max-width: 380px;
     line-height: 1.7;
-    margin-bottom: 2.25rem;
-    text-wrap: pretty;
+    margin-bottom: 2.5rem;
   }
 
   .cta-group {
@@ -315,10 +798,9 @@ const features = [
     font-size: 0.9rem;
     font-weight: 600;
     font-family: var(--font-mono);
-    border: 1px solid transparent;
-    border-radius: 6px;
-    transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
+    transition: all 0.15s;
     cursor: pointer;
+    border: 1px solid transparent;
   }
 
   .btn-icon {
@@ -330,6 +812,7 @@ const features = [
     background: var(--accent);
     color: var(--bg-primary);
     border-color: var(--accent);
+    border-radius: 6px;
   }
 
   .btn-primary:hover {
@@ -337,13 +820,14 @@ const features = [
     background: #6ef0cc;
     border-color: #6ef0cc;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(90, 228, 192, 0.28);
+    box-shadow: 0 4px 16px rgba(90, 228, 192, 0.25);
   }
 
   .btn-secondary {
     background: transparent;
     color: var(--text-secondary);
     border-color: rgba(136, 153, 180, 0.25);
+    border-radius: 6px;
   }
 
   .btn-secondary:hover {
@@ -356,7 +840,7 @@ const features = [
   .brew-note {
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin: 0.3rem 0 1.5rem;
+    margin: 0.3rem 0 1.5rem 0;
     line-height: 1.6;
   }
 
@@ -382,6 +866,7 @@ const features = [
   }
 
   .brew-copy:hover {
+    opacity: 1;
     border-color: rgba(136, 153, 180, 0.45);
   }
 
@@ -394,7 +879,6 @@ const features = [
   .fork-note {
     font-size: 0.8rem;
     color: var(--text-muted);
-    max-width: 380px;
   }
 
   .fork-note a {
@@ -409,7 +893,7 @@ const features = [
     opacity: 1;
   }
 
-  /* ── Visual: icon + feature index ── */
+  /* ---- Right: visual ---- */
   .hero-visual {
     position: relative;
     display: flex;
@@ -417,116 +901,597 @@ const features = [
     justify-content: center;
   }
 
-  .visual-stage {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 2.25rem;
+  /* App wireframe */
+  .app-frame {
     width: 100%;
-  }
-
-  .icon-wrap {
-    position: relative;
-    display: block;
-    width: 200px;
-    height: 200px;
-    border-radius: 44px;
-    opacity: 1;
-  }
-
-  .icon-wrap::before {
-    content: "";
-    position: absolute;
-    inset: -40px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(90, 228, 192, 0.16), transparent 68%);
-    filter: blur(10px);
-    pointer-events: none;
-  }
-
-  .app-icon {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    border-radius: 44px;
+    max-width: 540px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(136, 153, 180, 0.12);
+    background: #0a1018;
     box-shadow:
-      0 24px 60px rgba(0, 0, 0, 0.55),
-      0 0 0 1px rgba(90, 228, 192, 0.12);
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      0 24px 80px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
   }
 
-  .icon-wrap:hover .app-icon {
-    transform: rotate(-3deg) scale(1.03);
+  .frame-titlebar {
+    display: flex;
+    align-items: center;
+    padding: 9px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
 
-  .feature-index {
-    list-style: none;
+  .frame-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .fdot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .fdot-r { background: #ff5f57; }
+  .fdot-y { background: #febc2e; }
+  .fdot-g { background: #28c840; }
+
+  .frame-title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-right: 28px;
+  }
+
+  .frame-content {
+    display: flex;
+    min-height: 300px;
+  }
+
+  /* Sidebar with vertical tabs */
+  .frame-sidebar {
+    width: 140px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 6px 0;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
-    min-width: 0;
+    background: rgba(255, 255, 255, 0.015);
+    flex-shrink: 0;
   }
 
-  .feature-index li {
-    opacity: 0;
-    transform: translateX(10px);
-    animation: row-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-
-  .feature-index li:nth-child(1) { animation-delay: 0.15s; }
-  .feature-index li:nth-child(2) { animation-delay: 0.27s; }
-  .feature-index li:nth-child(3) { animation-delay: 0.39s; }
-  .feature-index li:nth-child(4) { animation-delay: 0.51s; }
-  .feature-index li:nth-child(5) { animation-delay: 0.63s; }
-
-  @keyframes row-in {
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .feature-row {
-    display: grid;
-    grid-template-columns: 6.75rem minmax(0, 1fr);
-    align-items: baseline;
-    gap: 0.9rem;
-    padding: 0.55rem 0.75rem;
-    margin-left: -0.75rem;
-    border-radius: 8px;
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
     color: var(--text-secondary);
-    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.15s;
   }
 
-  .feature-row:hover {
-    opacity: 1;
+  .tab.active {
     background: rgba(90, 228, 192, 0.06);
     color: var(--text-primary);
+    border-left-color: var(--accent);
   }
 
-  .feature-name {
-    font-family: var(--font-mono);
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--text-primary);
+  .tab.dim {
+    color: var(--text-muted);
+  }
+
+  .tab-icon {
+    font-size: 1rem;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  .tab-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .feature-row:hover .feature-name {
+  .tab-badge {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tab-badge.running {
+    background: var(--accent);
+  }
+
+  .tab-badge.idle {
+    background: var(--text-muted);
+  }
+
+  .sidebar-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .view-toggles {
+    gap: 4px;
+  }
+
+  .view-link {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 1px 6px;
+    border-radius: 3px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .view-link:hover {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.06);
+  }
+
+  /* Main area */
+  .frame-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+  }
+
+  .frame-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+
+  .toolbar-repo {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .action-btn {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(90, 228, 192, 0.08);
+    color: var(--accent-dim);
+    font-size: 0.58rem;
+    border: 1px solid rgba(90, 228, 192, 0.12);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .action-btn:hover {
+    background: rgba(90, 228, 192, 0.15);
+  }
+
+  .action-btn.flash {
+    background: rgba(90, 228, 192, 0.3);
+  }
+
+  .action-link {
+    text-decoration: none;
+    color: var(--accent-dim);
+  }
+
+  .action-link:hover {
+    opacity: 1;
+  }
+
+  /* Tab panels */
+  .tab-panel,
+  .canvas-panel,
+  .shelf-panel {
+    flex: 1;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.5s;
+  }
+
+  .tab-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .canvas-panel {
+    display: flex;
+    padding: 8px;
+  }
+
+  .tab-panel.active,
+  .canvas-panel.active,
+  .shelf-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+  }
+
+  .canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .canvas-card {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .canvas-card:hover {
+    border-color: rgba(90, 228, 192, 0.2);
+    background: rgba(90, 228, 192, 0.04);
+  }
+
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 3px;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .card-line {
+    font-family: var(--font-mono);
+    font-size: 0.48rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-line.ok {
+    color: var(--accent-dim);
+  }
+
+  .card-line.diff-r {
+    color: #f87171;
+  }
+
+  .card-line.diff-a {
     color: var(--accent);
   }
 
-  .feature-blurb {
-    font-size: 0.85rem;
-    line-height: 1.45;
-    text-wrap: pretty;
+  /* View toggle active state */
+  .view-link.active {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.1);
   }
 
-  /* ── Watch demo trigger ── */
+  /* ── Shelf wireframe ──
+     Single flex container holds all spines + the book; flex order positions
+     each item. The selected spine sits at the book's left edge and merges
+     visually with it. */
+  .shelf-panel {
+    display: flex;
+    align-items: stretch;
+    padding: 6px;
+    gap: 3px;
+  }
+
+  .spine {
+    width: 22px;
+    min-height: 110px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0 5px;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    /* transform managed by JS for FLIP; CSS handles colours only */
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .spine:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .spine-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 70px;
+    white-space: nowrap;
+  }
+
+  .spine-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .sicon {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .sicon.active {
+    background: rgba(90, 228, 192, 0.18);
+    color: var(--accent);
+  }
+
+  /* Selected spine: tinted, sits at book's left edge, merges visually */
+  .spine-selected {
+    background: rgba(90, 228, 192, 0.08);
+    border-color: rgba(90, 228, 192, 0.22);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-color: transparent;
+    margin-right: -4px; /* cancel container gap (3px) + 1px overlap */
+    z-index: 1;
+  }
+
+  .spine-selected .spine-label {
+    color: var(--accent);
+  }
+
+  .shelf-book {
+    flex: 1;
+    min-width: 0;
+    background: rgba(90, 228, 192, 0.04);
+    border: 1px solid rgba(90, 228, 192, 0.18);
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .book-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+
+  .book-repo {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .book-branch {
+    color: var(--text-muted);
+    font-size: 0.55rem;
+  }
+
+  .book-terminal {
+    flex: 1;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.85;
+  }
+
+  .bl {
+    white-space: nowrap;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bl.out { color: var(--text-muted); }
+  .bl.ok { color: var(--accent-dim); }
+
+  .bp {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  /* Terminal output inside frame */
+  .frame-terminal {
+    flex: 1;
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.9;
+  }
+
+  .tl {
+    white-space: nowrap;
+    color: var(--text-primary);
+  }
+
+  .tp {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  .tl.out {
+    color: var(--text-muted);
+  }
+
+  .tl.ok {
+    color: var(--accent-dim);
+  }
+
+  .blink {
+    color: var(--accent);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Diff view lines */
+  .frame-diff {
+    padding-top: 14px;
+  }
+
+  .diff-remove {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.06);
+    padding: 1px 14px;
+    margin: 0 -14px;
+  }
+
+  .diff-add {
+    color: var(--accent);
+    background: rgba(90, 228, 192, 0.06);
+    padding: 1px 14px;
+    margin: 0 -14px;
+  }
+
+  /* Floating icon */
+  .icon-float {
+    position: absolute;
+    bottom: -40px;
+    right: -32px;
+  }
+
+  .app-icon {
+    width: 172px;
+    height: 172px;
+    border-radius: 38px;
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(90, 228, 192, 0.1);
+    transition: transform 0.3s;
+  }
+
+  .app-icon:hover {
+    transform: rotate(-3deg) scale(1.04);
+  }
+
+  /* Paw prints bridging text → visual */
+  .paw-bridge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .paw {
+    position: absolute;
+    color: rgba(90, 228, 192, 0.22);
+    opacity: 0;
+    animation: paw-appear 0.8s ease-out forwards;
+    cursor: pointer;
+    transition:
+      color 0.25s ease,
+      filter 0.25s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
+    outline: none;
+    pointer-events: auto;
+  }
+
+  .p1 {
+    width: 32px;
+    bottom: 8%;
+    left: 58%;
+    transform: rotate(-75deg);
+    animation-delay: 2.0s;
+  }
+
+  .p2 {
+    width: 28px;
+    bottom: 4%;
+    left: 66%;
+    transform: rotate(-70deg);
+    animation-delay: 1.6s;
+  }
+
+  .p3 {
+    width: 24px;
+    bottom: 8%;
+    left: 73%;
+    transform: rotate(-65deg);
+    animation-delay: 1.2s;
+  }
+
+  .paw.lit {
+    color: rgba(142, 255, 219, 0.98);
+    filter: drop-shadow(0 0 12px rgba(90, 228, 192, 0.65));
+  }
+
+  .paw:focus-visible {
+    outline: 1px solid rgba(90, 228, 192, 0.55);
+    outline-offset: 3px;
+  }
+
+  @keyframes paw-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Watch demo trigger — floats at the wireframe's top-right */
+  .app-frame-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+  }
+
   .video-trigger {
     position: absolute;
-    left: 42px;
-    bottom: -3.6rem;
+    bottom: -16px;
+    left: -14px;
     z-index: 6;
     display: inline-flex;
     align-items: center;
@@ -541,7 +1506,7 @@ const features = [
     border-radius: 999px;
     cursor: pointer;
     box-shadow:
-      0 10px 28px rgba(90, 228, 192, 0.35),
+      0 10px 28px rgba(90, 228, 192, 0.4),
       0 0 0 4px var(--bg-primary);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
@@ -561,35 +1526,8 @@ const features = [
     animation: trigger-pulse 2.4s ease-out infinite;
   }
 
-  @keyframes trigger-pulse {
-    0% { transform: scale(0.95); opacity: 0.55; }
-    80% { transform: scale(1.35); opacity: 0; }
-    100% { transform: scale(1.35); opacity: 0; }
-  }
-
-  .video-trigger:hover {
-    transform: translateY(-1px) scale(1.04);
-    box-shadow:
-      0 12px 32px rgba(90, 228, 192, 0.45),
-      0 0 0 4px var(--bg-primary);
-  }
-
-  .video-trigger-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: rgba(11, 18, 33, 0.92);
-    color: var(--accent);
-  }
-
-  .video-trigger-label {
-    line-height: 1;
-  }
-
-  /* Easter egg: all three paws lit before the sequence finishes. */
+  /* Easter egg — Nyan Cat takeover when all paws lit before auto-sequence finishes.
+     Use contain + matching aspect so the gif is shown whole, head-to-tail. */
   .video-trigger.rainbow {
     padding: 0;
     width: 110px;
@@ -607,54 +1545,57 @@ const features = [
   }
 
   .video-trigger.rainbow .video-trigger-icon,
-  .video-trigger.rainbow .video-trigger-label,
+  .video-trigger.rainbow .video-trigger-label {
+    display: none;
+  }
+
+  /* No pulse ring during the easter-egg state — the cat is the show. */
   .video-trigger.rainbow::after {
     display: none;
   }
 
+  /* Easter-egg hover: just scale, no extra glow. */
   .video-trigger.rainbow:hover {
     transform: scale(1.06);
     box-shadow: none;
   }
 
-  /* ── Paw prints ── */
-  .paw-bridge {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
+  @keyframes trigger-pulse {
+    0% { transform: scale(0.95); opacity: 0.55; }
+    80% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
   }
 
-  .paw {
-    position: absolute;
-    color: rgba(90, 228, 192, 0.22);
-    opacity: 0;
-    animation: paw-appear 0.8s ease-out forwards;
-    cursor: pointer;
-    pointer-events: auto;
-    transition: color 0.25s ease, filter 0.25s ease;
-    outline: none;
+  .video-trigger:hover {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow:
+      0 12px 32px rgba(90, 228, 192, 0.5),
+      0 0 0 4px var(--bg-primary);
+    opacity: 1;
   }
 
-  .p1 { width: 30px; bottom: 30%; left: 34%; transform: rotate(-80deg); animation-delay: 2s; }
-  .p2 { width: 26px; bottom: 26%; left: 37.5%; transform: rotate(-72deg); animation-delay: 1.6s; }
-  .p3 { width: 22px; bottom: 30%; left: 41%; transform: rotate(-64deg); animation-delay: 1.2s; }
-
-  .paw.lit {
-    color: rgba(142, 255, 219, 0.98);
-    filter: drop-shadow(0 0 12px rgba(90, 228, 192, 0.65));
+  .video-trigger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 
-  .paw:focus-visible {
-    outline: 1px solid rgba(90, 228, 192, 0.55);
-    outline-offset: 3px;
+  .video-trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(11, 18, 33, 0.92);
+    color: var(--accent);
   }
 
-  @keyframes paw-appear {
-    to { opacity: 1; }
+  .video-trigger-label {
+    line-height: 1;
+    letter-spacing: 0.01em;
   }
 
-  /* ── Video modal ── */
+  /* Video modal */
   .video-modal {
     position: fixed;
     inset: 0;
@@ -693,7 +1634,7 @@ const features = [
     max-height: calc(100vh - 6rem);
     border-radius: 12px;
     overflow: hidden;
-    background: var(--bg-deep);
+    background: #0a1018;
     box-shadow:
       0 32px 100px rgba(0, 0, 0, 0.6),
       0 0 0 1px rgba(255, 255, 255, 0.04);
@@ -710,6 +1651,15 @@ const features = [
     inset: 0;
   }
 
+  .video-modal-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
   .video-modal-close {
     position: absolute;
     top: -44px;
@@ -724,15 +1674,22 @@ const features = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s, transform 0.15s;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
   }
 
   .video-modal-close:hover {
     background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
     transform: scale(1.06);
+    opacity: 1;
   }
 
-  /* ── Footer ── */
+  .video-modal-close:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Footer */
   .footer {
     position: absolute;
     bottom: 1rem;
@@ -756,20 +1713,12 @@ const features = [
     opacity: 1;
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 960px) {
-    .hero {
-      flex-direction: column;
-    }
-
-    .hero-visual {
-      flex-direction: column;
-    }
-
+  /* Responsive */
+  @media (max-width: 840px) {
     .hero-layout {
       grid-template-columns: 1fr;
-      gap: 3.5rem;
-      padding: 7rem 2rem 5rem;
+      gap: 3rem;
+      padding: 7rem 2rem 3rem;
       text-align: center;
     }
 
@@ -778,78 +1727,35 @@ const features = [
     }
 
     .title {
-      font-size: 3.25rem;
+      font-size: 3rem;
     }
 
     .slogan {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
     }
 
-    .cta-group {
-      justify-content: center;
-    }
-
-    .visual-stage {
-      grid-template-columns: 1fr;
-      justify-items: center;
-      gap: 1.75rem;
-      max-width: 440px;
+    .app-frame {
+      max-width: 380px;
       margin: 0 auto;
     }
 
-    .icon-wrap,
+    .icon-float {
+      bottom: -24px;
+      right: -16px;
+    }
+
     .app-icon {
-      width: 160px;
-      height: 160px;
-      border-radius: 36px;
-    }
-
-    .feature-index {
-      width: 100%;
-      text-align: left;
-    }
-
-    .feature-row {
-      margin-left: 0;
-    }
-
-    .video-trigger {
-      position: static;
-      margin-top: 1.5rem;
+      width: 128px;
+      height: 128px;
+      border-radius: 28px;
     }
 
     .paw-bridge {
       display: none;
     }
 
-    .footer {
-      position: static;
-      padding-bottom: 1rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .hero-layout {
-      padding: 6rem 1.25rem 3rem;
-    }
-
-    .title {
-      font-size: 2.75rem;
-    }
-
     .cta-group {
-      flex-direction: column;
-      width: 100%;
-      max-width: 240px;
-    }
-
-    .btn {
       justify-content: center;
-    }
-
-    .feature-row {
-      grid-template-columns: 1fr;
-      gap: 0.1rem;
     }
 
     .video-modal {
@@ -863,16 +1769,86 @@ const features = [
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .feature-index li,
-    .paw {
-      animation: none;
-      opacity: 1;
-      transform: none;
+  @media (max-width: 480px) {
+    .title {
+      font-size: 2.5rem;
     }
 
-    .video-trigger.pulse::after {
-      animation: none;
+    .cta-group {
+      flex-direction: column;
+      width: 100%;
+      max-width: 240px;
+    }
+
+    .btn {
+      justify-content: center;
+    }
+
+    .app-frame {
+      max-width: 320px;
+    }
+
+    .frame-sidebar {
+      width: 86px;
+    }
+
+    .tab {
+      padding: 7px 8px;
+      font-size: 0.58rem;
+      gap: 5px;
+    }
+
+    .tab-icon {
+      font-size: 0.85rem;
+    }
+
+    .view-link {
+      font-size: 0.5rem;
+      padding: 1px 4px;
+    }
+
+    .spine {
+      width: 18px;
+      min-height: 90px;
+    }
+
+    .spine-label {
+      font-size: 0.45rem;
+      max-height: 56px;
+    }
+
+    .sicon {
+      width: 10px;
+      height: 10px;
+      font-size: 6px;
+    }
+
+    .icon-float {
+      bottom: -16px;
+      right: -4px;
+    }
+
+    .app-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+    }
+
+    .video-trigger {
+      bottom: -14px;
+      left: -8px;
+      padding: 0.4rem 0.75rem 0.4rem 0.5rem;
+      font-size: 0.7rem;
+    }
+
+    .video-trigger.rainbow {
+      width: 92px;
+      height: 54px;
+    }
+
+    .video-trigger-icon {
+      width: 17px;
+      height: 17px;
     }
   }
 </style>
