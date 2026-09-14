@@ -51,6 +51,7 @@
     let hits: Hit[] = [];
     let selected = 0;
     let lastFocus: Element | null = null;
+    let openFrame = 0;
 
     function load(): Promise<Doc[]> {
       if (index) return Promise.resolve(index);
@@ -63,24 +64,24 @@
     }
 
     function open() {
+      if (root!.getAttribute("aria-hidden") === "false") return;
       lastFocus = document.activeElement;
       root!.hidden = false;
       root!.setAttribute("aria-hidden", "false");
-      requestAnimationFrame(() => root!.classList.add("open"));
-      document.body.style.overflow = "hidden";
+      openFrame = requestAnimationFrame(() => root!.classList.add("open"));
       input!.focus();
       input!.select();
       void load().then(() => search(input!.value));
     }
 
     function close() {
+      cancelAnimationFrame(openFrame);
       root!.classList.remove("open");
       root!.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
       window.setTimeout(() => {
-        if (!root!.classList.contains("open")) root!.hidden = true;
+        if (root!.getAttribute("aria-hidden") === "true") root!.hidden = true;
       }, 160);
-      if (lastFocus instanceof HTMLElement) lastFocus.focus();
+      if (lastFocus instanceof HTMLElement) lastFocus.focus({ preventScroll: true });
     }
 
     function snippetAround(text: string, term: string): string {
@@ -180,9 +181,16 @@
         event.preventDefault();
         move(-1);
       } else if (event.key === "Enter") {
-        const hit = hits[selected];
-        if (hit) window.location.href = hit.doc.href + hit.hash;
+        event.preventDefault();
+        list!.querySelector<HTMLAnchorElement>(".msearch-hit.selected a")?.click();
       }
+    });
+    list.addEventListener("click", (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!(event.target instanceof Element) || !event.target.closest("a")) return;
+      // A same-document link does not reload the page; dismiss both overlays first.
+      close();
+      document.dispatchEvent(new Event("manual-search-navigate"));
     });
     list.addEventListener("mousemove", (event) => {
       const li = (event.target as HTMLElement).closest<HTMLElement>(".msearch-hit");
@@ -194,7 +202,7 @@
     root.querySelectorAll("[data-msearch-close]").forEach((el) => el.addEventListener("click", close));
     document.querySelectorAll("[data-msearch-open]").forEach((el) => el.addEventListener("click", open));
     document.addEventListener("keydown", (event) => {
-      const isOpen = !root!.hidden;
+      const isOpen = root!.getAttribute("aria-hidden") === "false";
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         isOpen ? close() : open();

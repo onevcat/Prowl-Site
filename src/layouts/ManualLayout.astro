@@ -153,11 +153,11 @@ const rawUrl = current ? `https://raw.githubusercontent.com/onevcat/Prowl/${mani
     sidebar?.classList.toggle("open", open);
     toggle?.setAttribute("aria-expanded", String(open));
     if (scrim) scrim.hidden = !open;
-    document.body.style.overflow = open ? "hidden" : "";
   }
   toggle?.addEventListener("click", () => setOpen(!sidebar?.classList.contains("open")));
   scrim?.addEventListener("click", () => setOpen(false));
   sidebar?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("manual-search-navigate", () => setOpen(false));
 
   // Keep the active sidebar entry in view.
   sidebar?.querySelector(".nav-item.active")?.scrollIntoView({ block: "center" });
@@ -189,6 +189,12 @@ const rawUrl = current ? `https://raw.githubusercontent.com/onevcat/Prowl/${mani
 </script>
 
 <style>
+  /* Either overlay can own the scroll lock, including search over the drawer. */
+  :global(body:has(.msearch[aria-hidden="false"])),
+  :global(body:has(.manual-sidebar.open)) {
+    overflow: hidden;
+  }
+
   .manual {
     --sidebar-w: 268px;
     --toc-w: 220px;
