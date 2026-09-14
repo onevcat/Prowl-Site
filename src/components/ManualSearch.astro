@@ -27,6 +27,8 @@
 </div>
 
 <script>
+  import { escapeHtml, highlight } from "../lib/manual-search";
+
   type Heading = { depth: number; slug: string; text: string };
   type Doc = {
     href: string;
@@ -49,9 +51,6 @@
     let hits: Hit[] = [];
     let selected = 0;
     let lastFocus: Element | null = null;
-
-    const escapeHtml = (s: string) =>
-      s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 
     function load(): Promise<Doc[]> {
       if (index) return Promise.resolve(index);
@@ -91,16 +90,6 @@
       const start = Math.max(0, at - 60);
       const end = Math.min(text.length, at + term.length + 80);
       return (start > 0 ? "…" : "") + text.slice(start, end) + (end < text.length ? "…" : "");
-    }
-
-    function highlight(text: string, terms: string[]): string {
-      let html = escapeHtml(text);
-      for (const term of terms) {
-        if (!term) continue;
-        const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig");
-        html = html.replace(re, (m) => `<mark>${m}</mark>`);
-      }
-      return html;
     }
 
     function search(query: string) {
