@@ -32,7 +32,7 @@ const runtimes = [
     <!-- ═══ Intro ═══ -->
     <section class="intro" id="intro">
       <div class="intro-copy">
-        <h1>Your terminal wasn't built for agents.</h1>
+        <h1>Your terminal wasn't built for agents.<br /><span class="intro-answer">Prowl is.</span></h1>
         <p class="intro-lead">
           You're not typing commands any more. You're running Claude Code in one branch, Codex in
           another, and a third agent on a migration, and the hard part is knowing who needs you
@@ -921,6 +921,10 @@ const runtimes = [
     color: var(--text-primary);
     margin-bottom: 1.25rem;
     text-wrap: balance;
+  }
+
+  .intro-answer {
+    color: var(--accent);
   }
 
   .intro-lead {
