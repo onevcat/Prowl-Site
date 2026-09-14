@@ -6,6 +6,11 @@ import path from "node:path";
 import { visit } from "unist-util-visit";
 
 const GITHUB_BLOB = "https://github.com/onevcat/Prowl/blob/main/";
+// These headings live in docs/README.md, rendered on the manual index.
+const DIRECTORY_ANCHORS = new Map([
+  ["docs/components", "component-manuals"],
+  ["docs/reference", "reference-exact-lookups"],
+]);
 
 /** Absolute path of the synced manual root, injected by astro.config. */
 export default function rehypeManual({ contentRoot }) {
@@ -42,8 +47,9 @@ export default function rehypeManual({ contentRoot }) {
         if (isSyncedFile) {
           node.properties.href = routeFor(absolute) + (hash ? "#" + hash : "");
         } else if (isSyncedDir) {
-          // Directory links such as `components/` -> manual index section.
-          node.properties.href = "/manual/#" + relToRoot.replace(/\/$/, "").replace(/^docs\//, "");
+          // Unmapped directories return to the index without inventing an anchor.
+          const anchor = DIRECTORY_ANCHORS.get(relToRoot);
+          node.properties.href = "/manual/" + (anchor ? "#" + anchor : "");
         } else {
           // Anything else lives in the Prowl repository outside the synced
           // tree (e.g. ../MirrorClient/README.md). The synced root mirrors the
