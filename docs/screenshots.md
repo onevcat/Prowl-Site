@@ -36,7 +36,7 @@ that README.
 | `agent-island.webp` | Floating Agent Island bar with state counts and Blocked / Done cells | Agents → Agent Island |
 | `agent-island-roster.webp` | Expanded Island roster with 1–4 shortcuts and the keyboard legend | Agents → Agent Island |
 | `agents-popover.webp` | Toolbar Agents menu: Run a workflow (Hello World, Handoff) and one launch row per profile | Agents → Agent Profiles |
-| `agents-menu.webp` | 400px-wide crop of `agents-popover.webp` that shows only the Agents menu | Prowl `README.md` → Agent Profiles |
+| `agents-menu.webp` | 400×522 crop of `agents-popover.webp`: the Agents menu down to the first five profiles, with the bottom faded out through the alpha channel | Prowl `README.md` → Agent Profiles |
 | `custom-commands.webp` | Toolbar crop: Xcode open button, Run, Build, Check, Test | Automation → Custom Commands |
 | `workflow-history.webp` | Workflow History panel over a Handoff run that needs attention | Automation → Agent Workflows |
 | `command-palette.webp` | Command Palette filtered by "launch": Launch Agent rows | Fundamentals |
@@ -45,6 +45,11 @@ that README.
 
 ## Optional
 
-The set above is complete for the page. One nicety remains: the intro hero was captured while the
-Debug window was inactive (grey traffic lights) because another app had focus during the scripted
-run. Re-shooting the same Shelf composition with the window active would replace `hero.webp`.
+The set above is complete for the page. Two niceties remain:
+
+- The intro hero was captured while the Debug window was inactive (grey traffic lights) because
+  another app had focus during the scripted run. Re-shooting the same Shelf composition with the
+  window active would replace `hero.webp`.
+- `agents-popover.webp` (and the `agents-menu.webp` crop) predate the built-in Review Loop
+  workflow: the Run a workflow section lists a demo Hello World workflow and Handoff. A re-shoot
+  should show Review Loop and Handoff, and both files should be replaced together.

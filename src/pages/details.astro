@@ -159,6 +159,7 @@ const runtimes = [
                 <li><b>Declared, not guessed.</b> <code>.prowl/workspace.json</code> lists each repository, its role, and the branch expected for the task. Agents read it as the contract.</li>
                 <li><b>Mix sources.</b> Link a repository you already opened, create a fresh branch as a new worktree, or clone a remote straight into the workspace.</li>
                 <li><b>Per-repository review.</b> Child rows show their own branch, line counts and PR badge; diff and outgoing changes open per child.</li>
+                <li><b>Edit as the task grows.</b> Start with one repository, then change the title, task links and roles, or add, reorder and remove repositories with <em>Edit Workspace</em>.</li>
               </ul>
               <p class="toggle"><a href="/manual/components/workspaces/">Workspaces in the manual</a></p>
             </div>
@@ -368,8 +369,9 @@ const runtimes = [
         <div class="chapter-tabs" role="tablist" aria-label="Automation features">
           <button type="button" role="tab" aria-selected="true" data-tab="commands">Custom Commands</button>
           <button type="button" role="tab" aria-selected="false" data-tab="workflows">Agent Workflows</button>
-          <button type="button" role="tab" aria-selected="false" data-tab="workflow-yaml">Writing a workflow</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="review-loop">Review Loop</button>
           <button type="button" role="tab" aria-selected="false" data-tab="handoff">Handoff</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="workflow-yaml">Writing a workflow</button>
         </div>
       </header>
 
@@ -404,6 +406,7 @@ const runtimes = [
                 in the toolbar.
               </p>
               <ul class="facts">
+                <li><b>Two built in:</b> Review Loop and Handoff. Add your own for yourself or for one repository.</li>
                 <li><b>Start from anywhere:</b> <kbd>⌘P</kbd>, the Agents menu, an Active Agents row, or <code>prowl workflow run</code>.</li>
                 <li><b>Supervised.</b> The toolbar shows the current step and flags when a run needs you: nudge, retry, relaunch, accept, skip or cancel.</li>
                 <li><b>Workflow History</b> keeps every prompt, delivery and script output for three days.</li>
@@ -415,41 +418,31 @@ const runtimes = [
             </figure>
           </article>
 
-          <article class="panel" data-panel="workflow-yaml" role="tabpanel">
+          <article class="panel" data-panel="review-loop" role="tabpanel">
             <div class="panel-copy">
-              <h3>Writing a workflow</h3>
+              <h3>Review Loop</h3>
               <p class="pitch">
-                A <code>.pwlworkflow</code> bundle holds a <code>workflow.yaml</code>: roles, steps and typed
-                state. Keep it in <code>~/.prowl/workflows</code>, or in the repository's
-                <code>.prowl/workflows</code> so it travels with the code.
+                Start it from the agent that just wrote the code. Prowl opens a reviewer from any Profile
+                in a split beside it, and the two go back and forth until the review is clean.
               </p>
               <ul class="facts">
-                <li><b>Roles:</b> <code>current</code> (the pane you start from), <code>launch</code> (a Profile Prowl starts), <code>pick</code> (an agent you choose).</li>
-                <li><b>Steps:</b> <code>message</code>, <code>launch</code>, <code>if</code>, <code>while</code>, <code>action</code>, <code>notify</code>, <code>close</code>; a step can <code>expect</code> a delivery with a verdict.</li>
-                <li><b>Validated first.</b> <code>prowl workflow validate</code>; the bundled <code>prowl-workflow</code> skill teaches an agent the DSL.</li>
+                <li><b>Fresh eyes every round.</b> From round two on, the reviewer re-checks earlier findings against the author's answers and reviews the current diff again, including code added by fixes.</li>
+                <li><b>The author owns the change.</b> It verifies each finding, fixes the worthwhile ones with regression tests where practical, and explains what it rejects or defers.</li>
+                <li><b>Bounded.</b> Two to four rounds by default, both adjustable. Local changes and existing pull requests both work.</li>
+                <li><b>An honest result.</b> The final notification says clean or not clean; reports and unresolved findings stay in Workflow History.</li>
               </ul>
-              <p class="toggle"><a href="/manual/skills/prowl-workflow/references/authoring/">Authoring reference</a></p>
+              <p class="toggle"><a href="/manual/components/workflows/#built-in-review-loop">Review Loop in the manual</a></p>
             </div>
             <figure class="panel-visual panel-code">
-              <pre class="code"><span class="c"># review-loop.pwlworkflow/workflow.yaml</span>
-<span class="k">schema</span>: prowl.workflow/v1
-<span class="k">id</span>: review-loop
-<span class="k">name</span>: Adversarial review
-<span class="k">roles</span>:
-  <span class="k">author</span>:   &#123; <span class="k">source</span>: current &#125;
-  <span class="k">reviewer</span>: &#123; <span class="k">source</span>: launch, <span class="k">suggest</span>: Reviewer &#125;
-<span class="k">steps</span>:
-  - <span class="k">id</span>: brief
-    <span class="k">message</span>: author
-    <span class="k">prompt</span>: Summarise the change you just made.
-    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: brief &#125;
-  - <span class="k">id</span>: review
-    <span class="k">launch</span>: reviewer
-    <span class="k">prompt</span>: Review &#123;&#123; deliveries.brief.path &#125;&#125; against the diff.
-    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125;
-  <span class="c"># … a while loop re-messages both roles until the verdict is clean</span>
-  - <span class="k">id</span>: done
-    <span class="k">notify</span>: Review finished with verdict &#123;&#123; deliveries.findings.verdict &#125;&#125;</pre>
+              <pre class="code term"><span class="p">$</span> prowl workflow run prowl.review-loop --role reviewer=Codex \
+    --input min_rounds=2 --input max_rounds=4
+
+<span class="c"># what happens in the two panes</span>
+<span class="o">author    → brief: scope, plan, how it was verified</span>
+<span class="o">reviewer  → round 1: 3 findings</span>
+<span class="o">author    → fixed 2 with tests, rejected 1 with a reason</span>
+<span class="o">reviewer  → round 2: re-checked 3, reviewed the new diff</span>
+<span class="ok">verdict clean · reports kept in Workflow History</span></pre>
             </figure>
           </article>
 
@@ -481,6 +474,44 @@ const runtimes = [
 <span class="o">├── context.md</span>
 <span class="o">├── archive/workflow-3A4E9506….md</span>
 <span class="o">└── sessions/</span></pre>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="workflow-yaml" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Writing a workflow</h3>
+              <p class="pitch">
+                A <code>.pwlworkflow</code> bundle holds a <code>workflow.yaml</code>: roles, steps and typed
+                state. Keep it in <code>~/.prowl/workflows</code>, or in the repository's
+                <code>.prowl/workflows</code> so it travels with the code.
+              </p>
+              <ul class="facts">
+                <li><b>Roles:</b> <code>current</code> (the pane you start from), <code>launch</code> (a Profile Prowl starts), <code>pick</code> (an agent you choose).</li>
+                <li><b>Steps:</b> <code>message</code>, <code>launch</code>, <code>if</code>, <code>while</code>, <code>action</code>, <code>notify</code>, <code>close</code>; a step can <code>expect</code> a delivery with a verdict.</li>
+                <li><b>Validated first.</b> <code>prowl workflow validate</code>; the bundled <code>prowl-workflow</code> skill teaches an agent the DSL.</li>
+                <li><b>One item in Finder.</b> A bundle shows as a package with the Prowl workflow icon; Git, editors and the CLI still see a plain directory.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/skills/prowl-workflow/references/authoring/">Authoring reference</a></p>
+            </div>
+            <figure class="panel-visual panel-code">
+              <pre class="code"><span class="c"># second-opinion.pwlworkflow/workflow.yaml</span>
+<span class="k">schema</span>: prowl.workflow/v1
+<span class="k">id</span>: second-opinion
+<span class="k">name</span>: Second opinion
+<span class="k">roles</span>:
+  <span class="k">author</span>:   &#123; <span class="k">source</span>: current &#125;   <span class="c"># the pane you start from</span>
+  <span class="k">reviewer</span>: &#123; <span class="k">source</span>: launch &#125;    <span class="c"># a fresh agent from a Profile</span>
+<span class="k">steps</span>:
+  - <span class="k">id</span>: brief
+    <span class="k">message</span>: author
+    <span class="k">prompt</span>: Summarize the change you just made and how you verified it.
+    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: brief &#125;
+  - <span class="k">id</span>: review
+    <span class="k">launch</span>: reviewer
+    <span class="k">prompt</span>: Review &#123;&#123; deliveries.brief.path &#125;&#125; against the current diff.
+    <span class="k">expect</span>: &#123; <span class="k">delivery</span>: findings, <span class="k">verdicts</span>: [clean, issues] &#125;
+  - <span class="k">id</span>: done
+    <span class="k">notify</span>: "Review verdict: &#123;&#123; deliveries.findings.verdict &#125;&#125;"</pre>
             </figure>
           </article>
         </div>
@@ -641,6 +672,10 @@ EOF
           <dd><kbd>⌘P</kbd> reaches every action by name and shows its live binding. Remap anything in Settings → Shortcuts.</dd>
         </div>
         <div>
+          <dt>Undo a close</dt>
+          <dd>Closed the wrong pane? <kbd>⌘Z</kbd> or <kbd>⌘⇧T</kbd> within five seconds puts it back in place, with its running program, scrollback and split position. The window follows Ghostty's <code>undo-timeout</code>.</dd>
+        </div>
+        <div>
           <dt>Open in the right editor</dt>
           <dd><kbd>⌘O</kbd> inspects the project and opens Xcode, Android Studio, a JetBrains IDE, or the VS Code family accordingly, with a per-repository override.</dd>
         </div>
@@ -651,6 +686,10 @@ EOF
         <div>
           <dt>Repository identity</dt>
           <dd>Each repository gets a colour and an icon that tint its rows, Shelf spine and window chrome, so you know where you are without reading.</dd>
+        </div>
+        <div>
+          <dt>Your language</dt>
+          <dd>English and Simplified Chinese. Choose Follow System, English or 简体中文 in Settings → General; in Chinese, the Command Palette matches Chinese command names and English keywords.</dd>
         </div>
         <div>
           <dt>Notarized, auto-updated</dt>
