@@ -1,6 +1,9 @@
 # Product screenshots
 
 Assets live in `public/images/shots/`. They are referenced from `src/pages/details.astro`.
+The Prowl repository `README.md` also loads several of them by URL
+(`https://prowl.onev.cat/images/shots/…`), so do not rename or remove a file without updating
+that README.
 
 ## How the current set was captured
 
@@ -33,6 +36,7 @@ Assets live in `public/images/shots/`. They are referenced from `src/pages/detai
 | `agent-island.webp` | Floating Agent Island bar with state counts and Blocked / Done cells | Agents → Agent Island |
 | `agent-island-roster.webp` | Expanded Island roster with 1–4 shortcuts and the keyboard legend | Agents → Agent Island |
 | `agents-popover.webp` | Toolbar Agents menu: Run a workflow (Hello World, Handoff) and one launch row per profile | Agents → Agent Profiles |
+| `agents-menu.webp` | 400px-wide crop of `agents-popover.webp` that shows only the Agents menu | Prowl `README.md` → Agent Profiles |
 | `custom-commands.webp` | Toolbar crop: Xcode open button, Run, Build, Check, Test | Automation → Custom Commands |
 | `workflow-history.webp` | Workflow History panel over a Handoff run that needs attention | Automation → Agent Workflows |
 | `command-palette.webp` | Command Palette filtered by "launch": Launch Agent rows | Fundamentals |
