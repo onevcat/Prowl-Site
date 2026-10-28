@@ -24,6 +24,12 @@ that README.
   AppleScript (`click menu item "Canvas" of menu "View"`), toolbar buttons with the AX API
   (`AXPress` on the button's identifier, e.g. `agents-toolbar-menu`, `Tile`).
 
+- Remote shots: same isolated Debug instance, plus a remote project on a Mac mini reached through a
+  temporary `Host mini` alias in `~/.ssh/config`. The remote repository is a shallow clone of
+  QuantumNous/new-api with a `feature/rate-limit` worktree. Remote agents are Codex (asked to reply in
+  English); the Blocked state is `codex -a on-request -s read-only` asking to run `go test`. The SSH
+  shot starts from `remoteAgentDetection: "undecided"`, so the consent panel appears first.
+
 ## Inventory
 
 | File | Shows | Used on |
@@ -42,6 +48,10 @@ that README.
 | `command-palette.webp` | Command Palette filtered by "launch": Launch Agent rows | Fundamentals |
 | `diff.webp` | Show Diff window, split view, RetryStrategy.swift | Fundamentals |
 | `settings.webp` | Settings window, General page (older neutral scene), cropped to the gallery ratio | Fundamentals |
+| `remote-projects.webp` | Remote project `new-api` on host `mini` (purple chrome): a remote Codex at an approval prompt; Active Agents with two local Done agents and two remote agents labelled `mini` (Working, Blocked) | Remote → Remote projects |
+| `remote-browse.webp` | Crop of the Add Remote Project sheet with the host folder browser (branch marks on Git repositories) | Remote → Adding a host |
+| `remote-ssh.webp` | A local Kingfisher pane running `ssh` + tmux + Codex on the host; toolbar shows `user@host` and “Agent detection on” | Remote → Agents behind ssh |
+| `remote-consent.webp` | Crop of the toolbar consent panel “Detect agents in SSH sessions?” | Remote → Ask first |
 
 ## Optional
 
