@@ -388,10 +388,10 @@ const runtimes = [
               </p>
               <ul class="facts">
                 <li><b>Nothing to install.</b> Prowl uses your own <code>ssh</code> and <code>~/.ssh/config</code>: aliases, jump hosts, keys from your SSH agent. It installs nothing on the host and edits no startup file there.</li>
-                <li><b>A tab is a shell on the host.</b> A new tab lands in the folder, in your login shell. A split starts where its pane is. Setup scripts and custom commands run on the host.</li>
+                <li><b>A tab is a shell on the host.</b> A new tab lands in the folder, in your login shell. A split starts in its pane's last known directory. Setup scripts and custom commands run on the host.</li>
                 <li><b>Worktrees and branches</b> of the remote repository list as they do for a local one, so one branch per agent works there too.</li>
                 <li><b>Same states, with the host.</b> Remote agents show in Active Agents and Agent Island as Working, Blocked, Done or Idle, labelled with the host they run on.</li>
-                <li><b>Back after a restart.</b> Tabs and splits reconnect where they were on the host. An unreachable host never touches your local layout.</li>
+                <li><b>Back after a restart.</b> Tabs and splits reconnect using their last known directories on the host. If Prowl cannot read a pane's directory, it falls back to the shell's starting directory; see the <a href="/manual/components/remote-folders/#gotchas-for-agents">macOS host limitations</a>. An unreachable host never touches your local layout.</li>
               </ul>
               <p class="toggle">File → Add Remote Project… · <a href="/manual/components/remote-folders/">Remote projects in the manual</a></p>
             </div>
