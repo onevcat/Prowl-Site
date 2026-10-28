@@ -49,6 +49,7 @@ that README.
 | `diff.webp` | Show Diff window, split view, RetryStrategy.swift | Fundamentals |
 | `settings.webp` | Settings window, General page (older neutral scene), cropped to the gallery ratio | Fundamentals |
 | `remote-projects.webp` | Remote project `new-api` on host `mini` (purple chrome): a remote Codex at an approval prompt; Active Agents with two local Done agents and two remote agents labelled `mini` (Working, Blocked) | Remote → Remote projects |
+| `remote-projects-crop.webp` | 1640px crop of `remote-projects.webp`: sidebar, toolbar host status and the left part of the approval prompt, with the right edge faded out through the alpha channel, so it stays legible at README width | Prowl `README.md` → Reach agents on other machines |
 | `remote-browse.webp` | Crop of the Add Remote Project sheet with the host folder browser (branch marks on Git repositories) | Remote → Adding a host |
 | `remote-ssh.webp` | A local Kingfisher pane running `ssh` + tmux + Codex on the host; toolbar shows `user@host` and “Agent detection on” | Remote → Agents behind ssh |
 | `remote-consent.webp` | Crop of the toolbar consent panel “Detect agents in SSH sessions?” | Remote → Ask first |
