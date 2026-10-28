@@ -452,7 +452,7 @@ const runtimes = [
               </p>
               <ul class="facts">
                 <li><b>A separate, read-only channel.</b> Prowl opens its own SSH connection next to yours and runs a read-only check every few seconds. Your session does not change.</li>
-                <li><b>Nothing left on the host.</b> No daemon and no edits to startup files. The check finds your session through <code>LC_PROWL_PANE</code>, which the default OpenSSH settings forward.</li>
+                <li><b>Nothing left on the host.</b> No daemon and no edits to startup files. The check finds your session through <code>LC_PROWL_PANE</code>; your SSH client must send it (<code>SendEnv</code>) and the server must accept it (<code>AcceptEnv</code>). Without forwarding, detection relies on agents reporting their own status.</li>
                 <li><b>Your answer, kept.</b> Turn On, Not Now or Turn Off; change it later in Settings → Agents → Display. Adding a remote project already counts as a yes for its host.</li>
               </ul>
               <p class="toggle"><a href="/manual/components/agent-detection/#remote-agents-over-ssh">How remote detection works</a></p>
