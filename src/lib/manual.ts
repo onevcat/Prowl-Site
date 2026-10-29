@@ -44,6 +44,7 @@ const GROUPS: { id: string; label: string; slugs: string[] }[] = [
       "components/shelf",
       "components/repositories-and-worktrees",
       "components/workspaces",
+      "components/remote-folders",
       "components/terminal",
       "components/command-palette",
     ],

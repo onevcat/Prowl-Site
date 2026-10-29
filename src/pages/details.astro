@@ -31,7 +31,7 @@ const runtimes = [
 
 <Layout
   title="Prowl — What it does"
-  description="Canvas, Shelf, Active Agents, Agent Island, Agent Profiles, Workflows, Custom Commands and the prowl CLI: everything Prowl does for people who run several coding agents at once."
+  description="Canvas, Shelf, Active Agents, Agent Island, Agent Profiles, remote projects over SSH, Workflows, Custom Commands and the prowl CLI: everything Prowl does for people who run several coding agents at once."
 >
   <Nav active="details" />
 
@@ -44,11 +44,12 @@ const runtimes = [
           You're not typing commands any more. You're running Claude Code in one branch, Codex in
           another, and a third agent on a migration, and the hard part is knowing who needs you
           next. Prowl is a native macOS terminal built around exactly that: many agents, many
-          worktrees, all legible at a glance.
+          worktrees, on this Mac or another one over SSH, all legible at a glance.
         </p>
         <nav class="intro-jump" aria-label="Sections">
           <a href="#layout">Layout</a>
           <a href="#agents">Agents</a>
+          <a href="#remote">Remote</a>
           <a href="#automate">Automation</a>
           <a href="#cli">CLI &amp; skills</a>
           <a href="#foundation">Fundamentals</a>
@@ -344,6 +345,120 @@ const runtimes = [
                   <span class="notif-time">9m</span>
                 </div>
               </div>
+            </figure>
+          </article>
+        </div>
+        <button type="button" class="track-arrow prev" data-prev aria-label="Previous feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        <button type="button" class="track-arrow next" data-next aria-label="Next feature">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══ Chapter: Remote ═══ -->
+    <section class="chapter" id="remote" data-chapter>
+      <header class="chapter-head">
+        <div class="chapter-title-row">
+          <h2>Your agents, on any machine.</h2>
+          <p class="chapter-lead">
+            Some work has to run where the code, the data or the hardware is: a build box, a GPU
+            server, a dev VM. Prowl puts those machines in the same sidebar and watches their agents as
+            closely as the ones on your Mac. Over plain SSH, with nothing to install on the host.
+          </p>
+        </div>
+        <div class="chapter-tabs" role="tablist" aria-label="Remote features">
+          <button type="button" role="tab" aria-selected="true" data-tab="remote-projects">Remote projects</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="remote-add">Adding a host</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="remote-ssh">Agents behind ssh</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="remote-consent">Ask first</button>
+        </div>
+      </header>
+
+      <div class="track-wrap">
+        <div class="track" data-track tabindex="0">
+          <article class="panel" data-panel="remote-projects" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Remote projects</h3>
+              <p class="pitch">
+                A folder on another machine sits in the sidebar next to your local repositories, with a
+                globe after its name. Its tabs, splits, scripts and agents run on the host, and you drive
+                them from the same window.
+              </p>
+              <ul class="facts">
+                <li><b>Nothing to install.</b> Prowl uses your own <code>ssh</code> and <code>~/.ssh/config</code>: aliases, jump hosts, keys from your SSH agent. It installs nothing on the host and edits no startup file there.</li>
+                <li><b>A tab is a shell on the host.</b> A new tab lands in the folder, in your login shell. A split starts in its pane's last known directory. Setup scripts and custom commands run on the host.</li>
+                <li><b>Worktrees and branches</b> of the remote repository list as they do for a local one, so one branch per agent works there too.</li>
+                <li><b>Same states, with the host.</b> Remote agents show in Active Agents and Agent Island as Working, Blocked, Done or Idle, labelled with the host they run on.</li>
+                <li><b>Back after a restart.</b> Tabs and splits reconnect using their last known directories on the host. If Prowl cannot read a pane's directory, it falls back to the shell's starting directory; see the <a href="/manual/components/remote-folders/#gotchas-for-agents">macOS host limitations</a>. An unreachable host never touches your local layout.</li>
+              </ul>
+              <p class="toggle">File → Add Remote Project… · <a href="/manual/components/remote-folders/">Remote projects in the manual</a></p>
+            </div>
+            <figure class="panel-visual">
+              <img {...shot("remote-projects")} alt="Prowl with a remote project named new-api on the host mini: a Codex agent on the host waits at a command approval prompt, and Active Agents lists two local agents that are done next to two remote agents labelled mini, one working and one blocked" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="remote-add" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Adding a host</h3>
+              <p class="pitch">
+                Pick a host you added before, or type any destination that <code>ssh</code> understands:
+                <code>user@host</code> or an alias from your SSH configuration. Then browse the host's
+                folders instead of typing a path.
+              </p>
+              <ul class="facts">
+                <li><b>Browse the host.</b> Git repositories carry a branch mark. <kbd>↩</kbd> or <kbd>→</kbd> opens a folder, <kbd>←</kbd> goes up. Browsing stores nothing until you add the folder.</li>
+                <li><b>Checked before stored.</b> Prowl resolves the destination with <code>ssh -G</code>, connects, resolves the real path on the host, and checks for git.</li>
+                <li><b>Changed hosts are caught.</b> When your SSH configuration later sends the alias to another user, host or port, Prowl asks before it connects again.</li>
+                <li><b>Key sign-in.</b> Prowl connects without a prompt, so the host must accept a key from your configuration or SSH agent. Password and code prompts are not supported yet.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/remote-folders/#adding-a-remote-project">Adding a remote project</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-sheet">
+              <img src="/images/shots/remote-browse.webp" alt="The Add Remote Project sheet: host mini, and a folder browser on the host listing datasets, edge-worker, infra-terraform, logs, ml-pipeline and new-api, with branch marks on the Git repositories" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="remote-ssh" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Agents behind <code>ssh</code></h3>
+              <p class="pitch">
+                Already live in <code>ssh</code> and tmux? Type <code>ssh devbox</code> in any pane and
+                start an agent there as usual. Prowl finds the agent on the host and lists it with its
+                state, like a local one.
+              </p>
+              <ul class="facts">
+                <li><b>tmux too.</b> Prowl follows the tmux client to its active pane and reads that pane's screen, not the local one with the status line and the other panes.</li>
+                <li><b>Always labelled.</b> The pane shows <code>user@host</code> in its corner, its tab a network glyph, and the toolbar the host with “Agent detection on”.</li>
+                <li><b>Honest when the link drops.</b> If the host stops answering, the row keeps its last state in grey and tells you when the agent was last seen.</li>
+                <li><b>Only real sessions.</b> SSH that Git, scp, sftp or rsync start is ignored. <code>ssh -t host claude</code> and <code>ssh host tmux attach</code> count.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/agent-detection/#remote-agents-over-ssh">Remote agents in the manual</a></p>
+            </div>
+            <figure class="panel-visual">
+              <img {...shot("remote-ssh")} alt="A local Kingfisher pane running ssh into the host with tmux and Codex inside; the toolbar shows the host and Agent detection on, and Active Agents lists the agent with its user@host label" loading="lazy" data-lightbox />
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="remote-consent" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Ask first, change nothing</h3>
+              <p class="pitch">
+                Prowl does not connect to a host behind your back. The first time it sees an
+                <code>ssh</code> it can read, the toolbar asks whether to detect agents on that host,
+                without taking focus from a password prompt.
+              </p>
+              <ul class="facts">
+                <li><b>A separate, read-only channel.</b> Prowl opens its own SSH connection next to yours and runs a read-only check every few seconds. Your session does not change.</li>
+                <li><b>Nothing left on the host.</b> No daemon and no edits to startup files. The check finds your session through <code>LC_PROWL_PANE</code>; your SSH client must send it (<code>SendEnv</code>) and the server must accept it (<code>AcceptEnv</code>). Without forwarding, detection relies on agents reporting their own status.</li>
+                <li><b>Your answer, kept.</b> Turn On, Not Now or Turn Off; change it later in Settings → Agents → Display. Adding a remote project already counts as a yes for its host.</li>
+              </ul>
+              <p class="toggle"><a href="/manual/components/agent-detection/#remote-agents-over-ssh">How remote detection works</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-sheet">
+              <img src="/images/shots/remote-consent.webp" alt="The toolbar asks Detect agents on mini? with a panel that explains the extra read-only SSH connection and offers Turn Off, Not Now and Turn On" loading="lazy" data-lightbox />
             </figure>
           </article>
         </div>
@@ -1283,6 +1398,17 @@ EOF
     gap: 1.25rem;
     padding: 2rem 1.5rem;
     background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
+  }
+
+  .panel-visual-sheet {
+    max-width: 640px;
+    padding: 2rem 1.5rem;
+    background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
+  }
+
+  .panel-visual-sheet img {
+    max-width: 420px;
+    border-radius: 12px;
   }
 
   .panel-visual-island .island-bar {
