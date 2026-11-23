@@ -61,6 +61,14 @@ import Nav from "../components/Nav.astro";
           </button>
         </p>
 
+        <p class="mirror-note">
+          On the go? <a
+            href="https://apps.apple.com/app/id6831901271"
+            target="_blank"
+            rel="noopener">Prowl Mirror</a
+          > follows and answers your agents from your iPhone or iPad.
+        </p>
+
         <p class="fork-note">
           Free &amp; Open Source. A personal fork of <a
             href="https://supacode.sh/"
@@ -908,19 +916,26 @@ import Nav from "../components/Nav.astro";
     background: rgba(90, 228, 192, 0.12);
   }
 
-  .fork-note {
+  .fork-note,
+  .mirror-note {
     font-size: 0.8rem;
     color: var(--text-muted);
   }
 
-  .fork-note a {
+  .mirror-note {
+    margin-bottom: 0.4rem;
+  }
+
+  .fork-note a,
+  .mirror-note a {
     color: var(--text-secondary);
     text-decoration: underline;
     text-decoration-color: rgba(136, 153, 180, 0.3);
     text-underline-offset: 2px;
   }
 
-  .fork-note a:hover {
+  .fork-note a:hover,
+  .mirror-note a:hover {
     color: var(--accent);
     opacity: 1;
   }

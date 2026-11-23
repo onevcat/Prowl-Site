@@ -31,7 +31,7 @@ const runtimes = [
 
 <Layout
   title="Prowl — What it does"
-  description="Canvas, Shelf, Active Agents, Agent Island, Agent Profiles, remote projects over SSH, Workflows, Custom Commands and the prowl CLI: everything Prowl does for people who run several coding agents at once."
+  description="Canvas, Shelf, Active Agents, Agent Island, Agent Profiles, remote projects over SSH, Prowl Mirror for iPhone, Workflows, Custom Commands and the prowl CLI: everything Prowl does for people who run several coding agents at once."
 >
   <Nav active="details" />
 
@@ -208,6 +208,7 @@ const runtimes = [
           <button type="button" role="tab" aria-selected="false" data-tab="profiles">Agent Profiles</button>
           <button type="button" role="tab" aria-selected="false" data-tab="detection">Detection &amp; signals</button>
           <button type="button" role="tab" aria-selected="false" data-tab="reminders">Reminders</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="mirror">Prowl Mirror</button>
         </div>
       </header>
 
@@ -345,6 +346,28 @@ const runtimes = [
                   <span class="notif-time">9m</span>
                 </div>
               </div>
+            </figure>
+          </article>
+
+          <article class="panel" data-panel="mirror" role="tabpanel">
+            <div class="panel-copy">
+              <h3>Prowl Mirror</h3>
+              <p class="pitch">
+                Step away from the desk and keep your agents within reach. Prowl Mirror, the free
+                companion app for iPhone and iPad, shows every agent on your Mac and lets you answer the
+                one that waits for you.
+              </p>
+              <ul class="facts">
+                <li><b>Every agent, every state.</b> Grouped by project as in the sidebar, with Blocked, Working and Done at a glance.</li>
+                <li><b>Answer from your phone.</b> Permission prompts and questions show as buttons. Tap one, and Prowl answers on your Mac. Send a message, stop a turn, or start a new session with an Agent Profile.</li>
+                <li><b>Chat or terminal.</b> Read the conversation as a clean chat with tool calls and diffs, or switch to the live terminal screen.</li>
+                <li><b>Private by design.</b> The app connects straight to your Mac over your local network or VPN, encrypted with a key made when you pair. No account. Optional notifications are end-to-end encrypted.</li>
+              </ul>
+              <p class="toggle">Settings → Remote Mirror → Add a Device… · <a href="https://apps.apple.com/app/id6831901271" target="_blank" rel="noopener">Get Prowl Mirror on the App Store</a> · <a href="/manual/remote-mirror/">Remote Mirror in the manual</a></p>
+            </div>
+            <figure class="panel-visual panel-visual-phones">
+              <img src="/images/shots/mirror-agents.webp" alt="Prowl Mirror on an iPhone listing agents by project: one blocked, one working and one done, with their terminals" loading="lazy" data-lightbox />
+              <img src="/images/shots/mirror-prompt.webp" alt="Prowl Mirror showing a blocked agent's conversation with a permission prompt whose choices are buttons" loading="lazy" data-lightbox />
             </figure>
           </article>
         </div>
@@ -853,6 +876,9 @@ EOF
         Or install via Homebrew:
         <span class="brew-command" id="brew-command">brew install --cask onevcat/tap/prowl</span>
         <button type="button" class="brew-copy" id="brew-copy" aria-label="Copy Homebrew command">Copy</button>
+      </p>
+      <p class="mirror-note">
+        On the go? <a href="https://apps.apple.com/app/id6831901271" target="_blank" rel="noopener">Prowl Mirror</a> follows and answers your agents from your iPhone or iPad.
       </p>
       <p class="fork-note">
         Free &amp; open source. A personal fork of <a href="https://supacode.sh/" target="_blank" rel="noopener">Supacode</a>, built for daily use.
@@ -1406,6 +1432,21 @@ EOF
     background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
   }
 
+  .panel-visual-phones {
+    max-width: 560px;
+    gap: 1rem;
+    padding: 2rem 1.5rem;
+    align-items: center;
+    background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 70%), var(--bg-deep);
+  }
+
+  .panel-visual-phones img {
+    width: calc(50% - 0.5rem);
+    max-width: 240px;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+  }
+
   .panel-visual-sheet {
     max-width: 640px;
     padding: 2rem 1.5rem;
@@ -1735,12 +1776,18 @@ EOF
     border-color: rgba(90, 228, 192, 0.45);
   }
 
-  .fork-note {
+  .fork-note,
+  .mirror-note {
     font-size: 0.8rem;
     color: var(--text-muted);
   }
 
-  .fork-note a {
+  .mirror-note {
+    margin-bottom: 0.4rem;
+  }
+
+  .fork-note a,
+  .mirror-note a {
     color: var(--text-secondary);
     text-decoration: underline;
     text-decoration-color: rgba(136, 153, 180, 0.3);
