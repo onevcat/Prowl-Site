@@ -359,6 +359,10 @@ import Nav from "../components/Nav.astro";
           target="_blank"
           rel="noopener">@onevcat</a
         > with <span class="heart">&hearts;</span>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/privacy/">Privacy</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/terms/">Terms</a>
       </p>
     </footer>
 
@@ -1754,6 +1758,10 @@ import Nav from "../components/Nav.astro";
   .footer a:hover {
     color: var(--accent);
     opacity: 1;
+  }
+
+  .footer-sep {
+    margin: 0 0.35rem;
   }
 
   /* Responsive */
